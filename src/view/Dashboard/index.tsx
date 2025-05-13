@@ -26,14 +26,6 @@ const Dashboard = () => {
             </IconContext.Provider>
             <span>hello world Dashboard </span>
             <span>hello world Dashboard </span>
-            <span>hello world Dashboard </span>
-            <span>hello world Dashboard </span>
-            <span>hello world Dashboard </span>
-            <span>hello world Dashboard </span>
-            <span>hello world Dashboard </span>
-            <span>hello world Dashboard </span>
-            <span>hello world Dashboard </span>
-            <span>hello world Dashboard </span>
         </div>
     );
 };
