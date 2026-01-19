@@ -4,6 +4,7 @@ const PROJECT_PATH = path.resolve(__dirname, '../');
 const PROJECT_NAME = path.parse(PROJECT_PATH).name;
 
 // Dev server host and port
+// const SERVER_HOST = '0.0.0.0';
 const SERVER_HOST = '0.0.0.0';
 const SERVER_PORT = 9000;
 
@@ -35,5 +36,5 @@ module.exports = {
     imageInlineSizeLimit,
     imageBase64Path,
     shouldBase64FromFileEnd,
-    divider,
+    divider
 };

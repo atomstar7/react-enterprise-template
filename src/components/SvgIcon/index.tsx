@@ -1,10 +1,11 @@
 import React, {FC} from 'react';
 import './index.less';
 
-interface SvgIconProps {
+export interface SvgIconProps {
     svgName: string; // svg名字
     svgClass?: string; // 自定义类名
     color?: string; // 填充颜色
+    onClick?: () => void;
 }
 
 const SvgIcon: FC<SvgIconProps> = (props) => {

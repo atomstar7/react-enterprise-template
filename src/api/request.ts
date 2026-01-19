@@ -54,7 +54,6 @@ serviceAxios.interceptors.response.use(
         return Promise.reject(err);
     }
 );
-
 // 统一发起请求的函数
 function createRequest(service: AxiosInstance) {
     return function <T>(config: AxiosRequestConfig): Promise<T> {

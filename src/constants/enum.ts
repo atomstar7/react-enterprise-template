@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
-// use them in your app! 👍
 // import {Weekday} from '@/constants/enum';
 // {Weekday.Monday}
 
@@ -11,7 +8,7 @@
  * Wednesday = 3  测试数据周三
  */
 
-enum Weekday {
+enum Color {
     Monday = 1,
     Tuesday = 2,
     Wednesday = 3,
@@ -21,4 +18,4 @@ enum Weekday {
     Sunday
 }
 
-export {Weekday};
+export {Color};
