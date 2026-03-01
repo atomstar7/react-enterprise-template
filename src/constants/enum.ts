@@ -1,5 +1,6 @@
-// import {Weekday} from '@/constants/enum';
-// {Weekday.Monday}
+// Usage:
+// import Color} from '@/constants/enum';
+// {Color.font}
 
 /**
  * testEnum 测试数据
@@ -9,13 +10,8 @@
  */
 
 enum Color {
-    Monday = 1,
-    Tuesday = 2,
-    Wednesday = 3,
-    Thursday = 4,
-    Friday,
-    Saturday,
-    Sunday
+    font = 'black',
+    background = 'white',
 }
 
 export {Color};
