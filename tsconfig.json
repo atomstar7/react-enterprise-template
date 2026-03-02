@@ -7,7 +7,8 @@
         "noEmit": true,                         // 不输出, 不编译代码，只执行类型检查, 不生成输出文件
         "allowJs": true,                        // 允许编译 JavaScript 文件
         "jsx": "react",                         // 指定 jsx 代码的生成: 'preserve', 'react-native', or 'react'
-        "isolatedModules": true,                // 将每个文件做为单独的模块 （与 'ts.transpileModule' 类似）
+        "isolatedModules": true,   
+        "ignoreDeprecations": "6.0",             // 将每个文件做为单独的模块 （与 'ts.transpileModule' 类似）
         "lib": [                                // 指定要包含在编译中的库文件
             "esnext",
             "dom"
@@ -21,7 +22,7 @@
         "skipLibCheck": true,                   // 跳过所有声明文件的类型检查
         "allowSyntheticDefaultImports": true,   // 允许从没有设置默认导出的模块中默认导入
         "esModuleInterop": true,                // 发出额外的JavaScript以简化对导入CommonJS模块的支持
-        "moduleResolution": "node",             // 选择模块解析策略： 'node' (Node.js) or 'classic' (TypeScript pre-1.6)。默认是classic
+        "moduleResolution": "node",
         "resolveJsonModule": true,              // 允许使用 .json 扩展名导入的模块
         "paths": {                              // 模块名到基于 baseUrl 的路径映射的列表
             "@/*": ["src/*"],

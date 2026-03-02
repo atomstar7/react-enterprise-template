@@ -1,0 +1,26 @@
+
+@import url('@/constants/font.less');
+@import url('@/constants/color.less');
+
+.combination-root {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+
+    .combination-title {
+        flex: 1; // 固定高度
+        font-weight: @font-weight;
+        font-size: @view-header-font-size;
+        background-color: @view-title-background;
+        color: @view-title-font;
+        border: @border;
+        padding-left: 8px;
+    }
+
+    .combination-body {
+        flex: 12;
+        background-color: @view-body-background;
+        border: @border;
+        margin: 8px;
+    }
+}
