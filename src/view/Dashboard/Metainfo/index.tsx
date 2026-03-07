@@ -14,7 +14,7 @@ const tableData = [
 const Metainfo = () => {
     return (
         <div className='metainfo-root'>
-            <div className='metainfo-title'>Meta Information Panel</div>
+            <div className='metainfo-title'>MetaData View</div>
             <div className='metainfo-body'>
                 <div className='metainfo-selection'>
                     <div className='selection-item'>

@@ -1,4 +1,3 @@
-
 @import url('@/constants/font.less');
 @import url('@/constants/color.less');
 
@@ -6,21 +5,119 @@
     display: flex;
     flex-direction: column;
     width: 100%;
+    height: 100%;
 
     .combination-title {
-        flex: 1; // 固定高度
+        flex: 0 0 32px;
         font-weight: @font-weight;
         font-size: @view-header-font-size;
         background-color: @view-title-background;
         color: @view-title-font;
         border: @border;
         padding-left: 8px;
+        line-height: 32px;
+        display: flex;
+        align-items: center;
     }
 
     .combination-body {
-        flex: 12;
+        flex: 1;
         background-color: @view-body-background;
         border: @border;
         margin: 8px;
+        overflow: hidden; // Table handles scroll
+        padding: 10px;
+        min-height: 0; // Essential for flex-box height constraint
+
+        // Antd Table Customization
+        .ant-table-wrapper {
+            height: 100%;
+
+            .ant-spin-nested-loading,
+            .ant-spin-container,
+            .ant-table,
+            .ant-table-container {
+                height: 100%;
+            }
+
+            .ant-table-container {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .ant-table-body {
+                flex: 1;
+            }
+
+            .ant-table {
+                background: transparent;
+                font-family: Arial, sans-serif;
+            }
+
+            .ant-table-thead > tr > th {
+                background-color: @view-body-background;
+                font-weight: bold;
+                font-style: italic;
+                font-size: 16px;
+                color: #000;
+                border-bottom: 1px solid #000;
+                text-align: center;
+
+                &::before {
+                    display: none; // Remove antd default divider
+                }
+            }
+
+            .ant-table-tbody > tr > td {
+                border-bottom: 1px solid #e8e8e8;
+                padding: 4px 8px;
+                vertical-align: middle;
+            }
+
+            // Group divider
+            .group-row-end > td {
+                border-bottom: 1px solid #999;
+            }
+
+            .cluster-column {
+                font-size: 24px;
+                color: #333;
+                text-align: left;
+            }
+
+            .score-column {
+                font-size: 18px;
+                color: #333;
+            }
+
+            .marker-header {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                line-height: 1.2;
+            }
+
+            .marker-content {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+
+                .marker-label {
+                    min-width: 40px;
+                    text-align: right;
+                    font-size: 14px;
+                    color: #333;
+                }
+
+                .marker-gene {
+                    display: inline-block;
+                    padding: 4px 12px;
+                    min-width: 220px;
+                    text-align: left;
+                    font-size: 14px;
+                    color: #000;
+                }
+            }
+        }
     }
 }

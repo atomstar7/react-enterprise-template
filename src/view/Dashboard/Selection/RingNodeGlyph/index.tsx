@@ -1,0 +1,72 @@
+import React, {useEffect, useRef, useState} from 'react';
+import * as d3 from 'd3';
+import InnerGraph from '../InnerGraph';
+import {seriesColor} from '@/constants/enum';
+
+interface RingNodeGlyphProps {
+    nodeData: any;
+}
+
+const RingNodeGlyph: React.FC<RingNodeGlyphProps> = ({nodeData}) => {
+    const gRef = useRef(null);
+    const [g, setG] = useState<d3.Selection<SVGGElement, unknown, null, undefined> | null>(null);
+
+    useEffect(() => {
+        if (!gRef.current) return;
+
+        const g = d3.select(gRef.current);
+        setG(g);
+
+        const innerRadius = 30;
+        const outerRadius = 48;
+
+        // Use seriesColor c1-cN based on the number of sectors
+        const colors = Object.values(seriesColor);
+
+        // Map f1-score (0-1) to colors (c1-c10)
+        const getColorByF1Score = (score: number) => {
+            const index = Math.floor(score * 10);
+            return colors[Math.min(index, 9)]; // Ensure index doesn't exceed 9 (for score 1.0)
+        };
+
+        const pie = d3
+            .pie<any>()
+            .value((d: any) => d.count)
+            .padAngle(0.05);
+        const arc = d3.arc().innerRadius(innerRadius).outerRadius(outerRadius);
+
+        const arcs = g
+            .selectAll('.arc')
+            .data(pie(nodeData.data['cluster-score']))
+            .enter()
+            .append('g')
+            .attr('class', 'arc');
+
+        arcs.append('path')
+            .attr('d', arc as any)
+            .attr('fill', (d) => getColorByF1Score(parseFloat(d.data['f1-score'])));
+
+        g.append('circle').attr('r', innerRadius).attr('fill', 'none').attr('stroke', 'black');
+        g.append('circle').attr('r', outerRadius).attr('fill', 'none').attr('stroke', 'black');
+
+        const clusterScores = nodeData.data['cluster-score'];
+        const totalScore = clusterScores.reduce(
+            (acc: number, item: any) => acc + parseFloat(item['f1-score']) * item.count,
+            0
+        );
+        const totalCount = clusterScores.reduce((acc: number, item: any) => acc + item.count, 0);
+        const averageF1Score = totalCount > 0 ? totalScore / totalCount : 0;
+
+        const radiusScale = d3.scaleLinear().domain([0, 1]).range([innerRadius, outerRadius]);
+        const scoreRadius = radiusScale(averageF1Score);
+        g.append('circle').attr('r', scoreRadius).attr('fill', 'none').attr('stroke', 'black').attr('stroke-width', 2);
+
+        return () => {
+            g.selectAll('*').remove();
+        };
+    }, [nodeData]);
+
+    return <g ref={gRef}>{g && <InnerGraph g={g} radius={30} nodeCount={nodeData.data['cluster-score'].length} />}</g>;
+};
+
+export default RingNodeGlyph;

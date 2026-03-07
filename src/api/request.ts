@@ -6,8 +6,8 @@ const whiteRetry = new Set(['ECONNABORTED', undefined, 0]);
 
 // 创建 axios 请求实例
 const serviceAxios = axios.create({
-    baseURL: '', // 接口请求地址
-    timeout: 15 * 1000, // 请求超时设置
+    baseURL: 'http://127.0.0.1:8000', // 接口请求地址
+    timeout: 60 * 1000, // 请求超时设置
     withCredentials: false, // 跨域请求是否需要携带 cookie
     headers: {
         'Content-Type': 'application/json;charset=utf-8'
