@@ -3,9 +3,10 @@ import React, {useEffect, useRef, useState} from 'react';
 import * as d3 from 'd3';
 import InnerGraph from '../InnerGraph';
 import {seriesColor} from '@/constants/enum';
+import {Node} from '@/api/viewRequest';
 
 interface RingNodeGlyphProps {
-    nodeData: any;
+    nodeData: Node;
 }
 
 const RingNodeGlyph: React.FC<RingNodeGlyphProps> = ({nodeData}) => {
@@ -36,27 +37,19 @@ const RingNodeGlyph: React.FC<RingNodeGlyphProps> = ({nodeData}) => {
             .padAngle(0.05);
         const arc = d3.arc().innerRadius(innerRadius).outerRadius(outerRadius);
 
-        const arcs = g
-            .selectAll('.arc')
-            .data(pie(nodeData.data['cluster-score']))
-            .enter()
-            .append('g')
-            .attr('class', 'arc');
+        // Check if cluster_score exists before using it
+        const clusterScores = nodeData.cluster_score || [];
+
+        const arcs = g.selectAll('.arc').data(pie(clusterScores)).enter().append('g').attr('class', 'arc');
 
         arcs.append('path')
             .attr('d', arc as any)
-            .attr('fill', (d) => getColorByF1Score(parseFloat(d.data['f1-score'])));
+            .attr('fill', (d) => getColorByF1Score(d.data.score));
 
         g.append('circle').attr('r', innerRadius).attr('fill', 'none').attr('stroke', 'black');
         g.append('circle').attr('r', outerRadius).attr('fill', 'none').attr('stroke', 'black');
 
-        const clusterScores = nodeData.data['cluster-score'];
-        const totalScore = clusterScores.reduce(
-            (acc: number, item: any) => acc + parseFloat(item['f1-score']) * item.count,
-            0
-        );
-        const totalCount = clusterScores.reduce((acc: number, item: any) => acc + item.count, 0);
-        const averageF1Score = totalCount > 0 ? totalScore / totalCount : 0;
+        const averageF1Score = nodeData.average_score || 0;
 
         const radiusScale = d3.scaleLinear().domain([0, 1]).range([innerRadius, outerRadius]);
         const scoreRadius = radiusScale(averageF1Score);
@@ -67,7 +60,7 @@ const RingNodeGlyph: React.FC<RingNodeGlyphProps> = ({nodeData}) => {
         };
     }, [nodeData]);
 
-    return <g ref={gRef}>{g && <InnerGraph g={g} radius={30} nodeCount={nodeData.data['cluster-score'].length} />}</g>;
+    return <g ref={gRef}>{g && <InnerGraph g={g} radius={30} nodeCount={(nodeData.cluster_score || []).length} />}</g>;
 };
 
 export default RingNodeGlyph;

@@ -2,6 +2,8 @@
 import {makeAutoObservable, runInAction} from 'mobx';
 
 class CellData {
+    choose_id: string = '';
+
     data: string[][] = [];
     // 官方文档: https://zh.mobx.js.org/observable-state.html#%E5%8F%AF%E7%94%A8%E7%9A%84%E6%B3%A8%E8%A7%A3
     constructor() {

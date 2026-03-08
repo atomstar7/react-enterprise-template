@@ -1,268 +1,169 @@
 // @ts-nocheck
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import * as d3 from 'd3';
+import {fetchDagData, DagData, Node} from '@/api/viewRequest';
 import RingNodeGlyph from '../RingNodeGlyph';
 import {seriesColor} from '@/constants/enum';
 import './index.less';
 
+// Wrapper for D3 hierarchy to include incoming edge info
+interface TreeNode extends Node {
+    children?: TreeNode[];
+    incomingReasoning?: string;
+}
+
 const Legend = () => {
+    // The image shows a gradient from light purple/pink to dark blue
+    // and labels <0.8, 0.96, 1
+    // seriesColor has c1..c12
     const colors = Object.values(seriesColor);
+
+    // Create a gradient definition
+    // Since seriesColor is discrete steps, we can simulate gradient with multiple rects or a linearGradient
+    // Let's use a linearGradient in defs and a rect to display it
 
     return (
         <g transform='translate(20, 20)'>
-            {colors.slice(0, 10).map((color, i) => (
-                <rect key={color} x={i * 15} y={0} width={15} height={20} fill={color} />
-            ))}
-            <text x='0' y='35' fontSize='12' fill='#333'>
-                0.0
+            <defs>
+                <linearGradient id='legendGradient' x1='0%' y1='0%' x2='100%' y2='0%'>
+                    {/* Map the series colors to the gradient stops */}
+                    {colors.map((color, i) => (
+                        <stop key={i} offset={`${(i / (colors.length - 1)) * 100}%`} stopColor={color} />
+                    ))}
+                </linearGradient>
+            </defs>
+            <rect x='0' y='0' width='150' height='20' fill='url(#legendGradient)' />
+            <text x='0' y='35' fontSize='14' fontWeight='bold' fill='#000' textAnchor='start'>
+                &lt;0.8
             </text>
-            <text x={10 * 15} y='35' fontSize='12' fill='#333' textAnchor='end'>
-                1.0
+            <text x='75' y='35' fontSize='14' fontWeight='bold' fill='#000' textAnchor='middle'>
+                0.96
+            </text>
+            <text x='150' y='35' fontSize='14' fontWeight='bold' fill='#000' textAnchor='end'>
+                1
             </text>
         </g>
     );
 };
 
-const dagData = {
-    nodes: [
-        {
-            id: 'root',
-            x: 50,
-            y: 300,
-            label: '',
-            type: 'root',
-            data: {
-                'cluster-score': [
-                    {count: 1, 'f1-score': '0.5'},
-                    {count: 1, 'f1-score': '0.2'}
-                ]
-            }
-        },
-        {
-            id: '1',
-            x: 250,
-            y: 150,
-            label: '1',
-            type: 'U',
-            data: {
-                'cluster-score': [
-                    {count: 1, 'f1-score': '0.1'},
-                    {count: 2, 'f1-score': '0.2'},
-                    {count: 1, 'f1-score': '0.8'},
-                    {count: 2, 'f1-score': '0.6'},
-                    {count: 1, 'f1-score': '0.9'}
-                ]
-            }
-        },
-        {
-            id: '2',
-            x: 450,
-            y: 150,
-            label: '2',
-            type: 'S',
-            data: {
-                'cluster-score': [
-                    {count: 1, 'f1-score': '0.3'},
-                    {count: 3, 'f1-score': '0.4'},
-                    {count: 4, 'f1-score': '0.9'},
-                    {count: 2, 'f1-score': '0.5'}
-                ]
-            }
-        },
-        {
-            id: '3',
-            x: 650,
-            y: 150,
-            label: '3',
-            type: 'U',
-            data: {
-                'cluster-score': [
-                    {count: 1, 'f1-score': '0.5'},
-                    {count: 2, 'f1-score': '0.6'},
-                    {count: 2, 'f1-score': '0.1'},
-                    {count: 1, 'f1-score': '0.8'}
-                ]
-            }
-        },
-        {
-            id: '4',
-            x: 850,
-            y: 150,
-            label: '4',
-            type: 'S',
-            data: {
-                'cluster-score': [
-                    {count: 1, 'f1-score': '0.7'},
-                    {count: 2, 'f1-score': '0.8'},
-                    {count: 1, 'f1-score': '0.95'}
-                ]
-            }
-        },
-        {
-            id: '5',
-            x: 250,
-            y: 300,
-            label: '5',
-            type: 'S',
-            data: {
-                'cluster-score': [
-                    {count: 1, 'f1-score': '0.85'},
-                    {count: 1, 'f1-score': '0.9'},
-                    {count: 3, 'f1-score': '0.92'}
-                ]
-            }
-        },
-        {
-            id: '6',
-            x: 450,
-            y: 300,
-            label: '6',
-            type: 'S',
-            data: {
-                'cluster-score': [
-                    {count: 1, 'f1-score': '0.9'},
-                    {count: 1, 'f1-score': '0.95'},
-                    {count: 1, 'f1-score': '1.0'}
-                ]
-            }
-        },
-        {
-            id: '7',
-            x: 650,
-            y: 300,
-            label: '7',
-            type: 'U',
-            data: {
-                'cluster-score': [
-                    {count: 1, 'f1-score': '0.2'},
-                    {count: 1, 'f1-score': '0.9'},
-                    {count: 1, 'f1-score': '0.98'}
-                ]
-            }
-        },
-        {
-            id: '8',
-            x: 850,
-            y: 300,
-            label: '8',
-            type: 'M',
-            data: {
-                'cluster-score': [
-                    {count: 1, 'f1-score': '0.4'},
-                    {count: 1, 'f1-score': '0.5'},
-                    {count: 1, 'f1-score': '0.6'}
-                ]
-            }
-        },
-        {
-            id: '9',
-            x: 250,
-            y: 450,
-            label: '9',
-            type: 'S',
-            data: {
-                'cluster-score': [
-                    {count: 1, 'f1-score': '0.9'},
-                    {count: 1, 'f1-score': '0.9'},
-                    {count: 1, 'f1-score': '0.9'}
-                ]
-            }
-        },
-        {
-            id: '10',
-            x: 450,
-            y: 450,
-            label: '10',
-            type: 'U',
-            data: {
-                'cluster-score': [
-                    {count: 1, 'f1-score': '0.1'},
-                    {count: 1, 'f1-score': '0.95'},
-                    {count: 1, 'f1-score': '0.95'}
-                ]
-            }
-        },
-        {
-            id: '11',
-            x: 650,
-            y: 450,
-            label: '11',
-            type: 'M',
-            data: {
-                'cluster-score': [
-                    {count: 1, 'f1-score': '0.7'},
-                    {count: 1, 'f1-score': '0.7'},
-                    {count: 1, 'f1-score': '0.7'}
-                ]
-            }
-        },
-        {
-            id: '12',
-            x: 850,
-            y: 450,
-            label: '12',
-            type: 'U',
-            data: {
-                'cluster-score': [
-                    {count: 1, 'f1-score': '0.3'},
-                    {count: 1, 'f1-score': '0.3'},
-                    {count: 1, 'f1-score': '0.3'}
-                ]
-            }
-        }
-    ],
-    links: [
-        {source: 'root', target: '1', style: 'solid'},
-        {source: '1', target: '2', style: 'solid'},
-        {source: '2', target: '3', style: 'solid'},
-        {source: '3', target: '4', style: 'solid'},
-        {source: 'root', target: '5', style: 'solid'},
-        {source: '5', target: '6', style: 'solid'},
-        {source: '6', target: '7', style: 'solid'},
-        {source: '7', target: '8', style: 'solid'},
-        {source: 'root', target: '9', style: 'solid'},
-        {source: '9', target: '10', style: 'solid'},
-        {source: '10', target: '11', style: 'solid'},
-        {source: '11', target: '12', style: 'solid'},
-        {source: '1', target: '7', style: 'dashed'},
-        {source: '5', target: '10', style: 'dashed'}
-    ]
-};
-
 const RingNodeDag = () => {
-    const svgRef = useRef(null);
-    const gRef = useRef(null);
+    const [dagData, setDagData] = useState<DagData | null>(null);
+    const [layoutRoot, setLayoutRoot] = useState<d3.HierarchyPointNode<TreeNode> | null>(null);
+    const svgRef = useRef<SVGSVGElement>(null);
+    const gRef = useRef<SVGGElement>(null);
 
+    // 1. Load Data
     useEffect(() => {
+        const loadData = async () => {
+            try {
+                const response = (await fetchDagData()).data;
+                if (response.data) {
+                    setDagData(response.data);
+                }
+            } catch (err: any) {
+                console.error('Failed to fetch DAG data:', err);
+            }
+        };
+
+        loadData();
+    }, []);
+
+    // 2. Process Data & Calculate Layout
+    useEffect(() => {
+        if (!dagData) return;
+        const {nodes, links} = dagData;
+        if (nodes.length === 0) return;
+
+        // Map for quick lookup
+        const nodeMap = new Map<string, Node>(nodes.map((n) => [n.id, n]));
+
+        // Build adjacency list
+        const adj = new Map<string, {target: string; reasoning: string}[]>();
+        const inDegree = new Map<string, number>();
+
+        nodes.forEach((n) => {
+            adj.set(n.id, []);
+            inDegree.set(n.id, 0);
+        });
+
+        links.forEach((l) => {
+            // adj.get(l.source)?.push({target: l.target, reasoning: l.reasoning});
+            adj.get(l.source)?.push({target: l.target, reasoning: l.type});
+            inDegree.set(l.target, (inDegree.get(l.target) || 0) + 1);
+        });
+
+        // Identify root(s)
+        const roots = nodes.filter((n) => (inDegree.get(n.id) || 0) === 0);
+
+        if (roots.length === 0) {
+            console.warn('No root node found (cycle?)');
+            return;
+        }
+
+        // Recursive function to build tree structure
+        const buildTree = (nodeId: string, incomingReasoning?: string): TreeNode | null => {
+            const node = nodeMap.get(nodeId);
+            if (!node) return null;
+
+            const children = adj
+                .get(nodeId)
+                ?.map((edge) => buildTree(edge.target, edge.reasoning))
+                .filter(Boolean) as TreeNode[];
+
+            return {
+                ...node,
+                incomingReasoning,
+                children: children.length > 0 ? children : undefined
+            };
+        };
+
+        const rootNode = buildTree(roots[0].id);
+        if (!rootNode) return;
+
+        // D3 Layout
+        const root = d3.hierarchy<TreeNode>(rootNode);
+
+        // Node size: [height, width] -> corresponds to [y-spacing, x-spacing] in vertical layout
+        // But since we swap x/y for horizontal layout, we need to think:
+        // d3.tree outputs x (vertical in our case) and y (horizontal in our case).
+        // So nodeSize([height, width]) means spacing in vertical (x) and horizontal (y).
+        const treeLayout = d3
+            .tree<TreeNode>()
+            .nodeSize([150, 250])
+            .separation((a, b) => (a.parent === b.parent ? 1 : 1.2));
+
+        treeLayout(root);
+        setLayoutRoot(root);
+    }, [dagData]);
+
+    // 3. Setup Zoom
+    useEffect(() => {
+        if (!layoutRoot || !svgRef.current || !gRef.current) return;
+
         const svg = d3.select(svgRef.current);
         const g = d3.select(gRef.current);
 
-        const zoom = d3.zoom().on('zoom', (event) => {
-            g.attr('transform', event.transform);
-        });
+        const zoom = d3
+            .zoom<SVGSVGElement, unknown>()
+            .scaleExtent([0.1, 4])
+            .on('zoom', (event) => {
+                g.attr('transform', event.transform);
+            });
 
         svg.call(zoom);
 
-        // Set initial transform
-        const initialTransform = d3.zoomIdentity.translate(50, -100);
+        // Initial Center
+        const initialTransform = d3.zoomIdentity.translate(100, svgRef.current.clientHeight / 2);
         svg.call(zoom.transform, initialTransform);
-    }, []);
-
-    const nodeMap = new Map(dagData.nodes.map((node) => [node.id, node]));
-
-    const processedLinks = dagData.links.map((link) => ({
-        source: nodeMap.get(link.source),
-        target: nodeMap.get(link.target),
-        style: link.style
-    }));
+    }, [layoutRoot]);
 
     return (
         <svg ref={svgRef} width='100%' height='100%' className='ring-node-dag'>
             <defs>
                 <marker
-                    id='arrow'
+                    id='arrow-head'
                     viewBox='0 -5 10 10'
-                    refX={58}
+                    refX={48} // Offset to clear the node radius (approx 48)
                     refY={0}
                     markerWidth={6}
                     markerHeight={6}
@@ -271,32 +172,49 @@ const RingNodeDag = () => {
                     <path d='M0,-5L10,0L0,5' fill='#999' />
                 </marker>
             </defs>
+            {/* Render Legend Fixed at top-left, unaffected by zoom */}
             <Legend />
             <g ref={gRef}>
-                <g className='links'>
-                    {processedLinks.map((link, i) => (
-                        <line
-                            key={i}
-                            x1={link.source.x}
-                            y1={link.source.y}
-                            x2={link.target.x}
-                            y2={link.target.y}
-                            stroke='#999'
-                            strokeDasharray={link.style === 'dashed' ? '5,5' : 'none'}
-                            markerEnd='url(#arrow)'
-                        />
-                    ))}
-                </g>
-                <g className='nodes'>
-                    {dagData.nodes.map((node) => (
-                        <g key={node.id} transform={`translate(${node.x},${node.y})`}>
-                            <text x='-55' y='-55' textAnchor='middle' fontSize='14'>
-                                {node.label}
-                            </text>
-                            <RingNodeGlyph nodeData={node} />
+                {layoutRoot && (
+                    <>
+                        <g className='links'>
+                            {layoutRoot.links().map((link, i) => {
+                                const d = d3
+                                    .linkHorizontal()
+                                    .x((d: any) => d.y)
+                                    .y((d: any) => d.x)(link as any);
+                                return (
+                                    <g key={i}>
+                                        <path
+                                            d={d || ''}
+                                            fill='none'
+                                            stroke='#999'
+                                            strokeWidth={1.5}
+                                            markerEnd='url(#arrow-head)'
+                                        />
+                                        <text
+                                            x={(link.source.y + link.target.y) / 2}
+                                            y={(link.source.x + link.target.x) / 2 - 10}
+                                            textAnchor='middle'
+                                            fill='#666'
+                                            fontWeight='bold'
+                                            fontSize='14px'
+                                        >
+                                            {(link.target.data as TreeNode).incomingReasoning}
+                                        </text>
+                                    </g>
+                                );
+                            })}
                         </g>
-                    ))}
-                </g>
+                        <g className='nodes'>
+                            {layoutRoot.descendants().map((node, i) => (
+                                <g key={i} transform={`translate(${node.y},${node.x})`}>
+                                    <RingNodeGlyph nodeData={node.data} />
+                                </g>
+                            ))}
+                        </g>
+                    </>
+                )}
             </g>
         </svg>
     );

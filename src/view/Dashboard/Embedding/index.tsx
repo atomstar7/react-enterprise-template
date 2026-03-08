@@ -172,17 +172,17 @@ const Embedding = () => {
         const fetchData = async () => {
             try {
                 setLoading(true);
-                const coordsResponse = await fetchUmapCoords();
-                if (coordsResponse.data.status !== 200) {
-                    throw new Error('Failed to fetch Umap coords: ' + coordsResponse.message);
+                const coordsResponse = (await fetchUmapCoords()).data;
+                if (coordsResponse.status !== 200) {
+                    throw new Error('Failed to fetch Umap coords: ' + coordsResponse.status);
                 }
-                const coordsData = coordsResponse.data.data.map((p) => [p.x, p.y]);
+                const coordsData = coordsResponse.data.map((p) => [p.x, p.y]);
                 setCoords(coordsData);
-                const categoryResponse = await fetchUmapCategory('leiden');
+                const categoryResponse = (await fetchUmapCategory('leiden')).data;
                 if (categoryResponse.status !== 200) {
-                    throw new Error('Failed to fetch Umap category: ' + categoryResponse.message);
+                    throw new Error('Failed to fetch Umap category: ' + categoryResponse.status);
                 }
-                setCategory(categoryResponse.data.data);
+                setCategory(categoryResponse.data);
 
                 setLoading(false);
             } catch (err: any) {

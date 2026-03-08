@@ -18,3 +18,39 @@ export function fetchUmapCategory(data: string) {
         data
     });
 }
+
+export interface NodeData {
+    cluster_name: string;
+    /** 每个簇所含有的细胞数 */
+    count: number;
+    /** 每个簇所对应的 calc_marker_combination 中的 F1_score */
+    score: number;
+}
+
+export interface Node {
+    /** 对应 action_id */
+    id: string;
+    cluster_score: NodeData[];
+    /** 所有簇的 F1_score 的平均值 */
+    average_score: number;
+}
+
+export interface Link {
+    source: string;
+    target: string;
+    type: string;
+    /** 对应 target 所表示的 action 的 according 字段 */
+    reasoning: string;
+}
+
+export interface DagData {
+    nodes: Node[];
+    links: Link[];
+}
+
+export function fetchDagData() {
+    return request<ApiResponseData<DagData>>({
+        url: '/action_to_DAG',
+        method: 'post'
+    });
+}
