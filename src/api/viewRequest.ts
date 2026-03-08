@@ -54,3 +54,17 @@ export function fetchDagData() {
         method: 'post'
     });
 }
+
+export interface AgentCall {
+    layer: number;
+    start_action_id: string;
+    user_intent: string;
+}
+
+export function fetchAgentResponse(data: AgentCall) {
+    return request<ApiResponseData<DagData>>({
+        url: '/analyze',
+        method: 'post',
+        data
+    });
+}

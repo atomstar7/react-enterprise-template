@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState, useCallback} from 'react';
 import * as d3 from 'd3';
 import {fetchDagData, DagData, Node} from '@/api/viewRequest';
 import RingNodeGlyph from '../RingNodeGlyph';
@@ -10,23 +10,23 @@ import './index.less';
 interface TreeNode extends Node {
     children?: TreeNode[];
     incomingReasoning?: string;
+    incomingType?: string;
+}
+
+interface TooltipState {
+    visible: boolean;
+    x: number;
+    y: number;
+    content: string;
 }
 
 const Legend = () => {
-    // The image shows a gradient from light purple/pink to dark blue
-    // and labels <0.8, 0.96, 1
-    // seriesColor has c1..c12
     const colors = Object.values(seriesColor);
-
-    // Create a gradient definition
-    // Since seriesColor is discrete steps, we can simulate gradient with multiple rects or a linearGradient
-    // Let's use a linearGradient in defs and a rect to display it
 
     return (
         <g transform='translate(20, 20)'>
             <defs>
                 <linearGradient id='legendGradient' x1='0%' y1='0%' x2='100%' y2='0%'>
-                    {/* Map the series colors to the gradient stops */}
                     {colors.map((color, i) => (
                         <stop key={i} offset={`${(i / (colors.length - 1)) * 100}%`} stopColor={color} />
                     ))}
@@ -49,24 +49,25 @@ const Legend = () => {
 const RingNodeDag = () => {
     const [dagData, setDagData] = useState<DagData | null>(null);
     const [layoutRoot, setLayoutRoot] = useState<d3.HierarchyPointNode<TreeNode> | null>(null);
+    const [tooltip, setTooltip] = useState<TooltipState>({visible: false, x: 0, y: 0, content: ''});
     const svgRef = useRef<SVGSVGElement>(null);
     const gRef = useRef<SVGGElement>(null);
 
+    const loadData = useCallback(async () => {
+        try {
+            const response = (await fetchDagData()).data;
+            if (response.data) {
+                setDagData(response.data);
+            }
+        } catch (err: any) {
+            console.error('Failed to fetch DAG data:', err);
+        }
+    }, []);
+
     // 1. Load Data
     useEffect(() => {
-        const loadData = async () => {
-            try {
-                const response = (await fetchDagData()).data;
-                if (response.data) {
-                    setDagData(response.data);
-                }
-            } catch (err: any) {
-                console.error('Failed to fetch DAG data:', err);
-            }
-        };
-
         loadData();
-    }, []);
+    }, [loadData]);
 
     // 2. Process Data & Calculate Layout
     useEffect(() => {
@@ -78,7 +79,7 @@ const RingNodeDag = () => {
         const nodeMap = new Map<string, Node>(nodes.map((n) => [n.id, n]));
 
         // Build adjacency list
-        const adj = new Map<string, {target: string; reasoning: string}[]>();
+        const adj = new Map<string, {target: string; reasoning: string; type: string}[]>();
         const inDegree = new Map<string, number>();
 
         nodes.forEach((n) => {
@@ -87,8 +88,7 @@ const RingNodeDag = () => {
         });
 
         links.forEach((l) => {
-            // adj.get(l.source)?.push({target: l.target, reasoning: l.reasoning});
-            adj.get(l.source)?.push({target: l.target, reasoning: l.type});
+            adj.get(l.source)?.push({target: l.target, reasoning: l.reasoning, type: l.type});
             inDegree.set(l.target, (inDegree.get(l.target) || 0) + 1);
         });
 
@@ -101,18 +101,19 @@ const RingNodeDag = () => {
         }
 
         // Recursive function to build tree structure
-        const buildTree = (nodeId: string, incomingReasoning?: string): TreeNode | null => {
+        const buildTree = (nodeId: string, incomingReasoning?: string, incomingType?: string): TreeNode | null => {
             const node = nodeMap.get(nodeId);
             if (!node) return null;
 
             const children = adj
                 .get(nodeId)
-                ?.map((edge) => buildTree(edge.target, edge.reasoning))
+                ?.map((edge) => buildTree(edge.target, edge.reasoning, edge.type))
                 .filter(Boolean) as TreeNode[];
 
             return {
                 ...node,
                 incomingReasoning,
+                incomingType,
                 children: children.length > 0 ? children : undefined
             };
         };
@@ -122,11 +123,6 @@ const RingNodeDag = () => {
 
         // D3 Layout
         const root = d3.hierarchy<TreeNode>(rootNode);
-
-        // Node size: [height, width] -> corresponds to [y-spacing, x-spacing] in vertical layout
-        // But since we swap x/y for horizontal layout, we need to think:
-        // d3.tree outputs x (vertical in our case) and y (horizontal in our case).
-        // So nodeSize([height, width]) means spacing in vertical (x) and horizontal (y).
         const treeLayout = d3
             .tree<TreeNode>()
             .nodeSize([150, 250])
@@ -155,68 +151,117 @@ const RingNodeDag = () => {
         // Initial Center
         const initialTransform = d3.zoomIdentity.translate(100, svgRef.current.clientHeight / 2);
         svg.call(zoom.transform, initialTransform);
-    }, [layoutRoot]);
+    }, [layoutRoot]); // layoutRoot dependency ensures zoom is re-applied/reset on data update?
+    // Ideally we might want to PRESERVE zoom on update.
+    // If we want to preserve zoom, we shouldn't re-create the zoom behavior or reset transform in this effect if g already has transform.
+    // But since layoutRoot changes completely, a reset might be safer unless node positions are stable.
+    // For now, let's keep it simple: it resets view on data update.
+
+    const handleLinkMouseEnter = (event: React.MouseEvent, content: string) => {
+        setTooltip({
+            visible: true,
+            x: event.clientX + 10,
+            y: event.clientY + 10,
+            content
+        });
+    };
+
+    const handleLinkMouseMove = (event: React.MouseEvent) => {
+        setTooltip((prev) => ({
+            ...prev,
+            x: event.clientX + 10,
+            y: event.clientY + 10
+        }));
+    };
+
+    const handleLinkMouseLeave = () => {
+        setTooltip((prev) => ({...prev, visible: false}));
+    };
 
     return (
-        <svg ref={svgRef} width='100%' height='100%' className='ring-node-dag'>
-            <defs>
-                <marker
-                    id='arrow-head'
-                    viewBox='0 -5 10 10'
-                    refX={48} // Offset to clear the node radius (approx 48)
-                    refY={0}
-                    markerWidth={6}
-                    markerHeight={6}
-                    orient='auto'
-                >
-                    <path d='M0,-5L10,0L0,5' fill='#999' />
-                </marker>
-            </defs>
-            {/* Render Legend Fixed at top-left, unaffected by zoom */}
-            <Legend />
-            <g ref={gRef}>
-                {layoutRoot && (
-                    <>
-                        <g className='links'>
-                            {layoutRoot.links().map((link, i) => {
-                                const d = d3
-                                    .linkHorizontal()
-                                    .x((d: any) => d.y)
-                                    .y((d: any) => d.x)(link as any);
-                                return (
-                                    <g key={i}>
-                                        <path
-                                            d={d || ''}
-                                            fill='none'
-                                            stroke='#999'
-                                            strokeWidth={1.5}
-                                            markerEnd='url(#arrow-head)'
-                                        />
-                                        <text
-                                            x={(link.source.y + link.target.y) / 2}
-                                            y={(link.source.x + link.target.x) / 2 - 10}
-                                            textAnchor='middle'
-                                            fill='#666'
-                                            fontWeight='bold'
-                                            fontSize='14px'
-                                        >
-                                            {(link.target.data as TreeNode).incomingReasoning}
-                                        </text>
+        <div className='ring-node-dag' style={{width: '100%', height: '100%', position: 'relative'}}>
+            <svg ref={svgRef} width='100%' height='100%'>
+                <defs>
+                    <marker
+                        id='arrow-head'
+                        viewBox='0 -5 10 10'
+                        refX={48}
+                        refY={0}
+                        markerWidth={6}
+                        markerHeight={6}
+                        orient='auto'
+                    >
+                        <path d='M0,-5L10,0L0,5' fill='#999' />
+                    </marker>
+                </defs>
+                <Legend />
+                <g ref={gRef}>
+                    {layoutRoot && (
+                        <>
+                            <g className='links'>
+                                {layoutRoot.links().map((link, i) => {
+                                    const d = d3
+                                        .linkHorizontal()
+                                        .x((d: any) => d.y)
+                                        .y((d: any) => d.x)(link as any);
+
+                                    const targetNode = link.target.data as TreeNode;
+                                    const reasoning = targetNode.incomingReasoning || '';
+                                    const type = targetNode.incomingType || '';
+
+                                    return (
+                                        <g key={i}>
+                                            {/* Visible path */}
+                                            <path
+                                                d={d || ''}
+                                                fill='none'
+                                                stroke='#999'
+                                                strokeWidth={1.5}
+                                                markerEnd='url(#arrow-head)'
+                                            />
+                                            {/* Invisible wide path for hover interaction */}
+                                            <path
+                                                d={d || ''}
+                                                fill='none'
+                                                stroke='transparent'
+                                                strokeWidth={15}
+                                                style={{cursor: 'pointer'}}
+                                                onMouseEnter={(e) => handleLinkMouseEnter(e, reasoning)}
+                                                onMouseMove={handleLinkMouseMove}
+                                                onMouseLeave={handleLinkMouseLeave}
+                                            />
+                                            <text
+                                                x={(link.source.y + link.target.y) / 2}
+                                                y={(link.source.x + link.target.x) / 2 - 10}
+                                                textAnchor='middle'
+                                                fill='#666'
+                                                fontWeight='bold'
+                                                fontSize='14px'
+                                                style={{pointerEvents: 'none'}} // Let hover pass through to the wide path
+                                            >
+                                                {type}
+                                            </text>
+                                        </g>
+                                    );
+                                })}
+                            </g>
+                            <g className='nodes'>
+                                {layoutRoot.descendants().map((node, i) => (
+                                    <g key={i} transform={`translate(${node.y},${node.x})`}>
+                                        <RingNodeGlyph nodeData={node.data} refreshDag={loadData} />
                                     </g>
-                                );
-                            })}
-                        </g>
-                        <g className='nodes'>
-                            {layoutRoot.descendants().map((node, i) => (
-                                <g key={i} transform={`translate(${node.y},${node.x})`}>
-                                    <RingNodeGlyph nodeData={node.data} />
-                                </g>
-                            ))}
-                        </g>
-                    </>
-                )}
-            </g>
-        </svg>
+                                ))}
+                            </g>
+                        </>
+                    )}
+                </g>
+            </svg>
+            {tooltip.visible && (
+                <div className='dag-tooltip' style={{top: tooltip.y, left: tooltip.x}}>
+                    {tooltip.content}
+                </div>
+            )}
+        </div>
     );
 };
 
