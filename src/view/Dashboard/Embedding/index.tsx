@@ -74,19 +74,54 @@ const drawEmbedding = (svgElement: SVGSVGElement, coords: number[][], category: 
         return [sum[0] / points.length, sum[1] / points.length];
     });
 
-    // Draw connections between centroids
-    const trianglePath = d3
-        .line()
-        .x((d) => xScale(d[0]))
-        .y((d) => yScale(d[1]))
-        .curve(d3.curveLinearClosed);
+    // Calculate MST for centroids connections
+    const edges: {source: number; target: number; distance: number}[] = [];
+    for (let i = 0; i < centroids.length; i++) {
+        for (let j = i + 1; j < centroids.length; j++) {
+            const dx = centroids[i][0] - centroids[j][0];
+            const dy = centroids[i][1] - centroids[j][1];
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            edges.push({source: i, target: j, distance});
+        }
+    }
 
-    svg.append('path')
-        .datum(centroids)
-        .attr('d', trianglePath)
-        .attr('fill', 'none')
-        .attr('stroke', '#666')
-        .attr('stroke-width', 2);
+    edges.sort((a, b) => a.distance - b.distance);
+
+    const parent = new Array(centroids.length).fill(0).map((_, i) => i);
+    const find = (i: number): number => {
+        if (parent[i] === i) return i;
+        return (parent[i] = find(parent[i]));
+    };
+    const union = (i: number, j: number) => {
+        const rootI = find(i);
+        const rootJ = find(j);
+        if (rootI !== rootJ) {
+            parent[rootI] = rootJ;
+            return true;
+        }
+        return false;
+    };
+
+    const mstEdges: typeof edges = [];
+    for (const edge of edges) {
+        if (union(edge.source, edge.target)) {
+            mstEdges.push(edge);
+        }
+        if (mstEdges.length === centroids.length - 1) break;
+    }
+
+    // Draw MST edges
+    mstEdges.forEach((edge) => {
+        const p1 = centroids[edge.source];
+        const p2 = centroids[edge.target];
+        svg.append('line')
+            .attr('x1', xScale(p1[0]))
+            .attr('y1', yScale(p1[1]))
+            .attr('x2', xScale(p2[0]))
+            .attr('y2', yScale(p2[1]))
+            .attr('stroke', '#666')
+            .attr('stroke-width', 2);
+    });
 
     // Draw dotted outline for each cluster
     groupedData.forEach((points) => {
