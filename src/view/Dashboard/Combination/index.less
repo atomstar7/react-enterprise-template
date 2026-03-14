@@ -26,7 +26,7 @@
         border: @border;
         margin: 8px;
         overflow: hidden; // Table handles scroll
-        padding: 10px;
+        padding: 8px;
         min-height: 0; // Essential for flex-box height constraint
 
         // Antd Table Customization
@@ -47,6 +47,12 @@
 
             .ant-table-body {
                 flex: 1;
+                // Hide main scrollbar but keep functionality
+                scrollbar-width: none; // Firefox
+                -ms-overflow-style: none; // IE/Edge
+                &::-webkit-scrollbar {
+                    display: none; // Chrome/Safari
+                }
             }
 
             .ant-table {
@@ -54,6 +60,7 @@
                 font-family: Arial, sans-serif;
             }
 
+            // Header Styles
             .ant-table-thead > tr > th {
                 background-color: @view-body-background;
                 font-weight: bold;
@@ -62,60 +69,98 @@
                 color: #000;
                 border-bottom: 1px solid #000;
                 text-align: center;
+                padding: 8px 4px;
 
                 &::before {
                     display: none; // Remove antd default divider
                 }
             }
 
+            // Cell Styles
             .ant-table-tbody > tr > td {
                 border-bottom: 1px solid #e8e8e8;
                 padding: 4px 8px;
                 vertical-align: middle;
             }
 
-            // Group divider
-            .group-row-end > td {
-                border-bottom: 1px solid #999;
+            // Remove default padding for nested container cell
+            .marker-nested-container {
+                padding: 0 !important;
             }
 
             .cluster-column {
-                font-size: 24px;
-                color: #333;
-                text-align: left;
+                font-size: 20px;
+                color: #000;
+                font-weight: bold;
+                text-align: center; // Centered per design
             }
 
             .score-column {
                 font-size: 18px;
-                color: #333;
+                color: #000;
             }
 
-            .marker-header {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                line-height: 1.2;
+            // Marker Group Headers
+            .marker-group-header {
+                font-size: 18px;
+                border-bottom: 1px solid #000 !important;
             }
 
-            .marker-content {
+            // Nested Header
+            .marker-nested-header {
                 display: flex;
-                align-items: center;
-                gap: 8px;
+                font-weight: bold;
+                font-style: italic;
+                font-size: 14px;
+                padding: 4px 0;
+            }
 
-                .marker-label {
-                    min-width: 40px;
-                    text-align: right;
-                    font-size: 14px;
-                    color: #333;
+            // Nested Scroll Container
+            .marker-scroll-container {
+                max-height: 120px; // Approx 2.5 rows (assuming ~48px per row)
+                overflow-y: scroll;
+
+                // Hide scrollbar but keep functionality
+                scrollbar-width: none; // Firefox
+                -ms-overflow-style: none; // IE/Edge
+                &::-webkit-scrollbar {
+                    display: none; // Chrome/Safari
                 }
 
-                .marker-gene {
-                    display: inline-block;
-                    padding: 4px 12px;
-                    min-width: 220px;
-                    text-align: left;
-                    font-size: 14px;
-                    color: #000;
+                .marker-row {
+                    display: flex;
+                    align-items: center;
+                    padding: 8px 0;
+                    border-bottom: 1px solid #f0f0f0;
+
+                    &:last-child {
+                        border-bottom: none;
+                    }
+
+                    .marker-cell {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                    }
+
+                    .name-cell {
+                        width: 36%;
+                        justify-content: flex-start;
+                        padding-left: 8px;
+                        gap: 8px;
+
+                        .marker-link {
+                            color: #1890ff;
+                            text-decoration: underline;
+                            font-size: 16px;
+                            font-weight: bold;
+                        }
+                    }
+
+                    .metric-cell {
+                        width: 21%;
+                        font-size: 14px;
+                    }
                 }
             }
         }

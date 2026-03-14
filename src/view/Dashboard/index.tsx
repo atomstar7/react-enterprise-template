@@ -6,7 +6,8 @@ import Header from './Header';
 import Embedding from './Embedding';
 import Selection from './Selection';
 import Combination from './Combination';
-import Marker from './Marker';
+// import Marker from './Marker';
+import Duihua from './Duihua';
 
 const Dashboard = () => {
     return (
@@ -26,8 +27,11 @@ const Dashboard = () => {
             <div className='combination'>
                 <Combination />
             </div>
-            <div className='marker'>
+            {/* <div className='marker'>
                 <Marker />
+            </div> */}
+            <div className='duihua'>
+                <Duihua />
             </div>
         </div>
     );

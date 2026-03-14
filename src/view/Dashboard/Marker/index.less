@@ -6,6 +6,24 @@
     flex-direction: column;
     width: 100%;
     height: 100%;
+    padding: 8px;
+    gap: 8px;
+    background-color: @view-body-background;
+    border: @border; // Apply border to root if needed, or maybe just to body?
+    // Actually, usually root doesn't have border if children have headers with borders?
+    // But other views like Combination have root border? Let's check Combination styles.
+    // Combination has border on title and body separately.
+    // Let's remove padding and gap from root to match others better,
+    // and apply structure similar to Combination.
+    // However, existing structure is:
+    // root -> select -> content -> panels
+    // Requested: add title like Combination View.
+    // So structure becomes: root -> title -> select -> content -> panels
+
+    // Resetting root styles to match general layout better
+    padding: 0;
+    gap: 0;
+    border: none; // We will put border on components
 
     .marker-title {
         flex: 0 0 32px;
@@ -15,66 +33,90 @@
         color: @view-title-font;
         border: @border;
         padding-left: 8px;
+        line-height: 32px;
         display: flex;
         align-items: center;
-        gap: 8px;
-
-        .title-text {
-            font-style: italic;
-            font-weight: bold;
-        }
     }
 
-    .marker-body {
-        flex: 1;
+    .marker-header-select {
+        flex: 0 0 40px; // Increased height for select padding
+        width: 100%; // Select row usually takes full width
+        padding: 4px 8px;
         background-color: @view-body-background;
-        border: @border;
-        margin: 8px;
-        overflow-y: auto;
-        padding: 10px;
+        border-left: @border;
+        border-right: @border;
+        // Select itself width can be controlled inline or here
+    }
 
-        .marker-table {
+    .marker-content {
+        flex: 1;
+        display: flex;
+        gap: 8px;
+        min-height: 0; // Important for nested scrolling/flex behavior
+        padding: 8px;
+        border: @border;
+        border-top: none; // Title/Select has border
+        background-color: @view-body-background;
+
+        .marker-left-panel {
+            flex: 1;
             display: flex;
             flex-direction: column;
-            width: 100%;
-        }
+            gap: 8px;
+            overflow: hidden; // Prevent overflow from children
 
-        .marker-row {
-            display: flex;
-            align-items: center;
-            border-bottom: 1px solid #ccc;
-            width: 100%;
+            .pdf-viewer-placeholder {
+                flex: 2;
+                border: 1px solid #d9d9d9;
+                background: #fafafa;
+                min-height: 0; // Allow shrinking
+            }
 
-            &:first-child {
-                border-top: 1px solid #ccc;
+            .image-list-container {
+                flex: 1;
+                border: 1px solid #d9d9d9;
+                overflow-y: auto;
+                padding: 4px;
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+                min-height: 0; // Allow shrinking
             }
         }
 
-        .marker-cell {
-            display: flex;
-            align-items: center;
-            padding: 0 8px;
-        }
-
-        .marker-name {
-            flex: 0 0 120px;
-            gap: 8px;
-            font-style: italic;
-        }
-
-        .marker-line-chart {
-            flex: 0 0 60px;
-            justify-content: center;
-            padding: 0; // Remove padding to let lines touch the edges
-        }
-
-        .marker-bar-chart {
+        .marker-right-panel {
             flex: 1;
-            width: 0; // Prevent flex item from overflowing
-            padding-right: 0;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #d9d9d9;
+            padding: 16px;
 
-            svg {
-                display: block; // Remove default inline-block spacing
+            // As per drawing, top right is empty/white space, info is bottom right
+            // We can use flex to push content down or justify-content
+            justify-content: flex-end;
+
+            .paper-info {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+
+                .info-item {
+                    display: flex;
+                    align-items: baseline;
+                    gap: 8px;
+                    font-size: 14px;
+
+                    .label {
+                        font-weight: bold;
+                        color: #666;
+                        min-width: 80px; // Ensure alignment
+                    }
+
+                    .value {
+                        color: #333;
+                        word-break: break-all;
+                    }
+                }
             }
         }
     }

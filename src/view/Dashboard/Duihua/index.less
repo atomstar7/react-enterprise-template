@@ -1,0 +1,106 @@
+@import url('@/constants/font.less');
+@import url('@/constants/color.less');
+
+.duihua-root {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+
+    .duihua-title {
+        // Match selection-title style but with flex layout for icon
+        flex: 0 0 30px; // Fixed height similar to what flex: 1 might result in relative to flex: 12 in other component, or just use fixed px
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-weight: @font-weight;
+        font-size: @view-header-font-size;
+        background-color: @view-title-background;
+        color: @view-title-font;
+        border-bottom: @border; // Use border-bottom instead of full border since parent might have it
+        padding: 0 8px;
+
+        .refresh-icon {
+            cursor: pointer;
+            &:hover {
+                opacity: 0.8;
+            }
+        }
+    }
+
+    .duihua-body {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        background-color: @view-body-background;
+        overflow: hidden;
+
+        .message-list {
+            flex: 1;
+            padding: 12px;
+            overflow-y: auto;
+
+            .message-item {
+                display: flex;
+                margin-bottom: 12px;
+                align-items: flex-start;
+
+                .avatar-icon {
+                    margin-right: 8px;
+                    font-size: 20px;
+                    margin-top: 4px;
+                }
+
+                .message-bubble {
+                    background-color: #f5f5f5;
+                    padding: 8px 12px;
+                    border-radius: 8px;
+                    border-top-left-radius: 2px;
+                    font-size: 13px;
+                    line-height: 1.4;
+                    max-width: 90%;
+                    word-break: break-word;
+                    color: #333;
+                }
+            }
+        }
+
+        .input-area {
+            padding: 8px;
+            border-top: 1px solid #e8e8e8; // Or @border if compatible
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #fff;
+
+            .action-icon {
+                cursor: pointer;
+                font-size: 20px;
+                color: #666;
+            }
+
+            .input-field {
+                flex: 1;
+                border: none;
+                outline: none;
+                padding: 4px;
+                font-size: 13px;
+
+                &::placeholder {
+                    color: #999;
+                }
+            }
+
+            .send-icon {
+                cursor: pointer;
+                font-size: 20px;
+                color: #1890ff; // Antd primary color roughly
+
+                &:hover {
+                    opacity: 0.8;
+                }
+            }
+        }
+    }
+}

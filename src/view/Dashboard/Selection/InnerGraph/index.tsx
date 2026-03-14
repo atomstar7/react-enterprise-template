@@ -1,66 +1,61 @@
 import React, {useEffect} from 'react';
 import * as d3 from 'd3';
 
-interface InnerGraphProps {
-    g: d3.Selection<SVGGElement, unknown, null, undefined>;
-    radius: number;
-    nodeCount: number;
+interface InnerGraphData {
+    nodes: {id: number; x: number; y: number}[];
+    links: {source: number; target: number}[];
 }
 
-const InnerGraph: React.FC<InnerGraphProps> = ({g, radius, nodeCount}) => {
+interface InnerGraphProps {
+    g: d3.Selection<SVGGElement, unknown, null, undefined>;
+    data: InnerGraphData;
+}
+
+const InnerGraph: React.FC<InnerGraphProps> = ({g, data}) => {
     useEffect(() => {
-        const nodes = Array.from({length: nodeCount}, (_, i) => ({id: i + 1}));
-        const links = [];
-        for (let i = 0; i < nodeCount; i++) {
-            for (let j = i + 1; j < nodeCount; j++) {
-                links.push({source: i + 1, target: j + 1});
-            }
-        }
-        const graph = {nodes, links};
+        if (!data || !g) return;
 
-        const simulation = d3
-            .forceSimulation(graph.nodes as any)
-            .force(
-                'link',
-                d3.forceLink(graph.links).id((d: any) => d.id)
-            )
-            .force('charge', d3.forceManyBody().strength(-60))
-            .force('center', d3.forceCenter(0, 0))
-            .force('radial', d3.forceRadial(radius - 6));
+        // Container for the inner graph to avoid touching other elements in g
+        const innerG = g.append('g').attr('class', 'inner-graph-container');
 
-        const link = g
+        const {nodes, links} = data;
+
+        // Create a map for quick node lookup
+        const nodeMap = new Map(nodes.map((n) => [n.id, n]));
+
+        innerG
             .append('g')
             .attr('class', 'links')
             .selectAll('line')
-            .data(graph.links)
+            .data(links)
             .enter()
             .append('line')
             .attr('stroke', '#999')
-            .attr('stroke-opacity', 0.6);
+            .attr('stroke-opacity', 0.6)
+            .attr('x1', (d: any) => nodeMap.get(d.source)?.x || 0)
+            .attr('y1', (d: any) => nodeMap.get(d.source)?.y || 0)
+            .attr('x2', (d: any) => nodeMap.get(d.target)?.x || 0)
+            .attr('y2', (d: any) => nodeMap.get(d.target)?.y || 0);
 
-        const node = g
+        innerG
             .append('g')
             .attr('class', 'nodes')
             .selectAll('circle')
-            .data(graph.nodes)
+            .data(nodes)
             .enter()
             .append('circle')
-            .attr('r', 6)
-            .attr('fill', '#ccc');
+            .attr('r', 4)
+            .attr('fill', '#ccc')
+            .attr('cx', (d: any) => d.x)
+            .attr('cy', (d: any) => d.y);
 
-        simulation.on('tick', () => {
-            link.attr('x1', (d: any) => d.source.x)
-                .attr('y1', (d: any) => d.source.y)
-                .attr('x2', (d: any) => d.target.x)
-                .attr('y2', (d: any) => d.target.y);
-
-            node.attr('cx', (d: any) => d.x).attr('cy', (d: any) => d.y);
-        });
+        // No simulation needed as positions are pre-calculated
 
         return () => {
-            simulation.stop();
+            // Cleanup only the inner graph
+            innerG.remove();
         };
-    }, [g, radius]);
+    }, [g, data]);
 
     return null;
 };

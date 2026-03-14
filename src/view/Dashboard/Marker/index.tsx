@@ -1,120 +1,102 @@
 import React, {useState} from 'react';
-import {Checkbox} from 'antd';
-import LineChart from './LineChart';
-import BarChart from './BarChart';
+import {Select} from 'antd';
 import './index.less';
+import paper1 from '@/assets/paper/1.png';
+import paper2 from '@/assets/paper/2.png';
 
-interface MarkerData {
+interface PaperInfo {
     id: string;
-    name: string;
-    lineData: {
-        red: number;
-        black: number;
-    };
-    barData: number[];
+    title: string;
+    year: string;
+    citation: string;
+    field: string;
+    authors: string;
+    doi: string;
+    analysis: string;
+    images: string[];
 }
 
-// Helper to generate just the peak value
-const generatePeakValue = () => {
-    return Math.random() * 0.8 + 0.2; // Peak value between 0.2 and 1.0
-};
-
-// Helper to generate bar data with 10 bars
-const generateBarData = () => {
-    return Array.from({length: 10}, () => Math.random());
-};
-
-const mockData: MarkerData[] = [
+const papers: PaperInfo[] = [
     {
         id: '1',
-        name: 'CD34',
-        lineData: {red: generatePeakValue(), black: generatePeakValue()},
-        barData: generateBarData()
+        title: 'Single-cell analysis of human pancreas',
+        year: '2016',
+        citation: '125',
+        field: 'Biology',
+        authors: 'Muraro et al.',
+        doi: '10.1016/j.cels.2016.09.002',
+        analysis: 'This paper analyzed the single-cell transcriptome of human pancreas using scRNA-seq technology.',
+        images: [paper1, paper2]
     },
     {
         id: '2',
-        name: 'CDx',
-        lineData: {red: generatePeakValue(), black: generatePeakValue()},
-        barData: generateBarData()
-    },
-    {
-        id: '3',
-        name: 'CDx',
-        lineData: {red: generatePeakValue(), black: generatePeakValue()},
-        barData: generateBarData()
-    },
-    {
-        id: '4',
-        name: 'CDx',
-        lineData: {red: generatePeakValue(), black: generatePeakValue()},
-        barData: generateBarData()
-    },
-    {
-        id: '5',
-        name: 'CDx',
-        lineData: {red: generatePeakValue(), black: generatePeakValue()},
-        barData: generateBarData()
-    },
-    {
-        id: '6',
-        name: 'CDx',
-        lineData: {red: generatePeakValue(), black: generatePeakValue()},
-        barData: generateBarData()
-    },
-    {
-        id: '7',
-        name: 'CDx',
-        lineData: {red: generatePeakValue(), black: generatePeakValue()},
-        barData: generateBarData()
-    },
-    {
-        id: '8',
-        name: 'CDx',
-        lineData: {red: generatePeakValue(), black: generatePeakValue()},
-        barData: generateBarData()
-    },
-    {
-        id: '9',
-        name: 'CDx',
-        lineData: {red: generatePeakValue(), black: generatePeakValue()},
-        barData: generateBarData()
+        title: 'Another interesting paper about cells',
+        year: '2018',
+        citation: '89',
+        field: 'Bioinformatics',
+        authors: 'Smith et al.',
+        doi: '10.1038/s41586-018-0000-0',
+        analysis: 'This paper analyzed the single-cell transcriptome of human pancreas using scRNA-seq technology.',
+        images: [paper2, paper1]
     }
 ];
 
 const Marker = () => {
-    const [selected, setSelected] = useState<string[]>([]);
-    const allSelected = selected.length === mockData.length;
+    const [selectedPaperId, setSelectedPaperId] = useState<string>(papers[0].id);
+    const selectedPaper = papers.find((p) => p.id === selectedPaperId) || papers[0];
 
-    const handleSelectAll = (e: {target: {checked: any}}) => {
-        setSelected(e.target.checked ? mockData.map((item) => item.id) : []);
-    };
-
-    const handleSelect = (id: string) => {
-        setSelected((prev) => (prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]));
+    const handlePaperChange = (value: string) => {
+        setSelectedPaperId(value);
     };
 
     return (
         <div className='marker-root'>
-            <div className='marker-title'>
-                <Checkbox checked={allSelected} onChange={handleSelectAll} />
-                <span className='title-text'>Marker List View</span>
+            <div className='marker-title'>Paper Check View</div>
+            <div className='marker-header-select'>
+                <Select
+                    style={{width: '100%'}}
+                    value={selectedPaperId}
+                    onChange={handlePaperChange}
+                    options={papers.map((p) => ({value: p.id, label: p.title}))}
+                />
             </div>
-            <div className='marker-body'>
-                <div className='marker-table'>
-                    {mockData.map((item) => (
-                        <div key={item.id} className='marker-row'>
-                            <div className='marker-cell marker-name'>
-                                <Checkbox checked={selected.includes(item.id)} onChange={() => handleSelect(item.id)} />
-                                <span>{item.name}</span>
+            <div className='marker-content'>
+                <div className='marker-left-panel'>
+                    <div className='image-list-container'>
+                        {selectedPaper.images.map((img, index) => (
+                            <div key={index} className='image-item-wrapper'>
+                                <img src={img} alt={`Paper figure ${index + 1}`} />
                             </div>
-                            <div className='marker-cell marker-line-chart'>
-                                <LineChart data={item.lineData} width={60} height={45} />
-                            </div>
-                            <div className='marker-cell marker-bar-chart'>
-                                <BarChart data={item.barData} width='100%' height={45} />
-                            </div>
+                        ))}
+                    </div>
+                </div>
+                <div className='marker-right-panel'>
+                    <div className='paper-info'>
+                        <div className='info-item'>
+                            <span className='label'>Year:</span>
+                            <span className='value'>{selectedPaper.year}</span>
                         </div>
-                    ))}
+                        <div className='info-item'>
+                            <span className='label'>Citation:</span>
+                            <span className='value'>{selectedPaper.citation}</span>
+                        </div>
+                        <div className='info-item'>
+                            <span className='label'>Field:</span>
+                            <span className='value'>{selectedPaper.field}</span>
+                        </div>
+                        <div className='info-item'>
+                            <span className='label'>Authors:</span>
+                            <span className='value'>{selectedPaper.authors}</span>
+                        </div>
+                        <div className='info-item'>
+                            <span className='label'>Doi:</span>
+                            <span className='value'>{selectedPaper.doi}</span>
+                        </div>
+                        <div className='info-item'>
+                            <span className='label'>analysis:</span>
+                            <span className='value'>{selectedPaper.analysis}</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

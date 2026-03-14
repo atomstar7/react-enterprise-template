@@ -62,6 +62,13 @@
             padding: 8px;
             overflow-y: auto;
 
+            // Hide scrollbar but keep functionality
+            scrollbar-width: none; // Firefox
+            -ms-overflow-style: none; // IE/Edge
+            &::-webkit-scrollbar {
+                display: none; // Chrome/Safari
+            }
+
             .table-row {
                 display: flex;
                 align-items: center; // Vertically center all columns

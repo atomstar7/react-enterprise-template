@@ -22,4 +22,16 @@ enum seriesColor {
     c12 = '#2c364e'
 }
 
-export {seriesColor, lineColor};
+enum embeddingColor {
+    c1 = '#5070dd',
+    c2 = '#b6d634',
+    c3 = '#505372',
+    c4 = '#ff994d',
+    c5 = '#0ca8df',
+    c6 = '#ffd10a',
+    c7 = '#fb628b',
+    c8 = '#785db0',
+    c9 = '#3fbe95'
+}
+
+export {seriesColor, lineColor, embeddingColor};
