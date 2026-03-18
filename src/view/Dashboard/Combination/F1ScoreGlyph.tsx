@@ -1,5 +1,4 @@
 import React from 'react';
-import * as d3 from 'd3';
 
 interface F1ScoreGlyphProps {
     score: number;

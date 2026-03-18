@@ -19,10 +19,10 @@ const Header = () => {
                 <div className='header-controls'>
                     <Space wrap>
                         <Select
-                            defaultValue='PBMC-OTHER'
+                            defaultValue='PBMC'
                             style={{width: 140}}
                             onChange={handleDataChange}
-                            options={[{value: 'PBMC-OTHER', label: 'PBMC-OTHER'}]}
+                            options={[{value: 'PBMC', label: 'PBMC'}]}
                         />
                         <Select
                             defaultValue='Gemini'

@@ -8,7 +8,8 @@ import Embedding from '../../Embedding';
 
 import './index.less';
 import actions from '@/store/index';
-import {convertActionsToDagData} from '@/utils/dagConverter';
+import {convertActionsToDagData, ActionRecord} from '@/utils/dagConverter';
+import {clusterColorStore} from '@/store/colorMapping';
 
 // Wrapper for D3 hierarchy to include incoming edge info
 interface TreeNode extends Node {
@@ -34,6 +35,22 @@ const RingNodeDag = () => {
     const [tooltip, setTooltip] = useState<TooltipState>({visible: false, x: 0, y: 0, content: ''});
     const svgRef = useRef<SVGSVGElement>(null);
     const gRef = useRef<SVGGElement>(null);
+
+    // Initialize color scale once
+    useEffect(() => {
+        const allClusterIds: string[] = [];
+        (actions as ActionRecord[]).forEach((action) => {
+            if (action.mapping && action.mapping.length > 0) {
+                const mappingObj = action.mapping[0];
+                Object.keys(mappingObj).forEach((clusterId) => {
+                    if (!allClusterIds.includes(clusterId)) {
+                        allClusterIds.push(clusterId);
+                    }
+                });
+            }
+        });
+        clusterColorStore.initializeScale(allClusterIds);
+    }, []);
 
     const loadData = useCallback(async () => {
         try {
@@ -183,6 +200,11 @@ const RingNodeDag = () => {
     return (
         <div className='ring-node-dag' style={{width: '100%', height: '100%', position: 'relative'}}>
             <svg ref={svgRef} width='100%' height='100%'>
+                <defs>
+                    <filter id='shadow' x='-50%' y='-50%' width='200%' height='200%'>
+                        <feDropShadow dx='0' dy='2' stdDeviation='3' floodColor='#000000' floodOpacity='0.15' />
+                    </filter>
+                </defs>
                 <g ref={gRef}>
                     {layoutRoot && (
                         <>
@@ -247,7 +269,11 @@ const RingNodeDag = () => {
                             </g>
                             <g className='nodes'>
                                 {layoutRoot.descendants().map((node, i) => (
-                                    <g key={i} transform={`translate(${node.y},${node.x})`}>
+                                    <g
+                                        key={i}
+                                        transform={`translate(${node.y},${node.x})`}
+                                        style={{filter: 'url(#shadow)'}} // Apply shadow filter
+                                    >
                                         {node.data.id === 'virtual_root' ? (
                                             <GreyGlyph />
                                         ) : (

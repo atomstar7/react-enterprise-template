@@ -1,4 +1,3 @@
-
 @import url('@/constants/font.less');
 @import url('@/constants/color.less');
 
@@ -7,6 +6,20 @@
     flex-direction: column;
     width: 100%;
     height: 100%; // Ensure root takes full height
+
+    .embedding-title {
+        flex: 0 0 32px;
+        font-weight: @font-weight;
+        font-size: @view-header-font-size;
+        font-style: @view-font-style;
+        background-color: @view-title-background;
+        color: @view-title-font;
+        border: @border;
+        padding-left: 8px;
+        line-height: 32px;
+        display: flex;
+        align-items: center;
+    }
 
     .embedding-body {
         flex: 1;

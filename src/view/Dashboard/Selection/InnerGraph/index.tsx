@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import * as d3 from 'd3';
 
-import {embeddingColor} from '@/constants/enum';
+import {clusterColorStore} from '@/store/colorMapping';
 
 interface InnerGraphData {
     nodes: {id: number; x: number; y: number; category: string}[];
@@ -21,10 +21,6 @@ const InnerGraph: React.FC<InnerGraphProps> = ({g, data}) => {
         const innerG = g.append('g').attr('class', 'inner-graph-container');
 
         const {nodes, links} = data;
-
-        const categories = Array.from(new Set(nodes.map((n) => n.category))).sort();
-        const colors = Object.values(embeddingColor);
-        const colorScale = d3.scaleOrdinal<string>().domain(categories).range(colors);
 
         // Create a map for quick node lookup
         const nodeMap = new Map(nodes.map((n) => [n.id, n]));
@@ -51,7 +47,7 @@ const InnerGraph: React.FC<InnerGraphProps> = ({g, data}) => {
             .enter()
             .append('circle')
             .attr('r', 3)
-            .attr('fill', (d: any) => colorScale(d.category))
+            .attr('fill', (d: any) => clusterColorStore.getColor(d.category))
             .attr('cx', (d: any) => d.x)
             .attr('cy', (d: any) => d.y);
 

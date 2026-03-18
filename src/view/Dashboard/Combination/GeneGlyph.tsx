@@ -1,114 +1,138 @@
 import React from 'react';
 
 interface GeneGlyphProps {
-    name: string;
+    gene_name: string;
     log2FC: number;
-    pVal: number;
+    pval_adj: number;
     pts: number;
+    pts_rest: number;
 }
 
-const GeneGlyph: React.FC<GeneGlyphProps> = ({name, log2FC, pVal, pts}) => {
-    const width = 100;
+const GeneGlyph: React.FC<GeneGlyphProps> = ({gene_name, log2FC, pval_adj, pts, pts_rest}) => {
+    const width = 120;
     const height = 60;
-    const strokeWidth = 1.5;
+    const strokeWidth = 1;
+    const barWidth = 12;
 
-    const headerY = 5;
-    const headerHeight = 15;
-    const headerWidth = 90;
-    const headerX = 5;
+    const contentHeight = height - strokeWidth * 2;
+    const ptsHeight = contentHeight * pts;
+    const ptsRestHeight = contentHeight * pts_rest;
 
-    const boxWidth = headerWidth / 4;
-    const boxes = [
-        {id: 1, cx: headerX + boxWidth * 0.5},
-        {id: 2, cx: headerX + boxWidth * 1.5},
-        {id: 3, cx: headerX + boxWidth * 2.5},
-        {id: 4, cx: headerX + boxWidth * 3.5}
-    ];
-    const symbolCenterY = headerY + headerHeight / 2;
+    // Vertical positioning: Center elements within their allocated vertical space
+    const trianglesY = height * 0.125; // Center of top 25%
+    const geneNameY = height * 0.5; // Center of middle 50%
+    const starsY = height * 0.875; // Center of bottom 25%
 
-    const fillColor = '#5F92B6';
-    const fillWidth = pts * headerWidth;
-    const fillStartX = headerX + headerWidth / 2 - fillWidth / 2;
-
+    const trianglePath = 'M 0 -3 L 3 3 L -3 3 Z';
     const starPath =
-        'M 0 -5 L 1.18 -1.54 L 4.76 -1.54 L 1.91 0.59 L 3.09 4.05 L 0 2.5 L -3.09 4.05 L -1.91 0.59 L -4.76 -1.54 L -1.18 -1.54 Z';
-    const symbolColor = '#044777ff';
+        'M 0 -4 L 0.94 -1.23 L 3.8 -1.23 L 1.43 0.47 L 2.35 3.24 L 0 1.5 L -2.35 3.24 L -1.43 0.47 L -3.8 -1.23 L -0.94 -1.23 Z';
+
+    const renderTriangles = () => {
+        const triangles = [];
+        let count = 0;
+        if (log2FC > 5) count = 3;
+        else if (log2FC > 2) count = 2;
+        else if (log2FC > 1) count = 1;
+
+        for (let i = 0; i < count; i++) {
+            triangles.push(
+                <path
+                    key={i}
+                    d={trianglePath}
+                    fill='#333'
+                    transform={`translate(${width / 2 - (count - 1) * 5 + i * 10}, ${trianglesY}) scale(1.2)`}
+                />
+            );
+        }
+        return triangles;
+    };
+
+    const renderStars = () => {
+        const stars = [];
+        let count = 0;
+        if (pval_adj < 0.001) count = 3;
+        else if (pval_adj < 0.01) count = 2;
+        else if (pval_adj < 0.05) count = 1;
+
+        for (let i = 0; i < count; i++) {
+            stars.push(
+                <path
+                    key={i}
+                    d={starPath}
+                    fill='#333'
+                    transform={`translate(${width / 2 - (count - 1) * 6 + i * 12}, ${starsY}) scale(1)`}
+                />
+            );
+        }
+        return stars;
+    };
 
     return (
         <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`}>
-            <rect x={fillStartX} y={headerY} width={fillWidth} height={headerHeight} fill={fillColor} />
-
-            {log2FC > 5 ? (
-                <path
-                    d={`M ${boxes[0].cx},${symbolCenterY - 4} L ${boxes[0].cx - 4},${symbolCenterY + 4} L ${boxes[0].cx + 4},${symbolCenterY + 4} Z`}
-                    fill={symbolColor}
-                />
-            ) : log2FC > 1 ? (
-                <path
-                    d={`M ${boxes[1].cx},${symbolCenterY - 4} L ${boxes[1].cx - 4},${symbolCenterY + 4} L ${boxes[1].cx + 4},${symbolCenterY + 4} Z`}
-                    fill={symbolColor}
-                />
-            ) : null}
-
-            {pVal < 0.001 ? (
-                <path
-                    d={starPath}
-                    fill={symbolColor}
-                    transform={`translate(${boxes[2].cx}, ${symbolCenterY}) scale(0.9)`}
-                />
-            ) : pVal < 0.01 ? (
-                <path
-                    d={starPath}
-                    fill={symbolColor}
-                    transform={`translate(${boxes[3].cx}, ${symbolCenterY}) scale(0.9)`}
-                />
-            ) : null}
-
+            {/* Main container */}
             <rect
-                x={headerX}
-                y={headerY}
-                width={headerWidth}
-                height={height - 10}
-                fill='none'
-                stroke='#333'
-                strokeWidth={strokeWidth}
-            />
-            <line
-                x1={headerX}
-                y1={headerY + headerHeight}
-                x2={headerX + headerWidth}
-                y2={headerY + headerHeight}
-                stroke='#333'
-                strokeWidth={strokeWidth}
-            />
-            <line
-                x1={boxes[0].cx + boxWidth / 2}
-                y1={headerY}
-                x2={boxes[0].cx + boxWidth / 2}
-                y2={headerY + headerHeight}
-                stroke='#333'
-                strokeWidth={strokeWidth}
-            />
-            <line
-                x1={boxes[1].cx + boxWidth / 2}
-                y1={headerY}
-                x2={boxes[1].cx + boxWidth / 2}
-                y2={headerY + headerHeight}
-                stroke='#333'
-                strokeWidth={strokeWidth}
-            />
-            <line
-                x1={boxes[2].cx + boxWidth / 2}
-                y1={headerY}
-                x2={boxes[2].cx + boxWidth / 2}
-                y2={headerY + headerHeight}
+                x={strokeWidth / 2}
+                y={strokeWidth / 2}
+                width={width - strokeWidth}
+                height={height - strokeWidth}
+                fill='white'
                 stroke='#333'
                 strokeWidth={strokeWidth}
             />
 
-            <text x={width / 2} y='37.5' textAnchor='middle' fontSize='16' dominantBaseline='middle'>
-                {name.substring(0, 6)}
+            {/* Left bar (pts) */}
+            <rect
+                x={strokeWidth}
+                y={height - strokeWidth - ptsHeight}
+                width={barWidth}
+                height={ptsHeight}
+                fill='#6DD47E'
+            />
+
+            {/* Right bar (pts_rest) */}
+            <rect
+                x={width - barWidth - strokeWidth}
+                y={height - strokeWidth - ptsRestHeight}
+                width={barWidth}
+                height={ptsRestHeight}
+                fill='#E65555'
+            />
+
+            {/* Gene Name */}
+            <text
+                x={width / 2}
+                y={geneNameY}
+                textAnchor='middle'
+                dominantBaseline='middle'
+                fontSize='0.8rem'
+                fontWeight='500'
+            >
+                {gene_name}
             </text>
+
+            {/* Triangles for log2FC */}
+            <g>{renderTriangles()}</g>
+
+            {/* Stars for pval_adj */}
+            <g>{renderStars()}</g>
+
+            {/* Vertical dividers */}
+            <line
+                x1={barWidth + strokeWidth}
+                y1={strokeWidth}
+                x2={barWidth + strokeWidth}
+                y2={height - strokeWidth}
+                stroke='#333'
+                strokeWidth={strokeWidth}
+            />
+            <line
+                x1={width - barWidth - strokeWidth}
+                y1={strokeWidth}
+                x2={width - barWidth - strokeWidth}
+                y2={height - strokeWidth}
+                stroke='#333'
+                strokeWidth={strokeWidth}
+            />
         </svg>
     );
 };

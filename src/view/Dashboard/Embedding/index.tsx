@@ -6,7 +6,7 @@ import * as d3 from 'd3';
 import './index.less';
 import {myCoords, myCategories} from '@/store';
 import {cellStore} from '@/store/CellData';
-import {embeddingColor} from '@/constants/enum';
+import {clusterColorStore} from '@/store/colorMapping';
 
 const drawEmbedding = (svgElement: SVGSVGElement, coords: number[][], category: string[], actionId: string) => {
     const width = svgElement.clientWidth;
@@ -71,11 +71,6 @@ const drawEmbedding = (svgElement: SVGSVGElement, coords: number[][], category: 
     //     .style('font-size', '12px')
     //     .text('UMAP2');
 
-    // Create a color scale mapping categories to embedding colors
-    const uniqueCategories = Array.from(new Set(category)).sort();
-    const colors = Object.values(embeddingColor);
-    const colorScale = d3.scaleOrdinal<string>().domain(uniqueCategories).range(colors);
-
     // Draw points
     svg.selectAll('circle.point')
         .data(coords)
@@ -85,7 +80,7 @@ const drawEmbedding = (svgElement: SVGSVGElement, coords: number[][], category: 
         .attr('cx', (d) => xScale(d[0]))
         .attr('cy', (d) => yScale(d[1]))
         .attr('r', 1) // Smaller radius to match image
-        .attr('fill', (_, i) => colorScale(category[i]))
+        .attr('fill', (_, i) => clusterColorStore.getColor(category[i]))
         .attr('opacity', 0.8);
 
     // Calculate centroids and draw labels
@@ -169,6 +164,7 @@ const Embedding = observer(() => {
 
     return (
         <div className='embedding-root'>
+            <div className='embedding-title'>Cell Embedding Overview</div>
             <div className='embedding-body'>
                 <svg ref={svgRef} style={{width: '100%', height: '100%'}}></svg>
             </div>

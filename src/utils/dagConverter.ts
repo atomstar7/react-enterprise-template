@@ -1,7 +1,6 @@
-import * as d3 from 'd3';
 import {Node, Link, DagData, NodeData} from '@/api/viewRequest';
 import {myCoords, myCategories} from '@/store';
-import {embeddingColor} from '@/constants/enum';
+import {clusterColorStore} from '@/store/colorMapping';
 
 // Define types for store data
 interface Coords {
@@ -131,9 +130,6 @@ export const convertActionsToDagData = (actions: ActionRecord[]): DagData => {
         // Assuming mapping is an array with one object containing all clusters for this action
         if (action.mapping && action.mapping.length > 0) {
             const mappingObj = action.mapping[0];
-            const clusterIds = Object.keys(mappingObj);
-            const colors = Object.values(embeddingColor);
-            const colorScale = d3.scaleOrdinal<string>().domain(clusterIds).range(colors);
 
             Object.entries(mappingObj).forEach(([clusterId, detail]) => {
                 const scoreVal = detail.calc_marker_combination.F1_score;
@@ -143,7 +139,7 @@ export const convertActionsToDagData = (actions: ActionRecord[]): DagData => {
                     cluster_name: clusterId,
                     count: 1, // Set count to 1 for even distribution
                     score: score || 0,
-                    color: colorScale(clusterId) // Assign color from the new scale
+                    color: clusterColorStore.getColor(clusterId) // Assign color from the new scale
                 });
 
                 if (!isNaN(score)) {

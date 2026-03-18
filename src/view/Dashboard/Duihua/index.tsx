@@ -35,7 +35,7 @@ const Duihua = () => {
     return (
         <div className='duihua-root'>
             <div className='duihua-title'>
-                <span>Agent</span>
+                <span>Collaboration View</span>
                 <Trash size={18} className='refresh-icon' />
             </div>
             <div className='duihua-body'>
@@ -47,7 +47,7 @@ const Duihua = () => {
                                 <g key={marker.index} transform={`translate(15, ${marker.top})`}>
                                     <circle r='8' fill='white' stroke='#ccc' strokeWidth='1' />
                                     <text textAnchor='middle' dy='.3em' fontSize='10'>
-                                        {marker.index}
+                                        {'A' + marker.index}
                                     </text>
                                 </g>
                             ))}
@@ -62,7 +62,10 @@ const Duihua = () => {
                                     <User size={24} weight='regular' />
                                 )}
                             </div>
-                            <div className='message-bubble'>{msg.text}</div>
+                            {/* <div className='message-bubble'>{msg.text}</div> */}
+                            <div className='message-bubble'>
+                                <pre>{msg.text}</pre>
+                            </div>
                         </div>
                     ))}
                 </div>
