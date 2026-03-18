@@ -6,21 +6,11 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-
-    .embedding-title {
-        flex: 1; // 固定高度
-        font-weight: @font-weight;
-        font-size: @view-header-font-size;
-        background-color: @view-title-background;
-        color: @view-title-font;
-        border: @border;
-        padding-left: 8px;
-    }
+    height: 100%; // Ensure root takes full height
 
     .embedding-body {
-        flex: 12;
+        flex: 1;
         background-color: @view-body-background;
-        border: @border;
-        margin: 8px;
+        min-height: 0; // Flexbox height constraint
     }
 }

@@ -1,5 +1,7 @@
+import * as d3 from 'd3';
 import {Node, Link, DagData, NodeData} from '@/api/viewRequest';
 import {myCoords, myCategories} from '@/store';
+import {embeddingColor} from '@/constants/enum';
 
 // Define types for store data
 interface Coords {
@@ -47,7 +49,8 @@ const calculateInnerGraphData = (node: Node, allCategories: Categories[], allCoo
             const normalizedCentroids = centroids.map((c, i) => ({
                 id: i,
                 x: (c[0] - centerX) * scale,
-                y: (c[1] - centerY) * scale
+                y: (c[1] - centerY) * scale,
+                category: clusterNames[i] // Add category here
             }));
 
             const edges: {source: number; target: number; distance: number}[] = [];
@@ -128,16 +131,19 @@ export const convertActionsToDagData = (actions: ActionRecord[]): DagData => {
         // Assuming mapping is an array with one object containing all clusters for this action
         if (action.mapping && action.mapping.length > 0) {
             const mappingObj = action.mapping[0];
+            const clusterIds = Object.keys(mappingObj);
+            const colors = Object.values(embeddingColor);
+            const colorScale = d3.scaleOrdinal<string>().domain(clusterIds).range(colors);
+
             Object.entries(mappingObj).forEach(([clusterId, detail]) => {
                 const scoreVal = detail.calc_marker_combination.F1_score;
                 const score = typeof scoreVal === 'string' ? parseFloat(scoreVal) : scoreVal;
 
-                const clusterCount = actionCategories.filter((c) => c === clusterId).length;
-
                 clusterScore.push({
                     cluster_name: clusterId,
-                    count: clusterCount,
-                    score: score || 0
+                    count: 1, // Set count to 1 for even distribution
+                    score: score || 0,
+                    color: colorScale(clusterId) // Assign color from the new scale
                 });
 
                 if (!isNaN(score)) {
@@ -151,6 +157,8 @@ export const convertActionsToDagData = (actions: ActionRecord[]): DagData => {
 
         const node: Node = {
             id: action.action_id,
+            action_name: action.action_name,
+            reasoning: action.according.according_history_actions.history_reason_summary || '',
             cluster_score: clusterScore,
             average_score: averageScore
         };

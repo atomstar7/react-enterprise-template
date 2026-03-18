@@ -10,16 +10,18 @@
 
     .duihua-title {
         // Match selection-title style but with flex layout for icon
-        flex: 0 0 30px; // Fixed height similar to what flex: 1 might result in relative to flex: 12 in other component, or just use fixed px
+        flex: 0 0 32px; // Fixed height similar to what flex: 1 might result in relative to flex: 12 in other component, or just use fixed px
         display: flex;
         align-items: center;
         justify-content: space-between;
         font-weight: @font-weight;
+        font-style: @view-font-style;
         font-size: @view-header-font-size;
         background-color: @view-title-background;
         color: @view-title-font;
         border-bottom: @border; // Use border-bottom instead of full border since parent might have it
-        padding: 0 8px;
+        padding-left: 8px;
+        line-height: 32px;
 
         .refresh-icon {
             cursor: pointer;
@@ -38,18 +40,58 @@
 
         .message-list {
             flex: 1;
+            position: relative;
             padding: 12px;
+            padding-left: 40px;
             overflow-y: auto;
 
+            // Hide scrollbar but keep functionality
+            scrollbar-width: none; // Firefox
+            -ms-overflow-style: none; // IE/Edge
+            &::-webkit-scrollbar {
+                display: none; // Chrome/Safari
+            }
+
+            .navigation-line {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 30px;
+                height: 100%;
+                z-index: 0;
+            }
+
             .message-item {
+                position: relative;
+                z-index: 1;
                 display: flex;
                 margin-bottom: 12px;
                 align-items: flex-start;
+
+                &.agent {
+                    flex-direction: row;
+                }
+
+                &.user {
+                    flex-direction: row-reverse;
+
+                    .avatar-icon {
+                        margin-left: 8px;
+                        margin-right: 0;
+                    }
+
+                    .message-bubble {
+                        background-color: #e6f7ff; // A light blue for user messages
+                        border-top-left-radius: 8px;
+                        border-top-right-radius: 2px;
+                    }
+                }
 
                 .avatar-icon {
                     margin-right: 8px;
                     font-size: 20px;
                     margin-top: 4px;
+                    flex-shrink: 0; // Prevent the icon from being squeezed
                 }
 
                 .message-bubble {

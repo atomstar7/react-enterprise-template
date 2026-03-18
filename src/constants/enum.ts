@@ -23,15 +23,16 @@ enum seriesColor {
 }
 
 enum embeddingColor {
-    c1 = '#5070dd',
-    c2 = '#b6d634',
-    c3 = '#505372',
-    c4 = '#ff994d',
-    c5 = '#0ca8df',
-    c6 = '#ffd10a',
-    c7 = '#fb628b',
-    c8 = '#785db0',
-    c9 = '#3fbe95'
+    c1 = '#8dd3c7',
+    c2 = '#ffffb3',
+    c3 = '#bebada',
+    c4 = '#fb8072',
+    c5 = '#80b1d3',
+    c6 = '#fdb462',
+    c7 = '#b3de69',
+    c8 = '#fccde5',
+    c9 = '#3fbe95',
+    c10 = '#bc80bd'
 }
 
 export {seriesColor, lineColor, embeddingColor};

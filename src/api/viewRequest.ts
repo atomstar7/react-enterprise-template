@@ -30,6 +30,8 @@ export interface NodeData {
 export interface Node {
     /** 对应 action_id */
     id: string;
+    action_name?: string;
+    reasoning?: string;
     cluster_score: NodeData[];
     /** 所有簇的 F1_score 的平均值 */
     average_score: number;

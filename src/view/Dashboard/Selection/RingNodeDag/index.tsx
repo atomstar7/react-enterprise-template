@@ -3,7 +3,9 @@ import React, {useEffect, useRef, useState, useCallback} from 'react';
 import * as d3 from 'd3';
 import {DagData, Node} from '@/api/viewRequest';
 import RingNodeGlyph from '../RingNodeGlyph';
-import {seriesColor} from '@/constants/enum';
+import GreyGlyph from '../GreyGlyph';
+import Embedding from '../../Embedding';
+
 import './index.less';
 import actions from '@/store/index';
 import {convertActionsToDagData} from '@/utils/dagConverter';
@@ -14,7 +16,7 @@ interface TreeNode extends Node {
     incomingReasoning?: string;
     incomingType?: string;
     innerGraphData?: {
-        nodes: {id: number; x: number; y: number}[];
+        nodes: {id: number; x: number; y: number; category: string}[];
         links: {source: number; target: number}[];
     };
 }
@@ -95,8 +97,8 @@ const RingNodeDag = () => {
 
             return {
                 ...node,
-                incomingReasoning,
-                incomingType,
+                incomingReasoning: incomingReasoning || node.reasoning,
+                incomingType: incomingType || node.action_name, // Use node's own name for root nodes
                 children: children.length > 0 ? children : undefined,
                 innerGraphData: (node as any).innerGraphData
             };
@@ -186,30 +188,14 @@ const RingNodeDag = () => {
                         <>
                             <g className='links'>
                                 {layoutRoot.links().map((link, i) => {
-                                    const R_VIRTUAL = 15;
-                                    const R_NORMAL = 57; // outerRadius (48) + avgScore ring width (9)
+                                    const R_NODE = 69; // Corresponds to the outermost radius of the glyph
 
                                     const p1 = {x: link.source.y, y: link.source.x};
                                     const p2 = {x: link.target.y, y: link.target.x};
 
-                                    const r1 = link.source.data.id === 'virtual_root' ? R_VIRTUAL : R_NORMAL;
-                                    const r2 = link.target.data.id === 'virtual_root' ? R_VIRTUAL : R_NORMAL;
-
-                                    const dx = p2.x - p1.x;
-                                    const dy = p2.y - p1.y;
-                                    const dist = Math.sqrt(dx * dx + dy * dy);
-
-                                    if (dist === 0) return null;
-
-                                    const newP1 = {
-                                        x: p1.x + (dx / dist) * r1,
-                                        y: p1.y + (dy / dist) * r1
-                                    };
-
-                                    const newP2 = {
-                                        x: p2.x - (dx / dist) * r2,
-                                        y: p2.y - (dy / dist) * r2
-                                    };
+                                    // Unified start and end points for a cleaner tree structure
+                                    const newP1 = {x: p1.x + R_NODE, y: p1.y};
+                                    const newP2 = {x: p2.x - R_NODE, y: p2.y};
 
                                     const d = d3
                                         .linkHorizontal()
@@ -263,7 +249,7 @@ const RingNodeDag = () => {
                                 {layoutRoot.descendants().map((node, i) => (
                                     <g key={i} transform={`translate(${node.y},${node.x})`}>
                                         {node.data.id === 'virtual_root' ? (
-                                            <circle r={15} fill='grey' />
+                                            <GreyGlyph />
                                         ) : (
                                             <RingNodeGlyph nodeData={node.data} refreshDag={loadData} />
                                         )}
@@ -279,6 +265,9 @@ const RingNodeDag = () => {
                     {tooltip.content}
                 </div>
             )}
+            {/* <div className='embedding-container'>
+                <Embedding />
+            </div> */}
         </div>
     );
 };

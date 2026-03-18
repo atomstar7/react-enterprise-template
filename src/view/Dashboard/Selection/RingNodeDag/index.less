@@ -1,6 +1,18 @@
 .ring-node-dag {
+    position: relative; // Add relative positioning for absolute children
     border: 1px solid #ccc;
-    
+
+    .embedding-container {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        border-top: 1px solid #ccc;
+        border-right: 1px solid #ccc;
+        width: 250px; // or as needed
+        height: 250px; // or as needed
+        z-index: 10;
+    }
+
     .dag-tooltip {
         position: fixed;
         background-color: rgba(255, 255, 255, 0.95);

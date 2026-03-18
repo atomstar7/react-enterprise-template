@@ -11,6 +11,7 @@
         flex: 0 0 32px;
         font-weight: @font-weight;
         font-size: @view-header-font-size;
+        font-style: @view-font-style;
         background-color: @view-title-background;
         color: @view-title-font;
         border: @border;
@@ -24,10 +25,15 @@
         flex: 1;
         background-color: @view-body-background;
         border: @border;
-        margin: 8px;
-        overflow: hidden; // Table handles scroll
-        padding: 8px;
+        overflow: auto; // Table handles scroll
         min-height: 0; // Essential for flex-box height constraint
+
+        // Hide main scrollbar but keep functionality
+        scrollbar-width: none; // Firefox
+        -ms-overflow-style: none; // IE/Edge
+        &::-webkit-scrollbar {
+            display: none; // Chrome/Safari
+        }
 
         // Antd Table Customization
         .ant-table-wrapper {
@@ -69,7 +75,7 @@
                 color: #000;
                 border-bottom: 1px solid #000;
                 text-align: center;
-                padding: 8px 4px;
+                // padding: 8px 4px;
 
                 &::before {
                     display: none; // Remove antd default divider
@@ -79,8 +85,12 @@
             // Cell Styles
             .ant-table-tbody > tr > td {
                 border-bottom: 1px solid #e8e8e8;
-                padding: 4px 8px;
+                padding: 4px 24px;
                 vertical-align: middle;
+                text-align: center;
+                font-weight: @font-weight;
+                // font-style: italic;
+                font-size: @table-body-size;
             }
 
             // Remove default padding for nested container cell
@@ -119,6 +129,11 @@
             .marker-scroll-container {
                 max-height: 120px; // Approx 2.5 rows (assuming ~48px per row)
                 overflow-y: scroll;
+                transition: max-height 0.3s ease-in-out;
+
+                &.expanded {
+                    max-height: 800px; /* Adjust as needed to show all 10 items */
+                }
 
                 // Hide scrollbar but keep functionality
                 scrollbar-width: none; // Firefox
@@ -130,6 +145,7 @@
                 .marker-row {
                     display: flex;
                     align-items: center;
+                    justify-content: center;
                     padding: 8px 0;
                     border-bottom: 1px solid #f0f0f0;
 

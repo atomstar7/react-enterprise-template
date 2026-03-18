@@ -11,6 +11,7 @@ export interface Combination {
     id: string;
     markers: Marker[];
     f1Score: number;
+    cellType: string;
 }
 
 export interface ActionRecord {
@@ -45,7 +46,7 @@ export const convertActionsToCombinationData = (actions: ActionRecord[]): Combin
                 const markers: Marker[] = detail.candidate_marker_list.map((marker, index) => {
                     const log2FC = typeof marker.log2FC === 'string' ? parseFloat(marker.log2FC) : marker.log2FC;
                     const pVal = typeof marker.pval_adj === 'string' ? parseFloat(marker.pval_adj) : marker.pval_adj;
-                    const pts = typeof marker.pts === 'string' ? parseFloat(marker.pts) : (marker.pts || 0);
+                    const pts = typeof marker.pts === 'string' ? parseFloat(marker.pts) : marker.pts || 0;
 
                     return {
                         label: marker.gene_name, // Using gene_name as label for now
@@ -57,10 +58,13 @@ export const convertActionsToCombinationData = (actions: ActionRecord[]): Combin
                     };
                 });
 
+                const cellType = detail.predicted_cell_type?.cell_type || 'unknown';
+
                 combinations.push({
                     id: `${action.action_id}-${clusterId}`, // Composite ID to be unique
                     markers: markers,
-                    f1Score: isNaN(f1Score) ? 0 : f1Score
+                    f1Score: isNaN(f1Score) ? 0 : f1Score,
+                    cellType: cellType
                 });
             });
         }

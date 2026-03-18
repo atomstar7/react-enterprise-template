@@ -8,10 +8,10 @@ import {myCoords, myCategories} from '@/store';
 import {cellStore} from '@/store/CellData';
 import {embeddingColor} from '@/constants/enum';
 
-const drawEmbedding = (svgElement: SVGSVGElement, coords: number[][], category: string[]) => {
+const drawEmbedding = (svgElement: SVGSVGElement, coords: number[][], category: string[], actionId: string) => {
     const width = svgElement.clientWidth;
     const height = svgElement.clientHeight;
-    const margin = {top: 20, right: 20, bottom: 20, left: 20};
+    const margin = {top: 30, right: 10, bottom: 10, left: 10};
 
     const svg = d3
         .select(svgElement)
@@ -20,6 +20,15 @@ const drawEmbedding = (svgElement: SVGSVGElement, coords: number[][], category: 
         .attr('viewBox', `0 0 ${width} ${height}`);
 
     svg.selectAll('*').remove();
+
+    // Title
+    svg.append('text')
+        .attr('x', width / 2)
+        .attr('y', margin.top / 2)
+        .attr('text-anchor', 'middle')
+        .style('font-size', '14px')
+        .style('font-weight', 'bold')
+        .text(`${actionId} UMAP`);
 
     const xExtent = d3.extent(coords, (d) => d[0]) as [number, number];
     const yExtent = d3.extent(coords, (d) => d[1]) as [number, number];
@@ -34,6 +43,34 @@ const drawEmbedding = (svgElement: SVGSVGElement, coords: number[][], category: 
         .domain([yExtent[0] - 1, yExtent[1] + 1])
         .range([height - margin.bottom, margin.top]);
 
+    // Add X-Axis
+    svg.append('g')
+        .attr('transform', `translate(0, ${height - margin.bottom})`)
+        .call(d3.axisBottom(xScale).tickValues([]));
+
+    // Add Y-Axis
+    svg.append('g').attr('transform', `translate(${margin.left}, 0)`).call(d3.axisLeft(yScale).tickValues([]));
+
+    // Style the axis lines to be black
+    svg.selectAll('.domain').attr('stroke', 'black');
+
+    // // X-Axis Label
+    // svg.append('text')
+    //     .attr('x', width / 2)
+    //     .attr('y', height - margin.bottom + 20)
+    //     .attr('text-anchor', 'middle')
+    //     .style('font-size', '12px')
+    //     .text('UMAP1');
+
+    // // Y-Axis Label
+    // svg.append('text')
+    //     .attr('transform', 'rotate(-90)')
+    //     .attr('y', margin.left - 10)
+    //     .attr('x', 0 - height / 2)
+    //     .attr('text-anchor', 'middle')
+    //     .style('font-size', '12px')
+    //     .text('UMAP2');
+
     // Create a color scale mapping categories to embedding colors
     const uniqueCategories = Array.from(new Set(category)).sort();
     const colors = Object.values(embeddingColor);
@@ -47,27 +84,39 @@ const drawEmbedding = (svgElement: SVGSVGElement, coords: number[][], category: 
         .attr('class', 'point')
         .attr('cx', (d) => xScale(d[0]))
         .attr('cy', (d) => yScale(d[1]))
-        .attr('r', 1.5) // Slightly increased radius for better visibility
+        .attr('r', 1) // Smaller radius to match image
         .attr('fill', (_, i) => colorScale(category[i]))
         .attr('opacity', 0.8);
 
-    // Optional: Add legend
-    // const legend = svg.append('g').attr('transform', `translate(${width - 100}, ${margin.top})`);
+    // Calculate centroids and draw labels
+    const clusters: {[key: string]: number[][]} = {};
+    coords.forEach((coord, i) => {
+        const cat = category[i];
+        if (!clusters[cat]) {
+            clusters[cat] = [];
+        }
+        clusters[cat].push(coord);
+    });
 
-    // uniqueCategories.forEach((cat, i) => {
-    //     const legendRow = legend.append('g').attr('transform', `translate(0, ${i * 20})`);
+    Object.keys(clusters).forEach((cat) => {
+        const clusterCoords = clusters[cat];
+        const scaledCoords = clusterCoords.map((d) => [xScale(d[0]), yScale(d[1])]);
 
-    //     legendRow.append('circle').attr('r', 5).attr('fill', colorScale(cat));
+        if (scaledCoords.length > 0) {
+            const avgX = d3.mean(scaledCoords, (d) => d[0]);
+            const avgY = d3.mean(scaledCoords, (d) => d[1]);
 
-    //     legendRow
-    //         .append('text')
-    //         .attr('x', 10)
-    //         .attr('y', 5)
-    //         .text(cat)
-    //         .attr('font-size', '12px')
-    //         .attr('font-family', 'Arial, sans-serif')
-    //         .attr('fill', '#333');
-    // });
+            svg.append('text')
+                .attr('x', avgX)
+                .attr('y', avgY)
+                .attr('text-anchor', 'middle')
+                .attr('dy', '.3em')
+                .style('font-size', '10px')
+                .style('font-weight', 'bold')
+                .style('fill', '#333')
+                .text(cat);
+        }
+    });
 };
 
 const Embedding = observer(() => {
@@ -99,27 +148,27 @@ const Embedding = observer(() => {
     }, [cellStore.selected_action_id]);
 
     useEffect(() => {
-        if (!svgRef.current || coords.length === 0 || category.length === 0) return;
+        const actionId = cellStore.selected_action_id;
+        if (!svgRef.current || coords.length === 0 || category.length === 0 || !actionId) return;
 
         // Initial draw
-        drawEmbedding(svgRef.current, coords, category);
+        drawEmbedding(svgRef.current, coords, category, actionId);
 
         const resizeObserver = new ResizeObserver(() => {
             if (svgRef.current) {
-                drawEmbedding(svgRef.current, coords, category);
+                drawEmbedding(svgRef.current, coords, category, actionId);
             }
         });
         resizeObserver.observe(svgRef.current);
 
         return () => resizeObserver.disconnect();
-    }, [coords, category]);
+    }, [coords, category, cellStore.selected_action_id]);
 
     // if (loading) return <div>Loading...</div>;
     // if (error) return <div>Error: {error}</div>;
 
     return (
         <div className='embedding-root'>
-            <div className='embedding-title'>Cell Clusters View</div>
             <div className='embedding-body'>
                 <svg ref={svgRef} style={{width: '100%', height: '100%'}}></svg>
             </div>

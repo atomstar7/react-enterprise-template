@@ -1,4 +1,3 @@
-
 @import url('@/constants/font.less');
 @import url('@/constants/color.less');
 
@@ -8,19 +7,23 @@
     width: 100%;
 
     .selection-title {
-        flex: 1; // 固定高度
+        flex: 0 0 32px; // 固定高度
         font-weight: @font-weight;
         font-size: @view-header-font-size;
+        font-style: @view-font-style;
         background-color: @view-title-background;
         color: @view-title-font;
         border: @border;
         padding-left: 8px;
+        line-height: 32px;
+        display: flex;
+        align-items: center;
     }
 
     .selection-body {
         flex: 12;
         background-color: @view-body-background;
         border: @border;
-        margin: 8px;
+        // margin: 8px;
     }
 }

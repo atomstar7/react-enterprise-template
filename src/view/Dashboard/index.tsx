@@ -1,7 +1,7 @@
 import React from 'react';
 import {observer} from 'mobx-react-lite';
 import './index.less';
-import Metainfo from './Metainfo';
+// import Metainfo from './Metainfo';
 import Header from './Header';
 import Embedding from './Embedding';
 import Selection from './Selection';
@@ -15,18 +15,21 @@ const Dashboard = () => {
             <div className='header'>
                 <Header />
             </div>
-            <div className='metainfo'>
+            {/* <div className='metainfo'>
                 <Metainfo />
-            </div>
+            </div> */}
             <div className='embedding'>
                 <Embedding />
+            </div>
+            <div className='table'>
+                <Combination />
             </div>
             <div className='selection'>
                 <Selection />
             </div>
-            <div className='combination'>
+            {/* <div className='combination'>
                 <Combination />
-            </div>
+            </div> */}
             {/* <div className='marker'>
                 <Marker />
             </div> */}

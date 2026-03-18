@@ -2,7 +2,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import * as d3 from 'd3';
 import InnerGraph from '../InnerGraph';
-import {seriesColor} from '@/constants/enum';
 import {Node} from '@/api/viewRequest';
 import {cellStore} from '@/store/CellData';
 
@@ -21,49 +20,66 @@ const RingNodeGlyph: React.FC<RingNodeGlyphProps> = ({nodeData}) => {
         const g = d3.select(gRef.current);
         setG(g);
 
-        const innerRadius = 40;
+        const innerRadius = 30;
         const outerRadius = 60;
 
-        // Use seriesColor c1-cN based on the number of sectors
-        const colors = Object.values(seriesColor);
-
-        // Modified to color by index as per previous request
-        const colorScale = d3.scaleOrdinal(colors);
+        // Scale for the sector radius based on the score
+        const radiusScale = d3.scaleLinear().domain([0, 1]).range([innerRadius, outerRadius]);
 
         const pie = d3
             .pie<any>()
-            .value((d: any) => d.count)
+            .value((d: any) => d.count) // Evenly sized sectors
             .padAngle(0.05);
-        const arc = d3.arc().innerRadius(innerRadius).outerRadius(outerRadius);
 
-        // Check if cluster_score exists before using it
+        // Arc generator now uses the radius scale for the outer radius
+        const arc = d3
+            .arc<any>()
+            .innerRadius(innerRadius)
+            .outerRadius((d) => radiusScale(d.data.score));
+
         const clusterScores = nodeData.cluster_score || [];
 
         const arcs = g.selectAll('.arc').data(pie(clusterScores)).enter().append('g').attr('class', 'arc');
 
         arcs.append('path')
-            .attr('d', arc as any)
-            .attr('fill', (d, i) => colorScale(i.toString()));
+            .attr('d', arc)
+            .attr('fill', (d) => d.data.color); // Use color from data
+
+        // Add text labels to each sector
+        // arcs.append('text')
+        //     .attr('transform', (d: any) => `translate(${arc.centroid(d)})`)
+        //     .attr('dy', '0.35em')
+        //     .attr('text-anchor', 'middle')
+        //     .style('font-size', '10px')
+        //     .style('fill', '#333')
+        //     .text((d: any) => d.data.cluster_name);
 
         g.append('circle').attr('r', innerRadius).attr('fill', 'none').attr('stroke', 'black');
         g.append('circle').attr('r', outerRadius).attr('fill', 'none').attr('stroke', 'black');
 
         // Add outer ring for average score
         const avgScoreOuterRadius = outerRadius + 9;
-        const avgScoreArc = d3
+        const avgScore = nodeData.average_score || 0;
+
+        // Background for the outer ring
+        const backgroundArc = d3
             .arc()
             .innerRadius(outerRadius)
             .outerRadius(avgScoreOuterRadius)
             .startAngle(0)
             .endAngle(2 * Math.PI);
 
-        const avgScore = nodeData.average_score || 0;
-        const avgColorScale = d3
-            .scaleLinear<string>()
-            .domain([0, 1])
-            .range([colors[0], colors[colors.length - 1]]);
+        g.append('path').attr('d', backgroundArc).attr('fill', '#e0e0e0');
 
-        g.append('path').attr('d', avgScoreArc).attr('fill', avgColorScale(avgScore));
+        // Foreground arc representing the score
+        const scoreArc = d3
+            .arc()
+            .innerRadius(outerRadius)
+            .outerRadius(avgScoreOuterRadius)
+            .startAngle(0)
+            .endAngle(2 * Math.PI * avgScore);
+
+        g.append('path').attr('d', scoreArc).attr('fill', '#5F92B6');
 
         return () => {
             g.selectAll('*').remove();
