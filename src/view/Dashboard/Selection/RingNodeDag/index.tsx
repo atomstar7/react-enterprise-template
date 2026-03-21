@@ -145,6 +145,27 @@ const RingNodeDag = () => {
 
         treeLayout(root);
 
+        const layerGap = 150;
+        const depthMap = d3.group(root.descendants(), (node) => node.depth);
+        const sortedDepths = Array.from(depthMap.keys()).sort((a, b) => a - b);
+
+        sortedDepths.forEach((depth) => {
+            const layerNodes = depthMap.get(depth) || [];
+            const sortedLayerNodes = [...layerNodes].sort((a, b) => {
+                const parentXDiff = (a.parent?.x || 0) - (b.parent?.x || 0);
+                if (parentXDiff !== 0) return parentXDiff;
+                return a.x - b.x;
+            });
+
+            let nextX = 0;
+            sortedLayerNodes.forEach((node) => {
+                const minX = node.parent ? node.parent.x : 0;
+                const constrainedX = Math.max(minX, nextX);
+                node.x = constrainedX;
+                nextX = constrainedX + layerGap;
+            });
+        });
+
         setLayoutRoot(root);
     }, [dagData]);
 
@@ -165,7 +186,7 @@ const RingNodeDag = () => {
         svg.call(zoom);
 
         // Initial Center
-        const initialTransform = d3.zoomIdentity.translate(100, svgRef.current.clientHeight / 2);
+        const initialTransform = d3.zoomIdentity.translate(100, 80);
         svg.call(zoom.transform, initialTransform);
     }, [layoutRoot]);
 
@@ -188,6 +209,29 @@ const RingNodeDag = () => {
 
     const handleLinkMouseLeave = () => {
         setTooltip((prev) => ({...prev, visible: false}));
+    };
+
+    const createLinkPoints = (source: {x: number; y: number}, target: {x: number; y: number}, steps: number) => {
+        const c1 = {x: (source.x + target.x) / 2, y: source.y};
+        const c2 = {x: (source.x + target.x) / 2, y: target.y};
+        return Array.from({length: steps + 1}, (_, index) => {
+            const t = index / steps;
+            const mt = 1 - t;
+            const x = mt * mt * mt * source.x + 3 * mt * mt * t * c1.x + 3 * mt * t * t * c2.x + t * t * t * target.x;
+            const y = mt * mt * mt * source.y + 3 * mt * mt * t * c1.y + 3 * mt * t * t * c2.y + t * t * t * target.y;
+            return {x, y};
+        });
+    };
+
+    const getNodeAverageScore = (node: TreeNode) => {
+        const directScore = Number(node.average_score);
+        if (Number.isFinite(directScore)) return directScore;
+        if (!node.cluster_score || node.cluster_score.length === 0) return 0;
+        const validScores = node.cluster_score
+            .map((item) => Number(item.score))
+            .filter((score) => Number.isFinite(score));
+        if (validScores.length === 0) return 0;
+        return validScores.reduce((sum, score) => sum + score, 0) / validScores.length;
     };
 
     return (
@@ -221,19 +265,54 @@ const RingNodeDag = () => {
                                     } as any);
 
                                     const targetNode = link.target.data as TreeNode;
+                                    const sourceNode = link.source.data as TreeNode;
                                     const reasoning = targetNode.incomingReasoning || '';
                                     const type = targetNode.incomingType || '';
+                                    const sourceScore = getNodeAverageScore(sourceNode);
+                                    const targetScore = getNodeAverageScore(targetNode);
+                                    const shouldEncode = link.source.depth > 0 && sourceNode.id !== 'virtual_root';
+                                    const scoreDiff = targetScore - sourceScore;
+                                    const epsilon = 1e-6;
+                                    const isIncreasing = scoreDiff > epsilon;
+                                    const isDecreasing = scoreDiff < -epsilon;
+                                    const startWidth = isIncreasing ? 1.2 : isDecreasing ? 4 : 2.5;
+                                    const endWidth = isIncreasing ? 4 : isDecreasing ? 1.2 : 2.5;
+                                    const points = createLinkPoints(newP1, newP2, 18);
 
                                     return (
                                         <g key={i}>
-                                            {/* Visible path */}
-                                            <path
-                                                d={d || ''}
-                                                fill='none'
-                                                stroke='#999'
-                                                strokeWidth={1.5}
-                                                markerEnd='url(#arrow-head)'
-                                            />
+                                            {shouldEncode ? (
+                                                points.slice(0, -1).map((point, segmentIndex) => {
+                                                    const nextPoint = points[segmentIndex + 1];
+                                                    const ratio = (segmentIndex + 0.5) / (points.length - 1);
+                                                    const strokeWidth = startWidth + (endWidth - startWidth) * ratio;
+                                                    return (
+                                                        <line
+                                                            key={`seg-${segmentIndex}`}
+                                                            x1={point.x}
+                                                            y1={point.y}
+                                                            x2={nextPoint.x}
+                                                            y2={nextPoint.y}
+                                                            stroke='#999'
+                                                            strokeWidth={strokeWidth}
+                                                            strokeLinecap='round'
+                                                            markerEnd={
+                                                                segmentIndex === points.length - 2
+                                                                    ? 'url(#arrow-head)'
+                                                                    : undefined
+                                                            }
+                                                        />
+                                                    );
+                                                })
+                                            ) : (
+                                                <path
+                                                    d={d || ''}
+                                                    fill='none'
+                                                    stroke='#999'
+                                                    strokeWidth={1.5}
+                                                    markerEnd='url(#arrow-head)'
+                                                />
+                                            )}
                                             {/* Invisible wide path for hover interaction */}
                                             <path
                                                 d={d || ''}

@@ -145,8 +145,8 @@ const drawSankey = (svgElement, data) => {
         .data(links)
         .join('path')
         .attr('d', sankeyLinkHorizontal())
-        // .attr('stroke', (d, i) => `url(#gradient-${i})`) //渐变
-        .attr('stroke', 'grey')
+        .attr('stroke', (d, i) => `url(#gradient-${i})`) //渐变
+        // .attr('stroke', 'grey')
         .attr('stroke-width', (d) => Math.max(1, d.width));
 
     // Draw nodes
