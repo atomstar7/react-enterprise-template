@@ -72,11 +72,11 @@ const CombinationView = observer(() => {
                                 </div>
                                 <div className='markers-container'>
                                     {combo.markers.map((marker, idx) => (
-                                        <div key={idx} className='marker-row'>
-                                            <Checkbox
-                                                checked={marker.isSelected}
-                                                onChange={() => handleCheckboxChange(combo.id, marker.label)}
-                                            />
+                                        <div
+                                            key={idx}
+                                            className={`marker-row ${marker.isSelected ? 'selected' : ''}`}
+                                            onClick={() => handleCheckboxChange(combo.id, marker.label)}
+                                        >
                                             <GeneGlyph
                                                 gene_name={marker.gene_name}
                                                 log2FC={marker.log2FC}
@@ -87,9 +87,9 @@ const CombinationView = observer(() => {
                                         </div>
                                     ))}
                                 </div>
-                                <div className='f1-score-container'>
+                                {/* <div className='f1-score-container'>
                                     <F1ScoreGlyph score={combo.f1Score} />
-                                </div>
+                                </div> */}
                             </div>
                         ))}
                     </div>

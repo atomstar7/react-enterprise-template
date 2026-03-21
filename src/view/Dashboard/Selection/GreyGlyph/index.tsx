@@ -9,9 +9,9 @@ const GreyGlyph: React.FC = () => {
 
         const g = d3.select(gRef.current);
 
-        const innerRadius = 40;
-        const outerRadius = 60;
-        const avgScoreOuterRadius = outerRadius + 9;
+        const innerRadius = 24;
+        const outerRadius = 40;
+        const avgScoreOuterRadius = outerRadius + 5;
 
         // Inner circle
         g.append('circle').attr('r', innerRadius).attr('fill', 'none').attr('stroke', '#ccc');

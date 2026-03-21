@@ -20,8 +20,8 @@ const RingNodeGlyph: React.FC<RingNodeGlyphProps> = ({nodeData}) => {
         const g = d3.select(gRef.current);
         setG(g);
 
-        const innerRadius = 30;
-        const outerRadius = 60;
+        const innerRadius = 24;
+        const outerRadius = 40;
 
         // Scale for the sector radius based on the score
         const radiusScale = d3.scaleLinear().domain([0, 1]).range([innerRadius, outerRadius]);
@@ -58,7 +58,7 @@ const RingNodeGlyph: React.FC<RingNodeGlyphProps> = ({nodeData}) => {
         g.append('circle').attr('r', outerRadius).attr('fill', 'none').attr('stroke', 'black');
 
         // Add outer ring for average score
-        const avgScoreOuterRadius = outerRadius + 9;
+        const avgScoreOuterRadius = outerRadius + 5;
         const avgScore = nodeData.average_score || 0;
 
         // Background for the outer ring
