@@ -1,13 +1,14 @@
 @import url('@/constants/font.less');
 @import url('@/constants/color.less');
 
-.selection-root {
+.sankey-root {
     display: flex;
     flex-direction: column;
     width: 100%;
+    height: 100%; // Ensure root takes full height
 
-    .selection-title {
-        flex: 0 0 @title-line-height; // 固定高度
+    .sankey-title {
+        flex: 0 0 @title-line-height;
         font-weight: @font-weight;
         font-size: @view-header-font-size;
         font-style: @view-font-style;
@@ -20,10 +21,9 @@
         align-items: center;
     }
 
-    .selection-body {
-        flex: 12;
+    .sankey-body {
+        flex: 1;
         background-color: @view-body-background;
-        // border: @border;
-        // margin: 8px;
+        min-height: 0; // Flexbox height constraint
     }
 }

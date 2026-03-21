@@ -4,7 +4,6 @@ import * as d3 from 'd3';
 import {DagData, Node} from '@/api/viewRequest';
 import RingNodeGlyph from '../RingNodeGlyph';
 import GreyGlyph from '../GreyGlyph';
-import Embedding from '../../Embedding';
 
 import './index.less';
 import actions from '@/store/index';
@@ -54,8 +53,6 @@ const RingNodeDag = () => {
 
     const loadData = useCallback(async () => {
         try {
-            // Use local actions data instead of fetching
-            // const response = (await fetchDagData()).data;
             const data = convertActionsToDagData(actions as any);
 
             if (data) {
@@ -170,11 +167,7 @@ const RingNodeDag = () => {
         // Initial Center
         const initialTransform = d3.zoomIdentity.translate(100, svgRef.current.clientHeight / 2);
         svg.call(zoom.transform, initialTransform);
-    }, [layoutRoot]); // layoutRoot dependency ensures zoom is re-applied/reset on data update?
-    // Ideally we might want to PRESERVE zoom on update.
-    // If we want to preserve zoom, we shouldn't re-create the zoom behavior or reset transform in this effect if g already has transform.
-    // But since layoutRoot changes completely, a reset might be safer unless node positions are stable.
-    // For now, let's keep it simple: it resets view on data update.
+    }, [layoutRoot]);
 
     const handleLinkMouseEnter = (event: React.MouseEvent, content: string) => {
         setTooltip({
@@ -291,9 +284,6 @@ const RingNodeDag = () => {
                     {tooltip.content}
                 </div>
             )}
-            {/* <div className='embedding-container'>
-                <Embedding />
-            </div> */}
         </div>
     );
 };

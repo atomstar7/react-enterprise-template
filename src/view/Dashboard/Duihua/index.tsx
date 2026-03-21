@@ -28,25 +28,25 @@ const Duihua = () => {
 
     const handleSend = () => {
         if (!inputValue.trim()) return;
-        setMessages([...messages, {id: Date.now(), text: inputValue, sender: 'user'}]);
+        setMessages([...messages, {id: Date.now(), text: inputValue, sender: 'user', content: ''}]);
         setInputValue('');
     };
 
     return (
         <div className='duihua-root'>
             <div className='duihua-title'>
-                <span>Collaboration View</span>
-                <Trash size={18} className='refresh-icon' />
+                <span>Chat Panel</span>
+                <Trash size={22} className='refresh-icon' />
             </div>
             <div className='duihua-body'>
                 <div className='message-list' ref={messageListRef}>
                     <div className='navigation-line'>
-                        <svg width='30' height={svgHeight}>
-                            <line x1='15' y1='0' x2='15' y2={svgHeight} stroke='#ccc' strokeWidth='1' />
+                        <svg width='24' height={svgHeight}>
+                            <line x1='13' y1='0' x2='13' y2={svgHeight} stroke='#ccc' strokeWidth='1' />
                             {navMarkers.map((marker) => (
                                 <g key={marker.index} transform={`translate(15, ${marker.top})`}>
-                                    <circle r='8' fill='white' stroke='#ccc' strokeWidth='1' />
-                                    <text textAnchor='middle' dy='.3em' fontSize='10'>
+                                    <circle r='9' fill='white' stroke='#ccc' strokeWidth='1' />
+                                    <text textAnchor='middle' dy='.4em' fontSize='9'>
                                         {'A' + marker.index}
                                     </text>
                                 </g>
@@ -57,9 +57,9 @@ const Duihua = () => {
                         <div key={msg.id} className={`message-item ${msg.sender}`}>
                             <div className='avatar-icon'>
                                 {msg.sender === 'agent' ? (
-                                    <Robot size={24} weight='regular' />
+                                    <Robot size={16} weight='regular' />
                                 ) : (
-                                    <User size={24} weight='regular' />
+                                    <User size={16} weight='regular' />
                                 )}
                             </div>
                             {/* <div className='message-bubble'>{msg.text}</div> */}

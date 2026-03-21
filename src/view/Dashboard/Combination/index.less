@@ -8,7 +8,7 @@
     height: 100%;
 
     .combination-title {
-        flex: 0 0 32px;
+        flex: 0 0 24px;
         font-weight: @font-weight;
         font-size: @view-header-font-size;
         font-style: @view-font-style;
@@ -16,169 +16,90 @@
         color: @view-title-font;
         border: @border;
         padding-left: 8px;
-        line-height: 32px;
+        line-height: @title-line-height;
         display: flex;
         align-items: center;
     }
 
-    .combination-body {
+    .combination-body-vertical {
         flex: 1;
+        display: flex;
+        flex-direction: row;
         background-color: @view-body-background;
         border: @border;
-        overflow: auto; // Table handles scroll
-        min-height: 0; // Essential for flex-box height constraint
+        overflow-x: auto;
+        overflow-y: hidden;
+        min-height: 0;
 
-        // Hide main scrollbar but keep functionality
-        scrollbar-width: none; // Firefox
-        -ms-overflow-style: none; // IE/Edge
-        &::-webkit-scrollbar {
-            display: none; // Chrome/Safari
+        .cluster-column {
+            display: flex;
+            flex-direction: column;
+            flex: 0 0 auto; // Prevent columns from shrinking
+            border-right: @border; // Add border between columns
+            overflow-y: auto; // Enable vertical scrolling
+
+            // Hide scrollbar but keep functionality
+            scrollbar-width: none; // Firefox
+            -ms-overflow-style: none; // IE/Edge
+            &::-webkit-scrollbar {
+                display: none; // Chrome/Safari
+            }
+
+            &:last-child {
+                border-right: none;
+            }
         }
 
-        // Antd Table Customization
-        .ant-table-wrapper {
-            height: 100%;
+        .cluster-cell {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 8px;
+            border-bottom: @border;
 
-            .ant-spin-nested-loading,
-            .ant-spin-container,
-            .ant-table,
-            .ant-table-container {
-                height: 100%;
+            &:last-child {
+                border-bottom: none;
             }
+        }
 
-            .ant-table-container {
-                display: flex;
-                flex-direction: column;
-            }
+        .cluster-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            margin-bottom: 8px;
+        }
 
-            .ant-table-body {
-                flex: 1;
-                // Hide main scrollbar but keep functionality
-                scrollbar-width: none; // Firefox
-                -ms-overflow-style: none; // IE/Edge
-                &::-webkit-scrollbar {
-                    display: none; // Chrome/Safari
-                }
-            }
+        .cluster-tag {
+            border-radius: 4px;
+            padding: 2px 8px;
+            display: inline-block;
+            color: black;
+            font-weight: bold;
+        }
 
-            .ant-table {
-                background: transparent;
-                font-family: Arial, sans-serif;
-            }
+        .cell-type-tag {
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            padding: 2px 8px;
+            display: inline-block;
+        }
 
-            // Header Styles
-            .ant-table-thead > tr > th {
-                background-color: @view-body-background;
-                font-weight: bold;
-                font-style: italic;
-                font-size: 16px;
-                color: #000;
-                border-bottom: 1px solid #000;
-                text-align: center;
-                // padding: 8px 4px;
+        .markers-container {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            gap: 4px; // Space between marker rows
+        }
 
-                &::before {
-                    display: none; // Remove antd default divider
-                }
-            }
+        .marker-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
 
-            // Cell Styles
-            .ant-table-tbody > tr > td {
-                border-bottom: 1px solid #e8e8e8;
-                padding: 4px 24px;
-                vertical-align: middle;
-                text-align: center;
-                font-weight: @font-weight;
-                // font-style: italic;
-                font-size: @table-body-size;
-            }
-
-            // Remove default padding for nested container cell
-            .marker-nested-container {
-                padding: 0 !important;
-            }
-
-            .cluster-column {
-                font-size: 20px;
-                color: #000;
-                font-weight: bold;
-                text-align: center; // Centered per design
-            }
-
-            .score-column {
-                font-size: 18px;
-                color: #000;
-            }
-
-            // Marker Group Headers
-            .marker-group-header {
-                font-size: 18px;
-                border-bottom: 1px solid #000 !important;
-            }
-
-            // Nested Header
-            .marker-nested-header {
-                display: flex;
-                font-weight: bold;
-                font-style: italic;
-                font-size: 14px;
-                padding: 4px 0;
-            }
-
-            // Nested Scroll Container
-            .marker-scroll-container {
-                max-height: 120px; // Approx 2.5 rows (assuming ~48px per row)
-                overflow-y: scroll;
-                transition: max-height 0.3s ease-in-out;
-
-                &.expanded {
-                    max-height: 800px; /* Adjust as needed to show all 10 items */
-                }
-
-                // Hide scrollbar but keep functionality
-                scrollbar-width: none; // Firefox
-                -ms-overflow-style: none; // IE/Edge
-                &::-webkit-scrollbar {
-                    display: none; // Chrome/Safari
-                }
-
-                .marker-row {
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    padding: 8px 0;
-                    border-bottom: 1px solid #f0f0f0;
-
-                    &:last-child {
-                        border-bottom: none;
-                    }
-
-                    .marker-cell {
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                    }
-
-                    .name-cell {
-                        width: 36%;
-                        justify-content: flex-start;
-                        padding-left: 8px;
-                        gap: 8px;
-
-                        .marker-link {
-                            color: #1890ff;
-                            text-decoration: underline;
-                            font-size: 16px;
-                            font-weight: bold;
-                        }
-                    }
-
-                    .metric-cell {
-                        width: 21%;
-                        font-size: 14px;
-                    }
-                }
-            }
+        .f1-score-container {
+            margin-top: 8px;
         }
     }
 }

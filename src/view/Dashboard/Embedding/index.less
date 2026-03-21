@@ -8,7 +8,7 @@
     height: 100%; // Ensure root takes full height
 
     .embedding-title {
-        flex: 0 0 32px;
+        flex: 0 0 @title-line-height;
         font-weight: @font-weight;
         font-size: @view-header-font-size;
         font-style: @view-font-style;
@@ -16,7 +16,7 @@
         color: @view-title-font;
         border: @border;
         padding-left: 8px;
-        line-height: 32px;
+        line-height: @title-line-height;
         display: flex;
         align-items: center;
     }

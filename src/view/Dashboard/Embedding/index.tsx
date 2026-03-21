@@ -11,7 +11,7 @@ import {clusterColorStore} from '@/store/colorMapping';
 const drawEmbedding = (svgElement: SVGSVGElement, coords: number[][], category: string[], actionId: string) => {
     const width = svgElement.clientWidth;
     const height = svgElement.clientHeight;
-    const margin = {top: 30, right: 10, bottom: 10, left: 10};
+    const margin = {top: 0, right: 0, bottom: 0, left: 0};
 
     const svg = d3
         .select(svgElement)
@@ -20,15 +20,6 @@ const drawEmbedding = (svgElement: SVGSVGElement, coords: number[][], category: 
         .attr('viewBox', `0 0 ${width} ${height}`);
 
     svg.selectAll('*').remove();
-
-    // Title
-    svg.append('text')
-        .attr('x', width / 2)
-        .attr('y', margin.top / 2)
-        .attr('text-anchor', 'middle')
-        .style('font-size', '14px')
-        .style('font-weight', 'bold')
-        .text(`${actionId} UMAP`);
 
     const xExtent = d3.extent(coords, (d) => d[0]) as [number, number];
     const yExtent = d3.extent(coords, (d) => d[1]) as [number, number];
@@ -42,34 +33,6 @@ const drawEmbedding = (svgElement: SVGSVGElement, coords: number[][], category: 
         .scaleLinear()
         .domain([yExtent[0] - 1, yExtent[1] + 1])
         .range([height - margin.bottom, margin.top]);
-
-    // Add X-Axis
-    svg.append('g')
-        .attr('transform', `translate(0, ${height - margin.bottom})`)
-        .call(d3.axisBottom(xScale).tickValues([]));
-
-    // Add Y-Axis
-    svg.append('g').attr('transform', `translate(${margin.left}, 0)`).call(d3.axisLeft(yScale).tickValues([]));
-
-    // Style the axis lines to be black
-    svg.selectAll('.domain').attr('stroke', 'black');
-
-    // // X-Axis Label
-    // svg.append('text')
-    //     .attr('x', width / 2)
-    //     .attr('y', height - margin.bottom + 20)
-    //     .attr('text-anchor', 'middle')
-    //     .style('font-size', '12px')
-    //     .text('UMAP1');
-
-    // // Y-Axis Label
-    // svg.append('text')
-    //     .attr('transform', 'rotate(-90)')
-    //     .attr('y', margin.left - 10)
-    //     .attr('x', 0 - height / 2)
-    //     .attr('text-anchor', 'middle')
-    //     .style('font-size', '12px')
-    //     .text('UMAP2');
 
     // Draw points
     svg.selectAll('circle.point')
@@ -164,7 +127,7 @@ const Embedding = observer(() => {
 
     return (
         <div className='embedding-root'>
-            <div className='embedding-title'>Cell Embedding Overview</div>
+            <div className='embedding-title'>Cell Overview</div>
             <div className='embedding-body'>
                 <svg ref={svgRef} style={{width: '100%', height: '100%'}}></svg>
             </div>

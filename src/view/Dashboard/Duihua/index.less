@@ -10,7 +10,7 @@
 
     .duihua-title {
         // Match selection-title style but with flex layout for icon
-        flex: 0 0 32px; // Fixed height similar to what flex: 1 might result in relative to flex: 12 in other component, or just use fixed px
+        flex: 0 0 @title-line-height; // Fixed height similar to what flex: 1 might result in relative to flex: 12 in other component, or just use fixed px
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -21,7 +21,7 @@
         color: @view-title-font;
         border-bottom: @border; // Use border-bottom instead of full border since parent might have it
         padding-left: 8px;
-        line-height: 32px;
+        line-height: @title-line-height;
 
         .refresh-icon {
             cursor: pointer;
@@ -41,11 +41,9 @@
         .message-list {
             flex: 1;
             position: relative;
-            padding: 12px;
-            padding-left: 40px;
+            padding: 4px;
+            padding-left: 28px;
             overflow-y: auto;
-
-            // Hide scrollbar but keep functionality
             scrollbar-width: none; // Firefox
             -ms-overflow-style: none; // IE/Edge
             &::-webkit-scrollbar {
@@ -56,7 +54,7 @@
                 position: absolute;
                 left: 0;
                 top: 0;
-                width: 30px;
+                width: 24px;
                 height: 100%;
                 z-index: 0;
             }
