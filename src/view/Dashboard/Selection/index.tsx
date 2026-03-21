@@ -5,7 +5,7 @@ import RingNodeDag from './RingNodeDag';
 const Selection = () => {
     return (
         <div className='selection-root'>
-            <div className='selection-title'>LLM Action Inspection View</div>
+            <div className='selection-title'>Exploration View</div>
             <div className='selection-body'>
                 <RingNodeDag />
             </div>

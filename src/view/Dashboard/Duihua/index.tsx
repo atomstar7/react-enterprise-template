@@ -35,7 +35,7 @@ const Duihua = () => {
     return (
         <div className='duihua-root'>
             <div className='duihua-title'>
-                <span>Collaboration View</span>
+                <span>Chat Panel</span>
                 <Trash size={18} className='refresh-icon' />
             </div>
             <div className='duihua-body'>

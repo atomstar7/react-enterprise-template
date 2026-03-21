@@ -4,8 +4,7 @@ import {Table, Checkbox} from 'antd';
 import type {ColumnsType} from 'antd/es/table';
 import './index.less';
 import actions from '@/store/index';
-import {convertActionsToCombinationData, Combination} from '@/utils/combinationConverter';
-import GeneGlyph from './GeneGlyph';
+import {convertActionsToCombinationData, Combination, Marker} from '@/utils/combinationConverter';
 import F1ScoreGlyph from './F1ScoreGlyph';
 import {cellStore} from '@/store/CellData';
 import {clusterColorStore} from '@/store/colorMapping';
@@ -59,7 +58,7 @@ const CombinationView = observer(() => {
             dataIndex: 'id',
             key: 'id',
             className: 'cluster-column',
-            width: '25%',
+            width: '16%',
             align: 'center',
             render: (_, record) => (
                 <div
@@ -100,25 +99,64 @@ const CombinationView = observer(() => {
         {
             title: 'Marker genes',
             key: 'markers',
-            render: (_, record) => {
+            width: '68%',
+            className: 'marker-genes-cell', // Apply custom class
+            render: (record: Combination) => {
                 const isExpanded = expandedRowKeys.includes(record.id);
+                const markerColumns: ColumnsType<Marker> = [
+                    {
+                        title: 'Gene',
+                        dataIndex: 'gene_name',
+                        key: 'gene_name',
+                        render: (text, markerRecord) => (
+                            <div
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center'
+                                    // gap: '0px',
+                                    // padding: '0px',
+                                    // margin: '0px'
+                                }}
+                            >
+                                <Checkbox
+                                    checked={markerRecord.isSelected}
+                                    onChange={() => handleCheckboxChange(record.id, markerRecord.label)}
+                                />
+                                <span style={{marginLeft: 8}}>{text}</span>
+                            </div>
+                        )
+                    },
+                    {
+                        title: 'log2FC',
+                        dataIndex: 'log2FC',
+                        key: 'log2FC',
+                        render: (val) => val.toFixed(4)
+                    },
+                    {
+                        title: 'p-val adj',
+                        dataIndex: 'pval_adj',
+                        key: 'pval_adj',
+                        render: (val) => val.toFixed(4)
+                    },
+                    {title: 'pts', dataIndex: 'pts', key: 'pts', render: (val) => val.toFixed(2)},
+                    {
+                        title: 'pts_rest',
+                        dataIndex: 'pts_rest',
+                        key: 'pts_rest',
+                        render: (val) => val.toFixed(2)
+                    }
+                ];
+
                 return (
                     <div className={`marker-scroll-container ${isExpanded ? 'expanded' : ''}`}>
-                        {record.markers.map((marker, idx) => (
-                            <div key={idx} className='marker-row'>
-                                <Checkbox
-                                    checked={marker.isSelected}
-                                    onChange={() => handleCheckboxChange(record.id, marker.label)}
-                                />
-                                <GeneGlyph
-                                    gene_name={marker.gene_name}
-                                    log2FC={marker.log2FC}
-                                    pval_adj={marker.pval_adj}
-                                    pts={marker.pts}
-                                    pts_rest={marker.pts_rest}
-                                />
-                            </div>
-                        ))}
+                        <Table
+                            columns={markerColumns}
+                            dataSource={record.markers}
+                            rowKey='label'
+                            pagination={false}
+                            size='small'
+                            style={{width: '100%'}}
+                        />
                     </div>
                 );
             }
@@ -128,7 +166,7 @@ const CombinationView = observer(() => {
             dataIndex: 'f1Score',
             key: 'f1Score',
             className: 'score-column',
-            width: '25%',
+            width: '16%',
             align: 'center',
             render: (score) => <F1ScoreGlyph score={score} />
         }
@@ -136,7 +174,7 @@ const CombinationView = observer(() => {
 
     return (
         <div className='combination-root'>
-            <div className='combination-title'>Marker Genes View</div>
+            <div className='combination-title'>Marker Gene View</div>
             <div className='combination-body'>
                 <Table<Combination>
                     dataSource={interactiveData}

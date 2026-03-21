@@ -1,6 +1,10 @@
 @import url('@/constants/font.less');
 @import url('@/constants/color.less');
 
+.marker-genes-cell {
+    padding: 0 !important;
+}
+
 .combination-root {
     display: flex;
     flex-direction: column;
@@ -122,12 +126,12 @@
                 font-weight: bold;
                 font-style: italic;
                 font-size: 14px;
-                padding: 4px 0;
+                // padding: 4px 0;
             }
 
             // Nested Scroll Container
             .marker-scroll-container {
-                max-height: 120px; // Approx 2.5 rows (assuming ~48px per row)
+                max-height: 100px; // Approx 2.5 rows (assuming ~48px per row)
                 overflow-y: scroll;
                 transition: max-height 0.3s ease-in-out;
 
