@@ -1,16 +1,17 @@
 import React, {useMemo, useState, useEffect} from 'react';
 import {observer} from 'mobx-react-lite';
-import {Checkbox} from 'antd';
+// import {Checkbox} from 'antd';
 import './index.less';
 import actions from '@/store/index';
 import {convertActionsToCombinationData, Combination} from '@/utils/combinationConverter';
 import GeneGlyph from './GeneGlyph';
-import F1ScoreGlyph from './F1ScoreGlyph';
+// import F1ScoreGlyph from './F1ScoreGlyph';
 import {cellStore} from '@/store/CellData';
 import {clusterColorStore} from '@/store/colorMapping';
 
 const CombinationView = observer(() => {
     const [interactiveData, setInteractiveData] = useState<Combination[]>([]);
+    const [sortBy, setSortBy] = useState<'log2FC' | 'pts'>('pts');
 
     const allData = useMemo(() => {
         if (!clusterColorStore.isInitialized) return [];
@@ -24,8 +25,13 @@ const CombinationView = observer(() => {
     }, [allData, cellStore.selected_action_id]);
 
     useEffect(() => {
-        setInteractiveData(filteredData);
-    }, [filteredData]);
+        // Sort markers inside each combination based on the selected 'sortBy'
+        const sortedData = filteredData.map((combo) => {
+            const sortedMarkers = [...combo.markers].sort((a, b) => b[sortBy] - a[sortBy]);
+            return {...combo, markers: sortedMarkers};
+        });
+        setInteractiveData(sortedData);
+    }, [filteredData, sortBy]);
 
     const handleCheckboxChange = (combinationId: string, markerLabel: string) => {
         setInteractiveData((currentData) =>
@@ -58,18 +64,28 @@ const CombinationView = observer(() => {
 
     return (
         <div className='combination-root'>
-            <div className='combination-title'>Marker Gene View</div>
+            <div className='combination-title'>
+                Marker Gene View
+                <select
+                    className='sort-select'
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value as 'pts' | 'log2FC')}
+                >
+                    <option value='pts'>pts</option>
+                    <option value='log2FC'>log2FC</option>
+                </select>
+            </div>
             <div className='combination-body-vertical'>
                 {Object.entries(dataByCluster).map(([clusterId, combinations]) => (
                     <div key={clusterId} className='cluster-column'>
                         {combinations.map((combo) => (
                             <div key={combo.id} className='cluster-cell'>
-                                <div className='cluster-header'>
+                                {/* <div className='cluster-header'>
                                     <div className='cluster-tag' style={{backgroundColor: combo.clusterColor}}>
                                         {combo.clusterId}
                                     </div>
                                     <div className='cell-type-tag'>{combo.cellType}</div>
-                                </div>
+                                </div> */}
                                 <div className='markers-container'>
                                     {combo.markers.map((marker, idx) => (
                                         <div
@@ -83,6 +99,7 @@ const CombinationView = observer(() => {
                                                 pval_adj={marker.pval_adj}
                                                 pts={marker.pts}
                                                 pts_rest={marker.pts_rest}
+                                                clusterColor={combo.clusterColor}
                                             />
                                         </div>
                                     ))}

@@ -8,17 +8,30 @@
     height: 100%;
 
     .combination-title {
-        flex: 0 0 24px;
-        font-weight: @font-weight;
+        flex: 0 0 @title-line-height;
+        font-weight: @view-font-weight;
         font-size: @view-header-font-size;
         font-style: @view-font-style;
         background-color: @view-title-background;
         color: @view-title-font;
-        border: @border;
-        padding-left: 8px;
+        border-bottom: @border;
+        padding-left: 12px;
+        padding-right: 4px;
         line-height: @title-line-height;
         display: flex;
         align-items: center;
+        justify-content: space-between;
+
+        .sort-select {
+            font-size: 0.7rem;
+            // padding: 1px;
+            border-radius: 4px;
+            font-weight: 500;
+            border: 1px solid #ccc;
+            outline: none;
+            background-color: white;
+            cursor: pointer;
+        }
     }
 
     .combination-body-vertical {
@@ -68,6 +81,8 @@
             align-items: center;
             gap: 4px;
             margin-bottom: 8px;
+            width: 73px;
+            height: 65px;
         }
 
         .cluster-tag {
@@ -104,7 +119,9 @@
             transition: background-color 0.2s ease-in-out;
 
             &.selected {
-                background-color: #e6f7ff; // A light blue for selection
+                // background-color: #e6f7ff; // A light blue for selection
+                // background-color: #e5ddf3; // A light blue for selection
+                background-color: #e5e5e5; // A light blue for selection
             }
 
             &:hover {
@@ -124,7 +141,7 @@
             padding: 5px 8px;
             border-radius: 4px;
             font-size: 12px;
-            z-index: 100; // Ensure it's on top
+            z-index: 1000; // Ensure it's on top of everything
             transition: opacity 0.2s;
         }
 

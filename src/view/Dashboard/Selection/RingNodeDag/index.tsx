@@ -13,6 +13,7 @@ import {clusterColorStore} from '@/store/colorMapping';
 // Wrapper for D3 hierarchy to include incoming edge info
 interface TreeNode extends Node {
     children?: TreeNode[];
+    _children?: TreeNode[]; // Keep track of collapsed children
     incomingReasoning?: string;
     incomingType?: string;
     innerGraphData?: {
@@ -32,6 +33,8 @@ const RingNodeDag = () => {
     const [dagData, setDagData] = useState<DagData | null>(null);
     const [layoutRoot, setLayoutRoot] = useState<d3.HierarchyPointNode<TreeNode> | null>(null);
     const [tooltip, setTooltip] = useState<TooltipState>({visible: false, x: 0, y: 0, content: ''});
+    // Add state to track which nodes are collapsed
+    const [collapsedNodes, setCollapsedNodes] = useState<Set<string>>(new Set());
     const svgRef = useRef<SVGSVGElement>(null);
     const gRef = useRef<SVGGElement>(null);
 
@@ -136,16 +139,40 @@ const RingNodeDag = () => {
 
         if (!rootNode) return;
 
+        // Apply collapse state to the tree structure BEFORE calculating layout
+        const applyCollapseState = (node: TreeNode) => {
+            if (collapsedNodes.has(node.id)) {
+                // If it's collapsed, hide children
+                if (node.children) {
+                    node._children = node.children;
+                    node.children = undefined;
+                }
+            } else {
+                // If it's expanded, restore children
+                if (node._children) {
+                    node.children = node._children;
+                    node._children = undefined;
+                }
+            }
+
+            // Recursively apply to children
+            if (node.children) {
+                node.children.forEach(applyCollapseState);
+            }
+        };
+
+        applyCollapseState(rootNode);
+
         // D3 Layout
         const root = d3.hierarchy<TreeNode>(rootNode);
         const treeLayout = d3
             .tree<TreeNode>()
-            .nodeSize([150, 250])
+            .nodeSize([500, 280])
             .separation((a, b) => (a.parent === b.parent ? 1 : 1.2));
 
         treeLayout(root);
 
-        const layerGap = 150;
+        const layerGap = 110;
         const depthMap = d3.group(root.descendants(), (node) => node.depth);
         const sortedDepths = Array.from(depthMap.keys()).sort((a, b) => a - b);
 
@@ -167,7 +194,7 @@ const RingNodeDag = () => {
         });
 
         setLayoutRoot(root);
-    }, [dagData]);
+    }, [dagData, collapsedNodes]);
 
     // 3. Setup Zoom
     useEffect(() => {
@@ -185,8 +212,9 @@ const RingNodeDag = () => {
 
         svg.call(zoom);
 
-        // Initial Center
-        const initialTransform = d3.zoomIdentity.translate(100, 80);
+        // Initial Center with 30% scale down (scale factor 0.7)
+        // Adjust the translate slightly if needed to keep it centered when scaled down
+        const initialTransform = d3.zoomIdentity.translate(100, 80).scale(0.6);
         svg.call(zoom.transform, initialTransform);
     }, [layoutRoot]);
 
@@ -232,6 +260,18 @@ const RingNodeDag = () => {
             .filter((score) => Number.isFinite(score));
         if (validScores.length === 0) return 0;
         return validScores.reduce((sum, score) => sum + score, 0) / validScores.length;
+    };
+
+    const handleLinkClick = (event: React.MouseEvent, targetId: string) => {
+        setCollapsedNodes((prev) => {
+            const next = new Set(prev);
+            if (next.has(targetId)) {
+                next.delete(targetId); // Expand
+            } else {
+                next.add(targetId); // Collapse
+            }
+            return next;
+        });
     };
 
     return (
@@ -323,18 +363,37 @@ const RingNodeDag = () => {
                                                 onMouseEnter={(e) => handleLinkMouseEnter(e, reasoning)}
                                                 onMouseMove={handleLinkMouseMove}
                                                 onMouseLeave={handleLinkMouseLeave}
+                                                onClick={(e) => handleLinkClick(e, targetNode.id)}
                                             />
-                                            <text
-                                                x={(newP1.x + newP2.x) / 2}
-                                                y={(newP1.y + newP2.y) / 2 - 10}
-                                                textAnchor='middle'
-                                                fill='#666'
-                                                fontWeight='bold'
-                                                fontSize='14px'
-                                                style={{pointerEvents: 'none'}} // Let hover pass through to the wide path
-                                            >
-                                                {type}
-                                            </text>
+                                            {/* Text and background for type (e.g. split, merge) */}
+                                            {type && (
+                                                <g
+                                                    transform={`translate(${(newP1.x + newP2.x) / 2}, ${(newP1.y + newP2.y) / 2})`}
+                                                >
+                                                    {/* Background rect for text */}
+                                                    <rect
+                                                        x={-25} // Adjust width based on expected text length
+                                                        y={-10}
+                                                        width={50}
+                                                        height={20}
+                                                        rx={10} // Rounded corners
+                                                        ry={10}
+                                                        fill='#f5f5f5' // Light gray background
+                                                        stroke='#e0e0e0' // Optional subtle border
+                                                        strokeWidth={1}
+                                                    />
+                                                    <text
+                                                        dy='0.35em' // Center vertically relative to rect
+                                                        textAnchor='middle'
+                                                        fill='#666'
+                                                        fontWeight='bold'
+                                                        fontSize='12px' // Slightly smaller to fit nicely in rect
+                                                        style={{pointerEvents: 'none'}} // Let hover pass through to the wide path
+                                                    >
+                                                        {type}
+                                                    </text>
+                                                </g>
+                                            )}
                                         </g>
                                     );
                                 })}

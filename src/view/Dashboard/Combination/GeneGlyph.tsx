@@ -7,9 +7,17 @@ interface GeneGlyphProps {
     pval_adj: number;
     pts: number;
     pts_rest: number;
+    clusterColor?: string;
 }
 
-const GeneGlyph: React.FC<GeneGlyphProps> = ({gene_name, log2FC, pval_adj, pts, pts_rest}) => {
+const GeneGlyph: React.FC<GeneGlyphProps> = ({
+    gene_name,
+    log2FC,
+    pval_adj,
+    pts,
+    pts_rest,
+    clusterColor = '#ffffff'
+}) => {
     const ref = useRef<SVGSVGElement>(null);
     const [tooltip, setTooltip] = useState<{visible: boolean; content: string; x: number; y: number}>({
         visible: false,
@@ -17,8 +25,8 @@ const GeneGlyph: React.FC<GeneGlyphProps> = ({gene_name, log2FC, pval_adj, pts, 
         x: 0,
         y: 0
     });
-    const width = 100;
-    const height = 100;
+    const width = 62;
+    const height = 62;
     const radius = Math.min(width, height) / 2 - 2; // Adjusted for labels
 
     useEffect(() => {
@@ -39,10 +47,11 @@ const GeneGlyph: React.FC<GeneGlyphProps> = ({gene_name, log2FC, pval_adj, pts, 
         };
 
         const data = {
-            log2fc: Math.max(0, Math.min(log2FC, 10)) / 10, // Normalize log2FC (0-10 range)
+            // Adjust scaling to make differences more visually pronounced
+            log2fc: Math.max(0.1, Math.min(log2FC, 5)) / 5, // Cap at 5 instead of 10 to exaggerate smaller differences
             p_value: pValueToNormalized(pval_adj),
-            pts: pts,
-            pts_rest: pts_rest
+            pts: Math.pow(pts, 2), // Square the value to penalize lower values and exaggerate high values
+            pts_rest: Math.pow(pts_rest, 0.5) // Square root to exaggerate smaller rest values (making them visually distinct)
         };
 
         const angleSlice = (Math.PI * 2) / features.length;
@@ -92,10 +101,10 @@ const GeneGlyph: React.FC<GeneGlyphProps> = ({gene_name, log2FC, pval_adj, pts, 
                 .enter()
                 .append('line')
                 .attr('class', `grid-level-${j}`)
-                .attr('x1', (d, i) => level * Math.cos(angleSlice * i - Math.PI / 2))
-                .attr('y1', (d, i) => level * Math.sin(angleSlice * i - Math.PI / 2))
-                .attr('x2', (d, i) => level * Math.cos(angleSlice * (i + 1) - Math.PI / 2))
-                .attr('y2', (d, i) => level * Math.sin(angleSlice * (i + 1) - Math.PI / 2))
+                .attr('x1', (_, i) => level * Math.cos(angleSlice * i - Math.PI / 2))
+                .attr('y1', (_, i) => level * Math.sin(angleSlice * i - Math.PI / 2))
+                .attr('x2', (_, i) => level * Math.cos(angleSlice * (i + 1) - Math.PI / 2))
+                .attr('y2', (_, i) => level * Math.sin(angleSlice * (i + 1) - Math.PI / 2))
                 .attr('stroke', 'grey')
                 .attr('stroke-width', '0.5px')
                 .attr('stroke-dasharray', '2,2');
@@ -118,7 +127,8 @@ const GeneGlyph: React.FC<GeneGlyphProps> = ({gene_name, log2FC, pval_adj, pts, 
         g.append('path')
             .datum(features)
             .attr('d', radarLine)
-            .attr('fill', 'none')
+            .attr('fill', clusterColor)
+            .attr('fill-opacity', 0.6)
             .attr('stroke', 'black')
             .attr('stroke-width', '0.5px');
 
@@ -163,19 +173,12 @@ const GeneGlyph: React.FC<GeneGlyphProps> = ({gene_name, log2FC, pval_adj, pts, 
     }, [gene_name, log2FC, pval_adj, pts, pts_rest, radius]);
 
     return (
-        <div className='glyph-container' style={{position: 'relative'}}>
+        <div className='glyph-container'>
             <svg ref={ref} width={width} height={height}></svg>
             {tooltip.visible && (
                 <div
                     className='glyph-tooltip'
                     style={{
-                        position: 'absolute',
-                        pointerEvents: 'none',
-                        background: 'rgba(0,0,0,0.7)',
-                        color: 'white',
-                        padding: '5px',
-                        borderRadius: '3px',
-                        fontSize: '12px',
                         left: tooltip.x,
                         top: tooltip.y
                     }}

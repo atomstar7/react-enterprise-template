@@ -4,21 +4,66 @@ import {observer} from 'mobx-react-lite';
 import * as d3 from 'd3';
 import {sankey, sankeyLinkHorizontal} from 'd3-sankey';
 import './index.less';
-import {myCategories} from '@/store';
+import actions, {myCategories} from '@/store';
 import {clusterColorStore} from '@/store/colorMapping';
+import {exportCellTypeData} from '@/utils/exportCelltyoe';
+import {cellStore} from '@/store/CellData';
+
+const cellTypeData = exportCellTypeData(actions as any);
+const cellTypeMap = new Map();
+cellTypeData.forEach((action) => {
+    if (action.mapping && action.mapping.length > 0) {
+        Object.entries(action.mapping[0]).forEach(([clusterId, mappingInfo]) => {
+            const cellType = mappingInfo.predicted_cell_type?.cell_type;
+            if (cellType) {
+                cellTypeMap.set(`${action.action_id}_${clusterId}`, cellType);
+            }
+        });
+    }
+});
+
+// Helper function to trace back parent actions
+const getActionPath = (targetActionId) => {
+    const path = [];
+    let currentId = targetActionId;
+
+    // Create a map for quick lookup
+    const actionMap = new Map();
+    (actions as any).forEach((action) => {
+        actionMap.set(action.action_id, action);
+    });
+
+    while (currentId && actionMap.has(currentId)) {
+        path.unshift(currentId);
+        const currentAction = actionMap.get(currentId);
+        currentId = currentAction.parent_action_id;
+    }
+
+    return path;
+};
 
 // Function to process the category data into a format suitable for a Sankey diagram
-const convertDataForSankey = (categories) => {
+const convertDataForSankey = (categories, selectedActionId) => {
     if (categories.length < 2) {
+        return {nodes: [], links: []};
+    }
+
+    // Get the path of actions from root to the selected action
+    const actionPath = getActionPath(selectedActionId);
+
+    if (actionPath.length < 2) {
         return {nodes: [], links: []};
     }
 
     const nodeSet = new Set();
     const linksMap = {};
 
-    for (let i = 0; i < categories.length - 1; i++) {
-        const sourceAction = categories[i];
-        const targetAction = categories[i + 1];
+    // Filter categories to only include those in our path, and keep them in order
+    const filteredCategories = actionPath.map((actionId) => categories.find((c) => c.key === actionId)).filter(Boolean);
+
+    for (let i = 0; i < filteredCategories.length - 1; i++) {
+        const sourceAction = filteredCategories[i];
+        const targetAction = filteredCategories[i + 1];
 
         for (let j = 0; j < sourceAction.value.length; j++) {
             const sourceCategory = `${sourceAction.key}_${sourceAction.value[j]}`;
@@ -80,7 +125,7 @@ const convertDataForSankey = (categories) => {
     const finalLinks = linkList.map((l) => ({
         source: l.source.id,
         target: l.target.id,
-        value: l.value,
+        value: Math.max(0.001, l.value), // Ensure value is strictly positive to prevent D3 layout errors
         originalValue: l.originalValue
     }));
     const finalNodes = nodeList.map((n) => ({id: n.id}));
@@ -110,7 +155,18 @@ const drawSankey = (svgElement, data) => {
             [width - margin.right, height - margin.bottom]
         ]);
 
-    const {nodes, links} = sankeyLayout(data);
+    // Handle empty data to prevent d3-sankey layout errors
+    if (!data.nodes || data.nodes.length === 0 || !data.links || data.links.length === 0) {
+        return;
+    }
+
+    let nodes, links;
+    try {
+        ({nodes, links} = sankeyLayout(data));
+    } catch (e) {
+        console.error('Sankey layout error:', e);
+        return;
+    }
 
     // Create a unique ID for each gradient
     const gradients = svg.append('defs').selectAll('linearGradient').data(links).join('linearGradient');
@@ -125,7 +181,7 @@ const drawSankey = (svgElement, data) => {
         .append('stop')
         .attr('offset', '0%')
         .attr('stop-color', (d) => {
-            const category = d.source.id.split('_').slice(1).join('_');
+            const category = d.source.id.split('_').slice(2).join('_');
             return clusterColorStore.getColor(category);
         });
 
@@ -133,7 +189,7 @@ const drawSankey = (svgElement, data) => {
         .append('stop')
         .attr('offset', '100%')
         .attr('stop-color', (d) => {
-            const category = d.target.id.split('_').slice(1).join('_');
+            const category = d.target.id.split('_').slice(2).join('_');
             return clusterColorStore.getColor(category);
         });
 
@@ -160,7 +216,7 @@ const drawSankey = (svgElement, data) => {
         .attr('height', (d) => d.y1 - d.y0)
         .attr('width', (d) => d.x1 - d.x0)
         .attr('fill', (d) => {
-            const category = d.id.split('_').slice(1).join('_');
+            const category = d.id.split('_').slice(2).join('_');
             return clusterColorStore.getColor(category);
         })
         .attr('fill-opacity', 0.8) // Added transparency to nodes
@@ -170,7 +226,9 @@ const drawSankey = (svgElement, data) => {
                 d3.sum(d.sourceLinks, (l) => l.originalValue),
                 d3.sum(d.targetLinks, (l) => l.originalValue)
             );
-            return `${d.id.replace('_', ': ')}\n${originalValue}`;
+            const cellType = cellTypeMap.get(d.id);
+            const labelName = cellType || d.id.split('_').slice(2).join('_');
+            return `${labelName}\n${originalValue}`;
         });
 
     // Add labels to nodes
@@ -184,15 +242,20 @@ const drawSankey = (svgElement, data) => {
         .attr('y', (d) => (d.y1 + d.y0) / 2)
         .attr('dy', '0.35em')
         .attr('text-anchor', (d) => (d.x0 < width / 2 ? 'start' : 'end'))
-        .text((d) => d.id.split('_').slice(1).join('_'));
+        .text((d) => {
+            const cellType = cellTypeMap.get(d.id);
+            return cellType || d.id.split('_').slice(2).join('_');
+        });
 };
 
 const Sankey = observer(() => {
     const svgRef = useRef<SVGSVGElement>(null);
+    const [currentPath, setCurrentPath] = React.useState<string[]>([]);
 
     useEffect(() => {
-        if (svgRef.current && myCategories.length > 0) {
-            const sankeyData = convertDataForSankey(myCategories);
+        if (svgRef.current && myCategories.length > 0 && cellStore.selected_action_id) {
+            const sankeyData = convertDataForSankey(myCategories, cellStore.selected_action_id);
+            setCurrentPath(getActionPath(cellStore.selected_action_id));
 
             // Initial draw
             drawSankey(svgRef.current, sankeyData);
@@ -207,11 +270,28 @@ const Sankey = observer(() => {
 
             return () => resizeObserver.disconnect();
         }
-    }, [myCategories]);
+    }, [myCategories, cellStore.selected_action_id]);
 
     return (
         <div className='sankey-root'>
-            <div className='sankey-title'>Label Flow View</div>
+            <div className='sankey-title'>
+                <div>Label Flow View</div>
+                <div className='action-path'>
+                    {currentPath.map((actionId, index) => {
+                        // Extract number from "action_X"
+                        const numMatch = actionId.match(/\d+/);
+                        const label = numMatch ? `A${numMatch[0]}` : actionId;
+                        return (
+                            <React.Fragment key={actionId}>
+                                <div className='action-node' title={actionId}>
+                                    {label}
+                                </div>
+                                {index < currentPath.length - 1 && <span className='action-arrow'>→</span>}
+                            </React.Fragment>
+                        );
+                    })}
+                </div>
+            </div>
             <div className='sankey-body'>
                 <svg ref={svgRef} style={{width: '100%', height: '100%'}}></svg>
             </div>

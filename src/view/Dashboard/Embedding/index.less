@@ -9,16 +9,33 @@
 
     .embedding-title {
         flex: 0 0 @title-line-height;
-        font-weight: @font-weight;
+        font-weight: @view-font-weight;
         font-size: @view-header-font-size;
         font-style: @view-font-style;
         background-color: @view-title-background;
         color: @view-title-font;
-        border: @border;
-        padding-left: 8px;
+        border-bottom: @border;
+        padding-left: 12px;
+        padding-right: 12px;
         line-height: @title-line-height;
         display: flex;
         align-items: center;
+        justify-content: space-between;
+
+        .cell-count-info {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            font-weight: normal;
+
+            .gray-circle {
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                background-color: #c0c0c0; // Gray color, darker than typical background
+            }
+        }
     }
 
     .embedding-body {

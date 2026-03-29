@@ -8,16 +8,38 @@
 
     .selection-title {
         flex: 0 0 @title-line-height; // 固定高度
-        font-weight: @font-weight;
+        font-weight: @view-font-weight;
         font-size: @view-header-font-size;
         font-style: @view-font-style;
         background-color: @view-title-background;
         color: @view-title-font;
-        border: @border;
-        padding-left: 8px;
+        border-bottom: @border;
+        padding-left: 12px;
+        padding-right: 12px;
         line-height: @title-line-height;
         display: flex;
         align-items: center;
+        justify-content: space-between;
+
+        .cluster-counts {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 12px;
+            font-weight: normal;
+
+            .cluster-count-item {
+                display: flex;
+                align-items: center;
+                gap: 4px;
+
+                .color-circle {
+                    width: 10px;
+                    height: 10px;
+                    border-radius: 50%;
+                }
+            }
+        }
     }
 
     .selection-body {

@@ -1,6 +1,7 @@
 import React from 'react';
 import {Select, Space} from 'antd';
 import {SettingOutlined} from '@ant-design/icons';
+import SvgIcon from '@/components/SvgIcon';
 import './index.less';
 
 const Header = () => {
@@ -14,19 +15,22 @@ const Header = () => {
 
     return (
         <div className='header-root'>
-            <div className='header-title'>CellDecipher</div>
+            <div className='header-left-content'>
+                <SvgIcon svgName='cell' svgClass='header-logo' color='#333' />
+                <div className='header-title'>CellDecipher</div>
+            </div>
             <div className='header-right-content'>
                 <div className='header-controls'>
                     <Space wrap>
                         <Select
                             defaultValue='PBMC'
-                            style={{width: 140}}
+                            style={{width: 100, height: 22, fontSize: '0.75rem'}}
                             onChange={handleDataChange}
                             options={[{value: 'PBMC', label: 'PBMC'}]}
                         />
                         <Select
                             defaultValue='Gemini'
-                            style={{width: 140}}
+                            style={{width: 100, height: 22, fontSize: '0.75rem'}}
                             onChange={handleModelChange}
                             options={[
                                 {value: 'Qwen', label: 'Qwen'},
@@ -37,7 +41,7 @@ const Header = () => {
                     </Space>
                 </div>
                 <div className='header-actions'>
-                    <SettingOutlined style={{fontSize: '20px'}} />
+                    <SettingOutlined style={{fontSize: '1rem'}} />
                 </div>
             </div>
         </div>

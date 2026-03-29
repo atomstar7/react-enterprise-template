@@ -79,7 +79,7 @@ const RingNodeGlyph: React.FC<RingNodeGlyphProps> = ({nodeData}) => {
             .startAngle(0)
             .endAngle(2 * Math.PI * avgScore);
 
-        g.append('path').attr('d', scoreArc).attr('fill', '#5F92B6');
+        g.append('path').attr('d', scoreArc).attr('fill', '#999999');
 
         return () => {
             g.selectAll('*').remove();

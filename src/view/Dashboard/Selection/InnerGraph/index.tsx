@@ -51,8 +51,6 @@ const InnerGraph: React.FC<InnerGraphProps> = ({g, data}) => {
             .attr('cx', (d: any) => d.x)
             .attr('cy', (d: any) => d.y);
 
-        // No simulation needed as positions are pre-calculated
-
         return () => {
             // Cleanup only the inner graph
             innerG.remove();

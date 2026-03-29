@@ -1,20 +1,36 @@
 @import url('@/constants/font.less');
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&display=swap');
 
 .header-root {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 2px;
+    padding: 0 4px;
     width: 100%;
     height: 100%;
+    // background-color: #98adc0;
 
-    .header-title {
-        font-family: 'Montserrat', 'Avenir Next', 'Segoe UI', sans-serif;
-        font-weight: 800;
-        font-size: @global-header-font-size;
-        font-style: normal;
-        letter-spacing: 0.08em;
+    .header-left-content {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        .header-logo {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            svg {
+                width: 100%;
+                height: 100%;
+            }
+        }
+
+        .header-title {
+            font-weight: @font-weight;
+            font-size: @global-header-font-size;
+        }
     }
 
     .header-right-content {

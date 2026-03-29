@@ -34,8 +34,21 @@ const drawEmbedding = (svgElement: SVGSVGElement, coords: number[][], category: 
         .domain([yExtent[0] - 1, yExtent[1] + 1])
         .range([height - margin.bottom, margin.top]);
 
+    // Create a container group for all elements that need to be zoomed/panned
+    const g = svg.append('g');
+
+    // Add zoom behavior
+    const zoom = d3
+        .zoom<SVGSVGElement, unknown>()
+        .scaleExtent([0.5, 10]) // Set min and max zoom limits
+        .on('zoom', (event) => {
+            g.attr('transform', event.transform);
+        });
+
+    svg.call(zoom);
+
     // Draw points
-    svg.selectAll('circle.point')
+    g.selectAll('circle.point')
         .data(coords)
         .enter()
         .append('circle')
@@ -64,7 +77,7 @@ const drawEmbedding = (svgElement: SVGSVGElement, coords: number[][], category: 
             const avgX = d3.mean(scaledCoords, (d) => d[0]);
             const avgY = d3.mean(scaledCoords, (d) => d[1]);
 
-            svg.append('text')
+            g.append('text')
                 .attr('x', avgX)
                 .attr('y', avgY)
                 .attr('text-anchor', 'middle')
@@ -127,7 +140,13 @@ const Embedding = observer(() => {
 
     return (
         <div className='embedding-root'>
-            <div className='embedding-title'>Cell Overview</div>
+            <div className='embedding-title'>
+                <div>Cell Overview</div>
+                <div className='cell-count-info'>
+                    <div className='gray-circle'></div>
+                    <span>{coords.length}</span>
+                </div>
+            </div>
             <div className='embedding-body'>
                 <svg ref={svgRef} style={{width: '100%', height: '100%'}}></svg>
             </div>

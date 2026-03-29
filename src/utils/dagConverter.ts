@@ -48,7 +48,7 @@ const calculateInnerGraphData = (node: Node, allCategories: Categories[], allCoo
             const normalizedCentroids = centroids.map((c, i) => ({
                 id: i,
                 x: (c[0] - centerX) * scale,
-                y: (c[1] - centerY) * scale,
+                y: -(c[1] - centerY) * scale,
                 category: clusterNames[i] // Add category here
             }));
 
@@ -131,7 +131,9 @@ export const convertActionsToDagData = (actions: ActionRecord[]): DagData => {
         if (action.mapping && action.mapping.length > 0) {
             const mappingObj = action.mapping[0];
 
-            Object.entries(mappingObj).forEach(([clusterId, detail]) => {
+            // Just use the keys in the order they appear in the object
+            Object.keys(mappingObj).forEach((clusterId) => {
+                const detail = mappingObj[clusterId];
                 const scoreVal = detail.calc_marker_combination.F1_score;
                 const score = typeof scoreVal === 'string' ? parseFloat(scoreVal) : scoreVal;
 
