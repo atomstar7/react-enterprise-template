@@ -42,14 +42,17 @@ const getActionPath = (targetActionId) => {
     return path;
 };
 
+// Helper function to get default sequential path
+const getDefaultPath = () => {
+    // return ['action_1', 'action_2', 'action_3', 'action_4', 'action_5', 'action_6'];
+    return ['action_1', 'action_2', 'action_3', 'action_4'];
+};
+
 // Function to process the category data into a format suitable for a Sankey diagram
-const convertDataForSankey = (categories, selectedActionId) => {
+const convertDataForSankey = (categories, actionPath) => {
     if (categories.length < 2) {
         return {nodes: [], links: []};
     }
-
-    // Get the path of actions from root to the selected action
-    const actionPath = getActionPath(selectedActionId);
 
     if (actionPath.length < 2) {
         return {nodes: [], links: []};
@@ -253,9 +256,20 @@ const Sankey = observer(() => {
     const [currentPath, setCurrentPath] = React.useState<string[]>([]);
 
     useEffect(() => {
-        if (svgRef.current && myCategories.length > 0 && cellStore.selected_action_id) {
-            const sankeyData = convertDataForSankey(myCategories, cellStore.selected_action_id);
-            setCurrentPath(getActionPath(cellStore.selected_action_id));
+        if (svgRef.current && myCategories.length > 0) {
+            let path;
+            if (cellStore.selected_action_id) {
+                path = getActionPath(cellStore.selected_action_id);
+                // Fallback to default if selected path is too short (e.g. root/action_1)
+                if (path.length < 2) {
+                    path = getDefaultPath();
+                }
+            } else {
+                path = getDefaultPath();
+            }
+
+            const sankeyData = convertDataForSankey(myCategories, path);
+            setCurrentPath(path);
 
             // Initial draw
             drawSankey(svgRef.current, sankeyData);
