@@ -159,15 +159,71 @@
                 color: #666;
             }
 
-            .input-field {
+            .input-wrapper {
                 flex: 1;
-                border: none;
-                outline: none;
-                padding: 4px;
-                font-size: 13px;
+                display: flex;
+                align-items: center;
+                height: 100%;
+                overflow-x: auto;
+                cursor: grab;
+                
+                &.dragging {
+                    cursor: grabbing;
+                    user-select: none;
+                    
+                    .input-field {
+                        pointer-events: none;
+                    }
+                }
 
-                &::placeholder {
-                    color: #999;
+                /* Hide scrollbar for a cleaner look */
+                &::-webkit-scrollbar {
+                    display: none;
+                }
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+
+                .action-tags {
+                    display: flex;
+                    align-items: center;
+                    gap: 6px;
+                    margin-right: 4px;
+                    flex-wrap: nowrap;
+
+                    .action-tag {
+                        display: flex;
+                        align-items: center;
+                        background-color: #e6f7ff;
+                        color: #1890ff;
+                        border: 1px solid #91d5ff;
+                        border-radius: 4px;
+                        padding: 0 4px;
+                        font-size: 10px;
+                        white-space: nowrap;
+
+                        .remove-tag {
+                            margin-left: 2px;
+                            cursor: pointer;
+                            color: #1890ff;
+                            
+                            &:hover {
+                                color: #ff4d4f;
+                            }
+                        }
+                    }
+                }
+
+                .input-field {
+                    flex: 1;
+                    border: none;
+                    outline: none;
+                    padding: 4px;
+                    font-size: 13px;
+                    min-width: 50px;
+
+                    &::placeholder {
+                        color: #999;
+                    }
                 }
             }
 

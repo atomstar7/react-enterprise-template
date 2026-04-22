@@ -9,6 +9,8 @@ import './index.less';
 import actions from '@/store/index';
 import {convertActionsToDagData, ActionRecord} from '@/utils/dagConverter';
 import {clusterColorStore} from '@/store/colorMapping';
+import {cellStore} from '@/store/CellData';
+import {observer} from 'mobx-react-lite';
 
 // Wrapper for D3 hierarchy to include incoming edge info
 interface TreeNode extends Node {
@@ -29,7 +31,7 @@ interface TooltipState {
     content: string;
 }
 
-const RingNodeDag = () => {
+const RingNodeDag = observer(() => {
     const [dagData, setDagData] = useState<DagData | null>(null);
     const [layoutRoot, setLayoutRoot] = useState<d3.HierarchyPointNode<TreeNode> | null>(null);
     const [tooltip, setTooltip] = useState<TooltipState>({visible: false, x: 0, y: 0, content: ''});
@@ -59,12 +61,16 @@ const RingNodeDag = () => {
             const data = convertActionsToDagData(actions as any);
 
             if (data) {
+                if (!cellStore.show_action8) {
+                    data.nodes = data.nodes.filter((node) => node.id !== 'action_8');
+                    data.links = data.links.filter((link) => link.source !== 'action_8' && link.target !== 'action_8');
+                }
                 setDagData(data);
             }
         } catch (err: any) {
             console.error('Failed to process local DAG data:', err);
         }
-    }, []);
+    }, [cellStore.show_action8]);
 
     // 1. Load Data
     useEffect(() => {
@@ -424,6 +430,6 @@ const RingNodeDag = () => {
             )}
         </div>
     );
-};
+});
 
 export default RingNodeDag;

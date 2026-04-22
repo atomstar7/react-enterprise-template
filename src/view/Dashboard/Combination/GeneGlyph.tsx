@@ -1,5 +1,8 @@
 import React, {useEffect, useRef, useState} from 'react';
 import * as d3 from 'd3';
+import {ContextMenuPortal} from '../Selection/RingNodeGlyph';
+import {cellStore} from '@/store/CellData';
+import '../Selection/RingNodeGlyph/index.less';
 
 interface GeneGlyphProps {
     gene_name: string;
@@ -25,8 +28,9 @@ const GeneGlyph: React.FC<GeneGlyphProps> = ({
         x: 0,
         y: 0
     });
-    const width = 62;
-    const height = 62;
+    const [contextMenu, setContextMenu] = useState<{visible: boolean; x: number; y: number} | null>(null);
+    const width = 69;
+    const height = 69;
     const radius = Math.min(width, height) / 2 - 2; // Adjusted for labels
 
     useEffect(() => {
@@ -65,15 +69,15 @@ const GeneGlyph: React.FC<GeneGlyphProps> = ({
         const axisEndRadius = radius; // Outermost grid line
 
         axes.append('line')
-            .attr('x1', (d, i) => axisStartRadius * Math.cos(angleSlice * i - Math.PI / 2))
-            .attr('y1', (d, i) => axisStartRadius * Math.sin(angleSlice * i - Math.PI / 2))
-            .attr('x2', (d, i) => axisEndRadius * Math.cos(angleSlice * i - Math.PI / 2))
-            .attr('y2', (d, i) => axisEndRadius * Math.sin(angleSlice * i - Math.PI / 2))
+            .attr('x1', (_, i) => axisStartRadius * Math.cos(angleSlice * i - Math.PI / 2))
+            .attr('y1', (_, i) => axisStartRadius * Math.sin(angleSlice * i - Math.PI / 2))
+            .attr('x2', (_, i) => axisEndRadius * Math.cos(angleSlice * i - Math.PI / 2))
+            .attr('y2', (_, i) => axisEndRadius * Math.sin(angleSlice * i - Math.PI / 2))
             .attr('stroke', 'black')
             .attr('stroke-width', '0.1px');
 
         // --- Draw Ticks ---
-        axes.each(function (d, i) {
+        axes.each(function (_, i) {
             const axis = d3.select(this);
             const axisLength = axisEndRadius - axisStartRadius;
             const angle = angleSlice * i - Math.PI / 2;
@@ -116,7 +120,7 @@ const GeneGlyph: React.FC<GeneGlyphProps> = ({
         // --- Draw Data Shape ---
         const radarLine = d3
             .lineRadial<string>()
-            .angle((d, i) => i * angleSlice)
+            .angle((_, i) => i * angleSlice)
             .radius((d) => {
                 // Ensure the data line starts from the center circle boundary
                 const value = data[d] * (radius - centerCircleRadius) + centerCircleRadius;
@@ -170,10 +174,51 @@ const GeneGlyph: React.FC<GeneGlyphProps> = ({
             .on('mouseleave', () => {
                 setTooltip((prev) => ({...prev, visible: false}));
             });
-    }, [gene_name, log2FC, pval_adj, pts, pts_rest, radius]);
+    }, [gene_name, log2FC, pval_adj, pts, pts_rest, radius, clusterColor]);
+
+    const handleContextMenu = (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        setContextMenu({
+            visible: true,
+            x: e.clientX,
+            y: e.clientY
+        });
+    };
+
+    useEffect(() => {
+        const handleClickOutside = () => {
+            if (contextMenu?.visible) {
+                setContextMenu(null);
+            }
+        };
+
+        let timeoutId: ReturnType<typeof setTimeout>;
+
+        if (contextMenu?.visible) {
+            timeoutId = setTimeout(() => {
+                document.addEventListener('click', handleClickOutside);
+                document.addEventListener('contextmenu', handleClickOutside);
+            }, 10);
+        }
+
+        return () => {
+            if (timeoutId) clearTimeout(timeoutId);
+            document.removeEventListener('click', handleClickOutside);
+            document.removeEventListener('contextmenu', handleClickOutside);
+        };
+    }, [contextMenu]);
+
+    const handleMenuAction = (action: string) => {
+        if (action === 'add_to_chat') {
+            cellStore.addChatPanelAction(`gene_${gene_name}`);
+        }
+        setContextMenu(null);
+    };
 
     return (
-        <div className='glyph-container'>
+        <div className='glyph-container' onContextMenu={handleContextMenu}>
             <svg ref={ref} width={width} height={height}></svg>
             {tooltip.visible && (
                 <div
@@ -186,6 +231,11 @@ const GeneGlyph: React.FC<GeneGlyphProps> = ({
                     {tooltip.content}
                 </div>
             )}
+            <ContextMenuPortal
+                contextMenu={contextMenu}
+                handleMenuAction={handleMenuAction}
+                nodeId={`gene_${gene_name}`}
+            />
         </div>
     );
 };

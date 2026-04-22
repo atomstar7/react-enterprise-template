@@ -1,9 +1,11 @@
 import React, {useState, useLayoutEffect, useRef} from 'react';
 import './index.less';
-import {Trash, List, PaperPlaneTilt, Robot, User, CaretDown, CaretUp} from '@phosphor-icons/react';
+import {Trash, List, PaperPlaneTilt, Robot, User, CaretDown, CaretUp, X} from '@phosphor-icons/react';
 import {initialMessages, Message} from '@/store/conversationData';
+import {cellStore} from '@/store/CellData';
+import {observer} from 'mobx-react-lite';
 
-const MessageBubble = ({msg}: {msg: Message}) => {
+const MessageBubble = ({msg, onHeightChange}: {msg: Message; onHeightChange?: () => void}) => {
     const [expanded, setExpanded] = useState(false);
     const textRef = useRef<HTMLPreElement>(null);
     const [showExpandIcon, setShowExpandIcon] = useState(false);
@@ -18,6 +20,14 @@ const MessageBubble = ({msg}: {msg: Message}) => {
         }
     }, [msg.text]);
 
+    const toggleExpand = () => {
+        setExpanded(!expanded);
+        // Notify parent of potential height change after a small delay to allow CSS transition
+        if (onHeightChange) {
+            setTimeout(onHeightChange, 350); // Match or exceed CSS transition time
+        }
+    };
+
     return (
         <div className={`message-bubble ${expanded ? 'expanded' : 'collapsed'}`}>
             <div className='message-content-wrapper'>
@@ -26,7 +36,7 @@ const MessageBubble = ({msg}: {msg: Message}) => {
                 </pre>
             </div>
             {showExpandIcon && (
-                <div className='expand-icon-wrapper' onClick={() => setExpanded(!expanded)}>
+                <div className='expand-icon-wrapper' onClick={toggleExpand}>
                     {expanded ? <CaretUp size={12} /> : <CaretDown size={12} />}
                 </div>
             )}
@@ -34,14 +44,18 @@ const MessageBubble = ({msg}: {msg: Message}) => {
     );
 };
 
-const Duihua = () => {
-    const [messages, setMessages] = useState<Message[]>(initialMessages);
+const Duihua = observer(() => {
+    const [messages, setMessages] = useState<Message[]>(initialMessages.filter((msg) => msg.id !== 7 && msg.id !== 8));
     const [inputValue, setInputValue] = useState('');
     const [navMarkers, setNavMarkers] = useState<{top: number; index: number; content: string}[]>([]);
     const [svgHeight, setSvgHeight] = useState(0);
     const messageListRef = useRef<HTMLDivElement>(null);
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
+    const [isDragging, setIsDragging] = useState(false);
+    const [startX, setStartX] = useState(0);
+    const [scrollLeft, setScrollLeft] = useState(0);
 
-    useLayoutEffect(() => {
+    const updateLayout = () => {
         if (messageListRef.current) {
             const userMessages = Array.from(messageListRef.current.querySelectorAll('.message-item.user'));
 
@@ -58,12 +72,82 @@ const Duihua = () => {
             setNavMarkers(markers);
             setSvgHeight(messageListRef.current.scrollHeight);
         }
+    };
+
+    useLayoutEffect(() => {
+        updateLayout();
+
+        // Use ResizeObserver to detect changes in children's sizes (e.g. expanding bubbles)
+        const observer = new ResizeObserver(() => {
+            updateLayout();
+        });
+
+        if (messageListRef.current) {
+            observer.observe(messageListRef.current);
+            // Also observe children to ensure we catch all height changes
+            Array.from(messageListRef.current.children).forEach((child) => {
+                observer.observe(child);
+            });
+        }
+
+        return () => observer.disconnect();
     }, [messages]);
 
     const handleSend = () => {
-        if (!inputValue.trim()) return;
-        setMessages([...messages, {id: Date.now(), text: inputValue, sender: 'user', content: ''}]);
+        if (!inputValue.trim() && cellStore.chat_panel_actions.length === 0) return;
+
+        let fullMessage = inputValue;
+        if (cellStore.chat_panel_actions.length > 0) {
+            const actionText = cellStore.chat_panel_actions
+                .map((id) => {
+                    if (id === 'root' || id === 'virtual_root') return '(root)';
+                    if (id.startsWith('gene_')) return `(${id.replace('gene_', '')})`;
+                    const numMatch = id.match(/\d+/);
+                    return numMatch ? `(action${numMatch[0]})` : `(${id})`;
+                })
+                .join(' ');
+            fullMessage = `${actionText} ${inputValue}`.trim();
+            cellStore.clearChatPanelActions();
+        }
+
+        setMessages([...messages, {id: Date.now(), text: fullMessage, sender: 'user', content: 'G'}]);
         setInputValue('');
+
+        if (fullMessage.startsWith('(action7)')) {
+            setTimeout(() => {
+                cellStore.setShowAction8(true);
+            }, 3000); // Wait a few seconds before rendering action8
+        }
+
+        const msg8 = initialMessages.find((m) => m.id === 8);
+        if (msg8 && !messages.some((m) => m.id === 8)) {
+            setTimeout(() => {
+                setMessages((prev) => [...prev, msg8]);
+            }, 1500);
+        }
+    };
+
+    const handleMouseDown = (e: React.MouseEvent) => {
+        if (!scrollContainerRef.current) return;
+        setIsDragging(true);
+        setStartX(e.pageX - scrollContainerRef.current.offsetLeft);
+        setScrollLeft(scrollContainerRef.current.scrollLeft);
+    };
+
+    const handleMouseLeave = () => {
+        setIsDragging(false);
+    };
+
+    const handleMouseUp = () => {
+        setIsDragging(false);
+    };
+
+    const handleMouseMove = (e: React.MouseEvent) => {
+        if (!isDragging || !scrollContainerRef.current) return;
+        e.preventDefault();
+        const x = e.pageX - scrollContainerRef.current.offsetLeft;
+        const walk = (x - startX) * 2; // Scroll speed multiplier
+        scrollContainerRef.current.scrollLeft = scrollLeft - walk;
     };
 
     return (
@@ -97,24 +181,58 @@ const Duihua = () => {
                                 )}
                             </div>
                             {/* <div className='message-bubble'>{msg.text}</div> */}
-                            <MessageBubble msg={msg} />
+                            <MessageBubble msg={msg} onHeightChange={updateLayout} />
                         </div>
                     ))}
                 </div>
                 <div className='input-area'>
                     <List size={16} className='action-icon' />
-                    <input
-                        className='input-field'
-                        placeholder='How can I help you?'
-                        value={inputValue}
-                        onChange={(e) => setInputValue(e.target.value)}
-                        onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-                    />
+                    <div
+                        className={`input-wrapper ${isDragging ? 'dragging' : ''}`}
+                        ref={scrollContainerRef}
+                        onMouseDown={handleMouseDown}
+                        onMouseLeave={handleMouseLeave}
+                        onMouseUp={handleMouseUp}
+                        onMouseMove={handleMouseMove}
+                    >
+                        {cellStore.chat_panel_actions.length > 0 && (
+                            <div className='action-tags'>
+                                {cellStore.chat_panel_actions.map((actionId) => {
+                                    const numMatch = actionId.match(/\d+/);
+                                    const label =
+                                        actionId === 'root' || actionId === 'virtual_root'
+                                            ? 'root'
+                                            : actionId.startsWith('gene_')
+                                              ? actionId.replace('gene_', '')
+                                              : numMatch
+                                                ? `action${numMatch[0]}`
+                                                : actionId;
+                                    return (
+                                        <div key={actionId} className='action-tag'>
+                                            <span>({label})</span>
+                                            <X
+                                                size={12}
+                                                className='remove-tag'
+                                                onClick={() => cellStore.removeChatPanelAction(actionId)}
+                                            />
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        )}
+                        <input
+                            className='input-field'
+                            placeholder={cellStore.chat_panel_actions.length > 0 ? '' : 'How can I help you?'}
+                            value={inputValue}
+                            onChange={(e) => setInputValue(e.target.value)}
+                            onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+                        />
+                    </div>
                     <PaperPlaneTilt size={16} className='send-icon' onClick={handleSend} />
                 </div>
             </div>
         </div>
     );
-};
+});
 
 export default Duihua;

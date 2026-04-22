@@ -2,7 +2,7 @@ export interface Message {
     id: number;
     text: string;
     sender: 'agent' | 'user';
-    content: 'D' | 'A1' | 'G';
+    content: 'D' | 'A1' | 'G' | '';
 }
 
 const summary = `Here is a summary of the current data:
@@ -31,9 +31,12 @@ Cluster 8: Annotated as neutrophils. High expression of MPO and CSF3R confirms t
 Cluster 9: Annotated as mast cells. The expression of marker genes such as HDC and LMO4 is highly specific, and the annotation is accurate.
 Next Steps:Based on the current annotation results, the following steps can be considered for the next steps:Optimize cluster quality: Try adjusting the resolution and observe the clustering effect at different resolutions. The current resolution (0.5) is an initial attempt and may be too broad. Increasing the resolution appropriately may help with more refined classification.`;
 
-const gene_reply = `IGHN is a gene that encodes the IgH chain, which is a protein that is involved in the immune response. CD74 is a gene that encodes the CD74 protein, which is a protein that is involved in the immune response.
+const gene_reply = `IGHM is a gene that encodes the Ig chain, which is a protein that is involved in the immune response. CD74 is a gene that encodes the CD74 protein, which is a protein that is involved in the immune response.
 CD74 antigen (invariant polypeptide of major histocompatibility complex, class II antigen-associated) [Mus musculus (house mouse)]
 Location in Chromosome 18, NC_000084.7 (60936921..60945724)`;
+
+const gene_comment = `The protein encoded by this gene belongs to the ornithine decarboxylase antizyme family, which plays a role in cell growth and proliferation by regulating intracellular polyamine levels. Expression of antizymes requires +1 ribosomal frameshifting, which is enhanced by high levels of polyamines. Antizymes in turn bind to and inhibit ornithine decarboxylase (ODC), the key enzyme in polyamine biosynthesis; thus, completing the auto-regulatory circuit. This gene encodes antizyme 1, the first member of the antizyme family, that has broad tissue distribution, and negatively regulates intracellular polyamine levels by binding to and targeting ODC for degradation, as well as inhibiting polyamine uptake. Antizyme 1 mRNA contains two potential in-frame AUGs; and studies in rat suggest that alternative use of the two translation initiation sites results in N-terminally distinct protein isoforms with different subcellular localization. Alternatively spliced transcript variants have also been noted for this gene.
+`;
 
 export const initialMessages: Message[] = [
     {id: 1, text: 'Please summarize the information in this dataset for me.', sender: 'user', content: 'D'},
@@ -47,7 +50,7 @@ export const initialMessages: Message[] = [
     {id: 4, text: action_comment, sender: 'agent', content: ''},
     {
         id: 5,
-        text: 'What are the functions of the genes IGHN and CD74?',
+        text: 'What are the functions of the genes IGHM and CD74?',
         sender: 'user',
         content: 'G'
     },
@@ -55,6 +58,8 @@ export const initialMessages: Message[] = [
         id: 6,
         text: gene_reply,
         sender: 'agent',
-        content: 'action_id'
-    }
+        content: ''
+    },
+    {id: 7, text: '(OAZ1) What are the functions of this gene?', sender: 'user', content: 'G'},
+    {id: 8, text: gene_comment, sender: 'agent', content: ''}
 ];

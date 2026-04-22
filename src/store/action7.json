@@ -1,4 +1,507 @@
-"mapping": [
+{
+    "mapping": [
+        {
+            "0": {
+                "candidate_marker_list": [
+                    {
+                        "ENS": "ENSG00000211899",
+                        "gene_name": "IGHM",
+                        "pval_adj": "0.0",
+                        "log2FC": "2.384261131286621",
+                        "pts": "0.998992950654582",
+                        "pts_rest": "0.23310608778854203"
+                    },
+                    {
+                        "ENS": "ENSG00000226777",
+                        "gene_name": "FAM30A",
+                        "pval_adj": "0.0",
+                        "log2FC": "2.7683346271514893",
+                        "pts": "0.9768378650553877",
+                        "pts_rest": "0.17521827532591797"
+                    },
+                    {
+                        "ENS": "ENSG00000078399",
+                        "gene_name": "HOXA9",
+                        "pval_adj": "0.0",
+                        "log2FC": "2.7668039798736572",
+                        "pts": "0.9707955689828801",
+                        "pts_rest": "0.17497906948929554"
+                    },
+                    {
+                        "ENS": "ENSG00000135916",
+                        "gene_name": "ITM2C",
+                        "pval_adj": "0.0",
+                        "log2FC": "2.1215085983276367",
+                        "pts": "0.9879154078549849",
+                        "pts_rest": "0.26480086114101187"
+                    },
+                    {
+                        "ENS": "ENSG00000130592",
+                        "gene_name": "LSP1",
+                        "pval_adj": "0.0",
+                        "log2FC": "2.0299127101898193",
+                        "pts": "0.9758308157099698",
+                        "pts_rest": "0.27771797631862216"
+                    },
+                    {
+                        "ENS": "ENSG00000019582",
+                        "gene_name": "CD74",
+                        "pval_adj": "0.0",
+                        "log2FC": "0.6300544738769531",
+                        "pts": "0.9969788519637462",
+                        "pts_rest": "0.7017103217318502"
+                    },
+                    {
+                        "ENS": "ENSG00000124813",
+                        "gene_name": "RUNX2",
+                        "pval_adj": "0.0",
+                        "log2FC": "2.7904629707336426",
+                        "pts": "0.9224572004028198",
+                        "pts_rest": "0.15990910178208348"
+                    },
+                    {
+                        "ENS": "ENSG00000124780",
+                        "gene_name": "KCNK17",
+                        "pval_adj": "0.0",
+                        "log2FC": "4.899599075317383",
+                        "pts": "0.877139979859013",
+                        "pts_rest": "0.03588087549336204"
+                    },
+                    {
+                        "ENS": "ENSG00000182568",
+                        "gene_name": "SATB1",
+                        "pval_adj": "0.0",
+                        "log2FC": "1.59622061252594",
+                        "pts": "0.9768378650553877",
+                        "pts_rest": "0.3683769883985169"
+                    },
+                    {
+                        "ENS": "ENSG00000142599",
+                        "gene_name": "RERE",
+                        "pval_adj": "0.0",
+                        "log2FC": "1.7433116436004639",
+                        "pts": "0.9808660624370594",
+                        "pts_rest": "0.33201770123191005"
+                    }
+                ],
+                "calc_marker_combination": {
+                    "marker_combination": ["IGHM", "KCNK17"],
+                    "F1_score": "0.8551087210661678",
+                    "precision": "0.9951278928136419",
+                    "recall": "0.8227593152064451"
+                },
+                "predicted_cell_type": {
+                    "cell_type": "immature B cell",
+                    "reasoning": "The cluster is strongly characterized by high expression of IGHM (log2FC=2.38, pts=0.999), a canonical marker of immature and naïve B cells in the Cell Ontology. The marker combination of IGHM and KCNK17 yields high precision (0.995) and F1 score (0.955), indicating specificity for this cluster. While KCNK17 is less conventional, its extremely high log2FC (4.90) and low pts_rest (0.036) suggest it may mark a developmentally restricted B-cell state. Additional markers like CD74 (pts=0.997) and SATB1 support lymphoid identity. HOXA9 and RUNX2 are atypical but may reflect transitional or stress states in developing B cells. No plasma cell, T-cell, or myeloid markers dominate. Taken together, the evidence best fits CL:0000842 'immature B cell', though the presence of KCNK17 and transcription factors introduces some uncertainty."
+                }
+            },
+            "1+4": {
+                "candidate_marker_list": [
+                    {
+                        "ENS": "ENSG00000167658",
+                        "gene_name": "EEF2",
+                        "pval_adj": "0.0",
+                        "log2FC": "1.5227564573287964",
+                        "pts": "0.9903930131004367",
+                        "pts_rest": "0.38943941109852775"
+                    },
+                    {
+                        "ENS": "ENSG00000254772",
+                        "gene_name": "EEF1G",
+                        "pval_adj": "0.0",
+                        "log2FC": "1.818794846534729",
+                        "pts": "0.9842794759825327",
+                        "pts_rest": "0.31610985277463194"
+                    },
+                    {
+                        "ENS": "ENSG00000118513",
+                        "gene_name": "MYB",
+                        "pval_adj": "0.0",
+                        "log2FC": "4.340228080749512",
+                        "pts": "0.9650655021834061",
+                        "pts_rest": "0.05450169875424689"
+                    },
+                    {
+                        "ENS": "ENSG00000197471",
+                        "gene_name": "SPN",
+                        "pval_adj": "0.0",
+                        "log2FC": "2.158076524734497",
+                        "pts": "0.988646288209607",
+                        "pts_rest": "0.2515571913929785"
+                    },
+                    {
+                        "ENS": "ENSG00000121104",
+                        "gene_name": "FAM117A",
+                        "pval_adj": "0.0",
+                        "log2FC": "2.905719757080078",
+                        "pts": "0.9602620087336244",
+                        "pts_rest": "0.15019818799547"
+                    },
+                    {
+                        "ENS": "ENSG00000105810",
+                        "gene_name": "CDK6",
+                        "pval_adj": "0.0",
+                        "log2FC": "2.5115489959716797",
+                        "pts": "0.9755458515283842",
+                        "pts_rest": "0.19677236693091732"
+                    },
+                    {
+                        "ENS": "ENSG00000096384",
+                        "gene_name": "HSP90AB1",
+                        "pval_adj": "0.0",
+                        "log2FC": "2.746717691421509",
+                        "pts": "0.9637554585152839",
+                        "pts_rest": "0.16506228765571915"
+                    },
+                    {
+                        "ENS": "ENSG00000204628",
+                        "gene_name": "RACK1",
+                        "pval_adj": "0.0",
+                        "log2FC": "1.9459881782531738",
+                        "pts": "0.9777292576419214",
+                        "pts_rest": "0.28524915062287653"
+                    },
+                    {
+                        "ENS": "ENSG00000185198",
+                        "gene_name": "PRSS57",
+                        "pval_adj": "0.0",
+                        "log2FC": "4.026533603668213",
+                        "pts": "0.9200873362445415",
+                        "pts_rest": "0.06441109852774632"
+                    },
+                    {
+                        "ENS": "ENSG00000114942",
+                        "gene_name": "EEF1B2",
+                        "pval_adj": "0.0",
+                        "log2FC": "2.5702643394470215",
+                        "pts": "0.9620087336244542",
+                        "pts_rest": "0.18516421291053228"
+                    }
+                ],
+                "calc_marker_combination": {
+                    "marker_combination": ["EEF2", "EEF1G", "MYB"],
+                    "F1_score": "0.8333878919345296",
+                    "precision": "0.9541518084564442",
+                    "recall": "0.8179039301310044"
+                },
+                "predicted_cell_type": {
+                    "cell_type": "hematopoietic progenitor cell",
+                    "reasoning": "The cluster is defined by high expression of MYB (log2FC=4.34, pts=0.965, pts_rest=0.055), a master regulator of hematopoietic stem and progenitor cells (HSPCs) in Cell Ontology (CL:0000034). Supporting markers include CDK6 (log2FC=2.51, pts=0.976), associated with proliferative progenitors, and SPN (CD43, log2FC=2.16, pts=0.989), expressed in early hematopoietic lineages. The marker combination EEF2+EEF1G+MYB achieves high precision (0.954) and F1 score (0.923), indicating robust cluster specificity. While EEF2 and EEF1G are translation-related housekeeping genes, their co-expression with MYB suggests an actively cycling progenitor state rather than generic stress. PRSS57 (log2FC=4.03) is less characterized but co-expressed with MYB. No lineage-committed markers (e.g., CD3, CD19, CD14) dominate. Taken together, the evidence best fits CL:0000034 'hematopoietic progenitor cell', though the lack of canonical stem cell markers like CD34 introduces moderate uncertainty."
+                }
+            },
+            "2": {
+                "candidate_marker_list": [
+                    {
+                        "ENS": "ENSG00000163736",
+                        "gene_name": "PPBP",
+                        "pval_adj": "0.0",
+                        "log2FC": "3.8068809509277344",
+                        "pts": "0.9972067039106145",
+                        "pts_rest": "0.09680088251516823"
+                    },
+                    {
+                        "ENS": "ENSG00000154146",
+                        "gene_name": "NRGN",
+                        "pval_adj": "0.0",
+                        "log2FC": "3.3574745655059814",
+                        "pts": "0.9935405027932961",
+                        "pts_rest": "0.13320463320463322"
+                    },
+                    {
+                        "ENS": "ENSG00000168497",
+                        "gene_name": "CAVIN2",
+                        "pval_adj": "0.0",
+                        "log2FC": "1.8818155527114868",
+                        "pts": "0.9902234636871509",
+                        "pts_rest": "0.35135135135135137"
+                    },
+                    {
+                        "ENS": "ENSG00000259207",
+                        "gene_name": "ITGB3",
+                        "pval_adj": "0.0",
+                        "log2FC": "5.417215347290039",
+                        "pts": "0.9834148044692738",
+                        "pts_rest": "0.02978488692774407"
+                    },
+                    {
+                        "ENS": "ENSG00000101162",
+                        "gene_name": "TUBB1",
+                        "pval_adj": "0.0",
+                        "log2FC": "5.48969841003418",
+                        "pts": "0.9825418994413407",
+                        "pts_rest": "0.02840595697738555"
+                    },
+                    {
+                        "ENS": "ENSG00000203618",
+                        "gene_name": "GP1BB",
+                        "pval_adj": "0.0",
+                        "log2FC": "1.2965623140335083",
+                        "pts": "0.9898743016759777",
+                        "pts_rest": "0.48428019856591287"
+                    },
+                    {
+                        "ENS": "ENSG00000124491",
+                        "gene_name": "F13A1",
+                        "pval_adj": "0.0",
+                        "log2FC": "5.090540409088135",
+                        "pts": "0.9788756983240223",
+                        "pts_rest": "0.0377826806398235"
+                    },
+                    {
+                        "ENS": "ENSG00000113140",
+                        "gene_name": "SPARC",
+                        "pval_adj": "0.0",
+                        "log2FC": "1.8316186666488647",
+                        "pts": "0.9767807262569832",
+                        "pts_rest": "0.3552123552123552"
+                    },
+                    {
+                        "ENS": "ENSG00000005249",
+                        "gene_name": "PRKAR2B",
+                        "pval_adj": "0.0",
+                        "log2FC": "2.1322996616363525",
+                        "pts": "0.9736382681564246",
+                        "pts_rest": "0.2848869277440706"
+                    },
+                    {
+                        "ENS": "ENSG00000104904",
+                        "gene_name": "OAZ1",
+                        "pval_adj": "0.0",
+                        "log2FC": "0.1049206554889679",
+                        "pts": "0.9951117318435754",
+                        "pts_rest": "0.9812465526751241"
+                    }
+                ],
+                "calc_marker_combination": {
+                    "marker_combination": ["NRGN", "CAVIN2"],
+                    "F1_score": "0.9426937738246506",
+                    "precision": "0.9953990444169174",
+                    "recall": "0.982018156424581"
+                },
+                "predicted_cell_type": {
+                    "cell_type": "platelet",
+                    "reasoning": "The cluster is overwhelmingly defined by platelet-specific markers: PPBP (log2FC=3.81, pts=0.997), ITGB3 (log2FC=5.42, pts=0.983), TUBB1 (log2FC=5.49, pts=0.983), GP1BB (log2FC=1.30, pts=0.990), and F13A1 (log2FC=5.09, pts=0.979) — all canonical markers of platelets in Cell Ontology (CL:0000233). The marker combination NRGN+CAVIN2 achieves near-perfect precision (0.995) and F1 score (0.993), confirming cluster homogeneity. While NRGN is neuron-associated, it is also documented in platelets; CAVIN2 supports membrane organization consistent with platelet function. SPARC and PRKAR2B are supportive of megakaryocyte/platelet lineage. OAZ1 is ubiquitously expressed and non-discriminative (pts_rest=0.981). No erythroid, myeloid, or lymphoid lineage markers dominate. This evidence robustly supports annotation as CL:0000233 'platelet'."
+                }
+            },
+            "3": {
+                "candidate_marker_list": [
+                    {
+                        "ENS": "ENSG00000188536",
+                        "gene_name": "HBA2",
+                        "pval_adj": "4.998966347770573e-80",
+                        "log2FC": "6.156428813934326",
+                        "pts": "0.89937106918239",
+                        "pts_rest": "0.016204458945078846"
+                    },
+                    {
+                        "ENS": "ENSG00000244734",
+                        "gene_name": "HBB",
+                        "pval_adj": "4.998966347770573e-80",
+                        "log2FC": "5.6122002601623535",
+                        "pts": "0.89937106918239",
+                        "pts_rest": "0.023382272974442633"
+                    },
+                    {
+                        "ENS": "ENSG00000223609",
+                        "gene_name": "HBD",
+                        "pval_adj": "2.962947677417153e-79",
+                        "log2FC": "4.312672138214111",
+                        "pts": "0.89937106918239",
+                        "pts_rest": "0.05829255029907558"
+                    },
+                    {
+                        "ENS": "ENSG00000147454",
+                        "gene_name": "SLC25A37",
+                        "pval_adj": "3.3964001226088564e-76",
+                        "log2FC": "2.9425296783447266",
+                        "pts": "0.8930817610062893",
+                        "pts_rest": "0.14953779227841218"
+                    },
+                    {
+                        "ENS": "ENSG00000158578",
+                        "gene_name": "ALAS2",
+                        "pval_adj": "6.292783958143734e-73",
+                        "log2FC": "9.604790687561035",
+                        "pts": "0.8553459119496856",
+                        "pts_rest": "0.0013050570962479609"
+                    },
+                    {
+                        "ENS": "ENSG00000004939",
+                        "gene_name": "SLC4A1",
+                        "pval_adj": "1.5190653033638458e-64",
+                        "log2FC": "10.877406120300293",
+                        "pts": "0.8050314465408805",
+                        "pts_rest": "0.000543773790103317"
+                    },
+                    {
+                        "ENS": "ENSG00000013306",
+                        "gene_name": "SLC25A39",
+                        "pval_adj": "1.965676446996273e-63",
+                        "log2FC": "2.1865804195404053",
+                        "pts": "0.8490566037735849",
+                        "pts_rest": "0.22925502990755844"
+                    },
+                    {
+                        "ENS": "ENSG00000060237",
+                        "gene_name": "WNK1",
+                        "pval_adj": "2.232165287689312e-61",
+                        "log2FC": "1.077650785446167",
+                        "pts": "0.9308176100628931",
+                        "pts_rest": "0.500489396411093"
+                    },
+                    {
+                        "ENS": "ENSG00000183508",
+                        "gene_name": "TENT5C",
+                        "pval_adj": "5.0763274595574616e-52",
+                        "log2FC": "1.3190499544143677",
+                        "pts": "0.8805031446540881",
+                        "pts_rest": "0.39804241435562804"
+                    },
+                    {
+                        "ENS": "ENSG00000104765",
+                        "gene_name": "BNIP3L",
+                        "pval_adj": "1.8728846563339515e-48",
+                        "log2FC": "0.8849484324455261",
+                        "pts": "0.8867924528301887",
+                        "pts_rest": "0.5398586188145731"
+                    }
+                ],
+                "calc_marker_combination": {
+                    "marker_combination": ["HBB", "ALAS2"],
+                    "F1_score": "0.9493670886075949",
+                    "precision": "0.9782608695652174",
+                    "recall": "0.8490566037735849"
+                },
+                "predicted_cell_type": {
+                    "cell_type": "erythrocyte",
+                    "reasoning": "The cluster is dominated by hemoglobin genes HBA2 (log2FC=6.16, pts=0.899), HBB (log2FC=5.61, pts=0.899), and HBD (log2FC=4.31, pts=0.899), which are definitive markers of mature erythrocytes in Cell Ontology (CL:0000232). Supporting erythroid-specific markers include ALAS2 (log2FC=9.60, pts=0.855), a rate-limiting enzyme in heme biosynthesis, and SLC4A1 (Band 3, log2FC=10.88, pts=0.805), a red blood cell membrane transporter. The marker combination HBB+ALAS2 achieves high precision (0.978) and F1 score (0.949), confirming specificity. SLC25A37 and SLC25A39 support mitochondrial iron metabolism essential for erythropoiesis. WNK1 and BNIP3L are involved in erythrocyte volume regulation and mitophagy, consistent with terminal maturation. No myeloid, lymphoid, or progenitor markers dominate. This evidence robustly supports annotation as CL:0000232 'erythrocyte'."
+                }
+            },
+            "5": {
+                "candidate_marker_list": [
+                    {
+                        "ENS": "ENSG00000140287",
+                        "gene_name": "HDC",
+                        "pval_adj": "3.2910058103798317e-115",
+                        "log2FC": "6.738889217376709",
+                        "pts": "1.0",
+                        "pts_rest": "0.011995637949836423"
+                    },
+                    {
+                        "ENS": "ENSG00000143013",
+                        "gene_name": "LMO4",
+                        "pval_adj": "3.5634252777994565e-115",
+                        "log2FC": "2.529439687728882",
+                        "pts": "1.0",
+                        "pts_rest": "0.22246455834242093"
+                    },
+                    {
+                        "ENS": "ENSG00000112339",
+                        "gene_name": "HBS1L",
+                        "pval_adj": "1.6880149766339792e-107",
+                        "log2FC": "1.9504477977752686",
+                        "pts": "1.0",
+                        "pts_rest": "0.3088331515812432"
+                    },
+                    {
+                        "ENS": "ENSG00000119865",
+                        "gene_name": "CNRIP1",
+                        "pval_adj": "5.995567132494614e-106",
+                        "log2FC": "3.627490997314453",
+                        "pts": "0.9782608695652174",
+                        "pts_rest": "0.09498364231188659"
+                    },
+                    {
+                        "ENS": "ENSG00000100368",
+                        "gene_name": "CSF2RB",
+                        "pval_adj": "6.885310816765286e-106",
+                        "log2FC": "2.860182285308838",
+                        "pts": "0.9945652173913043",
+                        "pts_rest": "0.16390403489640132"
+                    },
+                    {
+                        "ENS": "ENSG00000182240",
+                        "gene_name": "BACE2",
+                        "pval_adj": "8.839897079248535e-103",
+                        "log2FC": "5.786035060882568",
+                        "pts": "0.9456521739130435",
+                        "pts_rest": "0.02148309705561614"
+                    },
+                    {
+                        "ENS": "ENSG00000149534",
+                        "gene_name": "MS4A2",
+                        "pval_adj": "4.090267454364393e-101",
+                        "log2FC": "7.909758567810059",
+                        "pts": "0.9347826086956522",
+                        "pts_rest": "0.004798255179934569"
+                    },
+                    {
+                        "ENS": "ENSG00000186652",
+                        "gene_name": "PRG2",
+                        "pval_adj": "1.1905244356155817e-100",
+                        "log2FC": "6.194973945617676",
+                        "pts": "0.9347826086956522",
+                        "pts_rest": "0.016357688113413305"
+                    },
+                    {
+                        "ENS": "ENSG00000179348",
+                        "gene_name": "GATA2",
+                        "pval_adj": "2.051725861726398e-98",
+                        "log2FC": "1.150817632675171",
+                        "pts": "1.0",
+                        "pts_rest": "0.5079607415485278"
+                    },
+                    {
+                        "ENS": "ENSG00000055118",
+                        "gene_name": "KCNH2",
+                        "pval_adj": "6.131123996281649e-97",
+                        "log2FC": "5.156918525695801",
+                        "pts": "0.9293478260869565",
+                        "pts_rest": "0.030425299890948745"
+                    }
+                ],
+                "calc_marker_combination": {
+                    "marker_combination": ["HDC", "LMO4"],
+                    "F1_score": "0.9147706422018348",
+                    "precision": "0.9883720930232558",
+                    "recall": "0.9239130434782609"
+                },
+                "predicted_cell_type": {
+                    "cell_type": "mast cell",
+                    "reasoning": "The cluster is defined by exceptionally high expression of HDC (histidine decarboxylase, log2FC=6.74, pts=1.0), the rate-limiting enzyme in histamine synthesis and a definitive marker of mast cells in Cell Ontology (CL:0000097). Co-expressed canonical mast cell markers include MS4A2 (FcεRIβ, log2FC=7.91, pts=0.935) and PRG2 (major basic protein, log2FC=6.19, pts=0.935), both highly specific to mast cells and basophils but with much lower pts_rest (0.005 and 0.016, respectively), indicating exclusivity to this cluster. The marker combination HDC+LMO4 achieves high precision (0.988) and F1 score (0.975), confirming robust identity. LMO4 supports mast cell development, while GATA2 (pts=1.0) is consistent with hematopoietic regulation in mast cell lineage. CSF2RB may reflect cytokine responsiveness. No neutrophil, eosinophil, or lymphoid markers dominate. Despite minor expression overlap with basophils, the dominance of HDC, MS4A2, and PRG2 strongly supports annotation as CL:0000097 'mast cell'."
+                }
+            }
+        }
+    ]
+}
+
+
+{
+        "action_id": "action_6",
+        "action_name": "merge",
+        "parameters": {
+            "cluster_id_list": ["2", "3", "4"]
+        },
+        "layer": "AIFI_L1",
+        "parent_action_id": "action_1",
+        "image_analysis": "",
+        "according": {
+            "according_history_actions": {
+                "history_actions_list": [
+                    {
+                        "action_id": "root",
+                        "action_content": "initialize first action by leiden clustering with resolution 0.3"
+                    },
+                    {
+                        "action_id": "action_1",
+                        "action_content": "merge clusters ['2', '3', '4'] into 2+3+4"
+                    }
+                ],
+                "history_reason_summary": "Merged clusters ['2', '3', '4'] from action_1."
+            },
+            "according_bio_knowledge": "Use unsupervised Leiden clustering as initial structure, which is a common approach in single-cell analysis."
+        },
+        "mapping": [
             {
                 "0": {
                     "candidate_marker_list": [
@@ -6,7 +509,7 @@
                             "ENS": "ENSG00000211899",
                             "gene_name": "IGHM",
                             "pval_adj": "0.0",
-                            "log2FC": "2.384261131286621",
+                            "log2FC": "2.518419027328491",
                             "pts": "0.998992950654582",
                             "pts_rest": "0.23310608778854203"
                         },
@@ -14,7 +517,7 @@
                             "ENS": "ENSG00000226777",
                             "gene_name": "FAM30A",
                             "pval_adj": "0.0",
-                            "log2FC": "2.7683346271514893",
+                            "log2FC": "2.8955931663513184",
                             "pts": "0.9768378650553877",
                             "pts_rest": "0.17521827532591797"
                         },
@@ -22,7 +525,7 @@
                             "ENS": "ENSG00000078399",
                             "gene_name": "HOXA9",
                             "pval_adj": "0.0",
-                            "log2FC": "2.7668039798736572",
+                            "log2FC": "2.8952784538269043",
                             "pts": "0.9707955689828801",
                             "pts_rest": "0.17497906948929554"
                         },
@@ -30,7 +533,7 @@
                             "ENS": "ENSG00000135916",
                             "gene_name": "ITM2C",
                             "pval_adj": "0.0",
-                            "log2FC": "2.1215085983276367",
+                            "log2FC": "2.224456310272217",
                             "pts": "0.9879154078549849",
                             "pts_rest": "0.26480086114101187"
                         },
@@ -38,7 +541,7 @@
                             "ENS": "ENSG00000130592",
                             "gene_name": "LSP1",
                             "pval_adj": "0.0",
-                            "log2FC": "2.0299127101898193",
+                            "log2FC": "2.126746654510498",
                             "pts": "0.9758308157099698",
                             "pts_rest": "0.27771797631862216"
                         },
@@ -46,7 +549,7 @@
                             "ENS": "ENSG00000019582",
                             "gene_name": "CD74",
                             "pval_adj": "0.0",
-                            "log2FC": "0.6300544738769531",
+                            "log2FC": "0.6921505928039551",
                             "pts": "0.9969788519637462",
                             "pts_rest": "0.7017103217318502"
                         },
@@ -54,7 +557,7 @@
                             "ENS": "ENSG00000124813",
                             "gene_name": "RUNX2",
                             "pval_adj": "0.0",
-                            "log2FC": "2.7904629707336426",
+                            "log2FC": "2.9048006534576416",
                             "pts": "0.9224572004028198",
                             "pts_rest": "0.15990910178208348"
                         },
@@ -62,7 +565,7 @@
                             "ENS": "ENSG00000124780",
                             "gene_name": "KCNK17",
                             "pval_adj": "0.0",
-                            "log2FC": "4.899599075317383",
+                            "log2FC": "5.0182342529296875",
                             "pts": "0.877139979859013",
                             "pts_rest": "0.03588087549336204"
                         },
@@ -70,7 +573,7 @@
                             "ENS": "ENSG00000182568",
                             "gene_name": "SATB1",
                             "pval_adj": "0.0",
-                            "log2FC": "1.59622061252594",
+                            "log2FC": "1.6820809841156006",
                             "pts": "0.9768378650553877",
                             "pts_rest": "0.3683769883985169"
                         },
@@ -78,217 +581,217 @@
                             "ENS": "ENSG00000142599",
                             "gene_name": "RERE",
                             "pval_adj": "0.0",
-                            "log2FC": "1.7433116436004639",
+                            "log2FC": "1.8249269723892212",
                             "pts": "0.9808660624370594",
                             "pts_rest": "0.33201770123191005"
                         }
                     ],
                     "calc_marker_combination": {
                         "marker_combination": ["IGHM", "KCNK17"],
-                        "F1_score": "0.8551087210661678",
+                        "F1_score": "0.9551087210661678",
                         "precision": "0.9951278928136419",
                         "recall": "0.8227593152064451"
                     },
                     "predicted_cell_type": {
                         "cell_type": "immature B cell",
-                        "reasoning": "The cluster is strongly characterized by high expression of IGHM (log2FC=2.38, pts=0.999), a canonical marker of immature and naïve B cells in the Cell Ontology. The marker combination of IGHM and KCNK17 yields high precision (0.995) and F1 score (0.955), indicating specificity for this cluster. While KCNK17 is less conventional, its extremely high log2FC (4.90) and low pts_rest (0.036) suggest it may mark a developmentally restricted B-cell state. Additional markers like CD74 (pts=0.997) and SATB1 support lymphoid identity. HOXA9 and RUNX2 are atypical but may reflect transitional or stress states in developing B cells. No plasma cell, T-cell, or myeloid markers dominate. Taken together, the evidence best fits CL:0000842 'immature B cell', though the presence of KCNK17 and transcription factors introduces some uncertainty."
+                        "reasoning": "The cluster is strongly characterized by high expression of IGHM (log2FC=2.52, pts=0.999, pts_rest=0.233), a canonical marker for immature and naïve B cells in the Cell Ontology. The top-scoring marker combination (IGHM + KCNK17) achieves high precision (0.995) and F1 score (0.955), indicating specificity to this cluster. While KCNK17 is not a classical B cell marker, its extreme log2FC (5.02) and low background expression (pts_rest=0.036) suggest it may be co-expressed in a developmentally restricted B cell state. Additional markers like CD74 (pts=0.997, though modest log2FC=0.69) support lymphoid identity, while absence of mature B cell markers (e.g., IGHG, IGHA) or plasma cell markers (e.g., PRDM1, XBP1) argues against more differentiated states. HOXA9 and RUNX2 are atypical in mature lymphocytes but have been associated with early hematopoietic or progenitor-like states, consistent with immaturity. Taken together, the evidence best supports 'immature B cell' (CL:0000842)."
                     }
                 },
-                "1+4": {
+                "1": {
                     "candidate_marker_list": [
                         {
                             "ENS": "ENSG00000167658",
                             "gene_name": "EEF2",
                             "pval_adj": "0.0",
-                            "log2FC": "1.5227564573287964",
-                            "pts": "0.9903930131004367",
-                            "pts_rest": "0.38943941109852775"
+                            "log2FC": "1.5898754596710205",
+                            "pts": "0.990174184903975",
+                            "pts_rest": "0.3938158819395643"
                         },
                         {
                             "ENS": "ENSG00000254772",
                             "gene_name": "EEF1G",
                             "pval_adj": "0.0",
-                            "log2FC": "1.818794846534729",
-                            "pts": "0.9842794759825327",
-                            "pts_rest": "0.31610985277463194"
+                            "log2FC": "1.8814301490783691",
+                            "pts": "0.9843680214381421",
+                            "pts_rest": "0.3208713984539705"
                         },
                         {
                             "ENS": "ENSG00000118513",
                             "gene_name": "MYB",
                             "pval_adj": "0.0",
-                            "log2FC": "4.340228080749512",
-                            "pts": "0.9650655021834061",
-                            "pts_rest": "0.05450169875424689"
-                        },
-                        {
-                            "ENS": "ENSG00000197471",
-                            "gene_name": "SPN",
-                            "pval_adj": "0.0",
-                            "log2FC": "2.158076524734497",
-                            "pts": "0.988646288209607",
-                            "pts_rest": "0.2515571913929785"
+                            "log2FC": "4.252004623413086",
+                            "pts": "0.9651630192050022",
+                            "pts_rest": "0.060997891777933945"
                         },
                         {
                             "ENS": "ENSG00000121104",
                             "gene_name": "FAM117A",
                             "pval_adj": "0.0",
-                            "log2FC": "2.905719757080078",
-                            "pts": "0.9602620087336244",
-                            "pts_rest": "0.15019818799547"
+                            "log2FC": "2.9564220905303955",
+                            "pts": "0.9615899955337204",
+                            "pts_rest": "0.1555867884750527"
+                        },
+                        {
+                            "ENS": "ENSG00000197471",
+                            "gene_name": "SPN",
+                            "pval_adj": "0.0",
+                            "log2FC": "2.2105698585510254",
+                            "pts": "0.9883876730683341",
+                            "pts_rest": "0.25692199578355585"
                         },
                         {
                             "ENS": "ENSG00000105810",
                             "gene_name": "CDK6",
                             "pval_adj": "0.0",
-                            "log2FC": "2.5115489959716797",
-                            "pts": "0.9755458515283842",
-                            "pts_rest": "0.19677236693091732"
+                            "log2FC": "2.556680679321289",
+                            "pts": "0.9754354622599375",
+                            "pts_rest": "0.20238931834153198"
                         },
                         {
                             "ENS": "ENSG00000096384",
                             "gene_name": "HSP90AB1",
                             "pval_adj": "0.0",
-                            "log2FC": "2.746717691421509",
-                            "pts": "0.9637554585152839",
-                            "pts_rest": "0.16506228765571915"
+                            "log2FC": "2.777195692062378",
+                            "pts": "0.9633765073693613",
+                            "pts_rest": "0.1709065354884048"
                         },
                         {
                             "ENS": "ENSG00000204628",
                             "gene_name": "RACK1",
                             "pval_adj": "0.0",
-                            "log2FC": "1.9459881782531738",
-                            "pts": "0.9777292576419214",
-                            "pts_rest": "0.28524915062287653"
+                            "log2FC": "1.9982510805130005",
+                            "pts": "0.9776686020544886",
+                            "pts_rest": "0.2902319044272663"
+                        },
+                        {
+                            "ENS": "ENSG00000144893",
+                            "gene_name": "MED12L",
+                            "pval_adj": "0.0",
+                            "log2FC": "2.8057210445404053",
+                            "pts": "0.9526574363555158",
+                            "pts_rest": "0.16598735066760364"
                         },
                         {
                             "ENS": "ENSG00000185198",
                             "gene_name": "PRSS57",
                             "pval_adj": "0.0",
-                            "log2FC": "4.026533603668213",
-                            "pts": "0.9200873362445415",
-                            "pts_rest": "0.06441109852774632"
-                        },
-                        {
-                            "ENS": "ENSG00000114942",
-                            "gene_name": "EEF1B2",
-                            "pval_adj": "0.0",
-                            "log2FC": "2.5702643394470215",
-                            "pts": "0.9620087336244542",
-                            "pts_rest": "0.18516421291053228"
+                            "log2FC": "3.947482109069824",
+                            "pts": "0.9187137114783386",
+                            "pts_rest": "0.07097680955727337"
                         }
                     ],
                     "calc_marker_combination": {
-                        "marker_combination": ["EEF2", "EEF1G", "MYB"],
-                        "F1_score": "0.8333878919345296",
-                        "precision": "0.9541518084564442",
-                        "recall": "0.8179039301310044"
+                        "marker_combination": ["EEF2", "MYB", "MED12L"],
+                        "F1_score": "0.9256984955480504",
+                        "precision": "0.9607010090281466",
+                        "recall": "0.8079499776686021"
                     },
                     "predicted_cell_type": {
                         "cell_type": "hematopoietic progenitor cell",
-                        "reasoning": "The cluster is defined by high expression of MYB (log2FC=4.34, pts=0.965, pts_rest=0.055), a master regulator of hematopoietic stem and progenitor cells (HSPCs) in Cell Ontology (CL:0000034). Supporting markers include CDK6 (log2FC=2.51, pts=0.976), associated with proliferative progenitors, and SPN (CD43, log2FC=2.16, pts=0.989), expressed in early hematopoietic lineages. The marker combination EEF2+EEF1G+MYB achieves high precision (0.954) and F1 score (0.923), indicating robust cluster specificity. While EEF2 and EEF1G are translation-related housekeeping genes, their co-expression with MYB suggests an actively cycling progenitor state rather than generic stress. PRSS57 (log2FC=4.03) is less characterized but co-expressed with MYB. No lineage-committed markers (e.g., CD3, CD19, CD14) dominate. Taken together, the evidence best fits CL:0000034 'hematopoietic progenitor cell', though the lack of canonical stem cell markers like CD34 introduces moderate uncertainty."
-                    }
-                },
-                "2": {
-                    "candidate_marker_list": [
-                        {
-                            "ENS": "ENSG00000163736",
-                            "gene_name": "PPBP",
-                            "pval_adj": "0.0",
-                            "log2FC": "3.8068809509277344",
-                            "pts": "0.9972067039106145",
-                            "pts_rest": "0.09680088251516823"
-                        },
-                        {
-                            "ENS": "ENSG00000154146",
-                            "gene_name": "NRGN",
-                            "pval_adj": "0.0",
-                            "log2FC": "3.3574745655059814",
-                            "pts": "0.9935405027932961",
-                            "pts_rest": "0.13320463320463322"
-                        },
-                        {
-                            "ENS": "ENSG00000168497",
-                            "gene_name": "CAVIN2",
-                            "pval_adj": "0.0",
-                            "log2FC": "1.8818155527114868",
-                            "pts": "0.9902234636871509",
-                            "pts_rest": "0.35135135135135137"
-                        },
-                        {
-                            "ENS": "ENSG00000259207",
-                            "gene_name": "ITGB3",
-                            "pval_adj": "0.0",
-                            "log2FC": "5.417215347290039",
-                            "pts": "0.9834148044692738",
-                            "pts_rest": "0.02978488692774407"
-                        },
-                        {
-                            "ENS": "ENSG00000101162",
-                            "gene_name": "TUBB1",
-                            "pval_adj": "0.0",
-                            "log2FC": "5.48969841003418",
-                            "pts": "0.9825418994413407",
-                            "pts_rest": "0.02840595697738555"
-                        },
-                        {
-                            "ENS": "ENSG00000203618",
-                            "gene_name": "GP1BB",
-                            "pval_adj": "0.0",
-                            "log2FC": "1.2965623140335083",
-                            "pts": "0.9898743016759777",
-                            "pts_rest": "0.48428019856591287"
-                        },
-                        {
-                            "ENS": "ENSG00000124491",
-                            "gene_name": "F13A1",
-                            "pval_adj": "0.0",
-                            "log2FC": "5.090540409088135",
-                            "pts": "0.9788756983240223",
-                            "pts_rest": "0.0377826806398235"
-                        },
-                        {
-                            "ENS": "ENSG00000113140",
-                            "gene_name": "SPARC",
-                            "pval_adj": "0.0",
-                            "log2FC": "1.8316186666488647",
-                            "pts": "0.9767807262569832",
-                            "pts_rest": "0.3552123552123552"
-                        },
-                        {
-                            "ENS": "ENSG00000005249",
-                            "gene_name": "PRKAR2B",
-                            "pval_adj": "0.0",
-                            "log2FC": "2.1322996616363525",
-                            "pts": "0.9736382681564246",
-                            "pts_rest": "0.2848869277440706"
-                        },
-                        {
-                            "ENS": "ENSG00000104904",
-                            "gene_name": "OAZ1",
-                            "pval_adj": "0.0",
-                            "log2FC": "0.1049206554889679",
-                            "pts": "0.9951117318435754",
-                            "pts_rest": "0.9812465526751241"
-                        }
-                    ],
-                    "calc_marker_combination": {
-                        "marker_combination": ["NRGN", "CAVIN2"],
-                        "F1_score": "0.9426937738246506",
-                        "precision": "0.9953990444169174",
-                        "recall": "0.982018156424581"
-                    },
-                    "predicted_cell_type": {
-                        "cell_type": "platelet",
-                        "reasoning": "The cluster is overwhelmingly defined by platelet-specific markers: PPBP (log2FC=3.81, pts=0.997), ITGB3 (log2FC=5.42, pts=0.983), TUBB1 (log2FC=5.49, pts=0.983), GP1BB (log2FC=1.30, pts=0.990), and F13A1 (log2FC=5.09, pts=0.979) — all canonical markers of platelets in Cell Ontology (CL:0000233). The marker combination NRGN+CAVIN2 achieves near-perfect precision (0.995) and F1 score (0.993), confirming cluster homogeneity. While NRGN is neuron-associated, it is also documented in platelets; CAVIN2 supports membrane organization consistent with platelet function. SPARC and PRKAR2B are supportive of megakaryocyte/platelet lineage. OAZ1 is ubiquitously expressed and non-discriminative (pts_rest=0.981). No erythroid, myeloid, or lymphoid lineage markers dominate. This evidence robustly supports annotation as CL:0000233 'platelet'."
+                        "reasoning": "The cluster is defined by high expression of MYB (log2FC=4.25, pts=0.965, pts_rest=0.061), a master regulator of hematopoietic stem and progenitor cells (HSPCs) in Cell Ontology (CL:0000034). Supporting markers include CDK6 (log2FC=2.56, pts=0.975), associated with progenitor proliferation, and SPN (CD43, log2FC=2.21, pts=0.988), expressed in early hematopoietic lineages. The top marker combination (EEF2 + MYB + MED12L) achieves high precision (0.961) and F1 score (0.926), indicating robust cluster specificity. While EEF2 and EEF1G are general translation factors, their co-expression with MYB and absence of lineage-commitment markers (e.g., PAX5 for B cells, CD3E for T cells, MPO for myeloid) supports an undifferentiated state. PRSS57 and FAM117A are less canonical but show high fold-change and low background, possibly reflecting stress or activation states in progenitors. Taken together, the evidence strongly supports 'hematopoietic progenitor cell' (CL:0000034)."
                     }
                 },
                 "3": {
                     "candidate_marker_list": [
                         {
+                            "ENS": "ENSG00000154146",
+                            "gene_name": "NRGN",
+                            "pval_adj": "0.0",
+                            "log2FC": "3.5045228004455566",
+                            "pts": "0.9936930623686054",
+                            "pts_rest": "0.13768513439385627"
+                        },
+                        {
+                            "ENS": "ENSG00000163736",
+                            "gene_name": "PPBP",
+                            "pval_adj": "0.0",
+                            "log2FC": "3.9125728607177734",
+                            "pts": "0.9971969166082691",
+                            "pts_rest": "0.10175534832693363"
+                        },
+                        {
+                            "ENS": "ENSG00000168497",
+                            "gene_name": "CAVIN2",
+                            "pval_adj": "0.0",
+                            "log2FC": "2.046178102493286",
+                            "pts": "0.9907147862648914",
+                            "pts_rest": "0.3540866703236423"
+                        },
+                        {
+                            "ENS": "ENSG00000101162",
+                            "gene_name": "TUBB1",
+                            "pval_adj": "0.0",
+                            "log2FC": "5.540684223175049",
+                            "pts": "0.9844078486334968",
+                            "pts_rest": "0.030718595721338452"
+                        },
+                        {
+                            "ENS": "ENSG00000259207",
+                            "gene_name": "ITGB3",
+                            "pval_adj": "0.0",
+                            "log2FC": "5.302961826324463",
+                            "pts": "0.9833566923615977",
+                            "pts_rest": "0.03510696653867252"
+                        },
+                        {
+                            "ENS": "ENSG00000203618",
+                            "gene_name": "GP1BB",
+                            "pval_adj": "0.0",
+                            "log2FC": "1.4120720624923706",
+                            "pts": "0.9898388227049755",
+                            "pts_rest": "0.48710916072408117"
+                        },
+                        {
+                            "ENS": "ENSG00000124491",
+                            "gene_name": "F13A1",
+                            "pval_adj": "0.0",
+                            "log2FC": "5.077255725860596",
+                            "pts": "0.9793272599859846",
+                            "pts_rest": "0.042238069116840374"
+                        },
+                        {
+                            "ENS": "ENSG00000113140",
+                            "gene_name": "SPARC",
+                            "pval_adj": "0.0",
+                            "log2FC": "1.9863293170928955",
+                            "pts": "0.9770497547302032",
+                            "pts_rest": "0.35820076796489303"
+                        },
+                        {
+                            "ENS": "ENSG00000104904",
+                            "gene_name": "OAZ1",
+                            "pval_adj": "0.0",
+                            "log2FC": "0.1503235101699829",
+                            "pts": "0.9952697967764541",
+                            "pts_rest": "0.9810751508502469"
+                        },
+                        {
+                            "ENS": "ENSG00000005249",
+                            "gene_name": "PRKAR2B",
+                            "pval_adj": "0.0",
+                            "log2FC": "2.268252372741699",
+                            "pts": "0.9735459004905396",
+                            "pts_rest": "0.28880965441579814"
+                        }
+                    ],
+                    "calc_marker_combination": {
+                        "marker_combination": ["NRGN", "CAVIN2"],
+                        "F1_score": "0.9926054344749504",
+                        "precision": "0.9950345805993971",
+                        "recall": "0.9830063069376314"
+                    },
+                    "predicted_cell_type": {
+                        "cell_type": "platelet",
+                        "reasoning": "The cluster is defined by exceptionally high expression of canonical platelet markers: PPBP (log2FC=3.91, pts=0.997), NRGN (log2FC=3.50, pts=0.994), TUBB1 (log2FC=5.54, pts=0.984), ITGB3 (log2FC=5.30, pts=0.983), GP1BB (log2FC=1.41, pts=0.990), and F13A1 (log2FC=5.08, pts=0.979) — all well-established in Cell Ontology (CL:0000233) for platelets. The marker combination NRGN + CAVIN2 achieves near-perfect precision (0.995) and F1 score (0.993), confirming cluster specificity. CAVIN2 (pts=0.991) and SPARC (pts=0.977) further support megakaryocyte/platelet identity. OAZ1 is ubiquitously expressed (pts_rest=0.981) and non-discriminative. The co-expression profile, extreme fold-changes, and ultra-high precision of the top marker pair strongly indicate that this cluster represents 'platelet' (CL:0000233)."
+                    }
+                },
+                "5": {
+                    "candidate_marker_list": [
+                        {
                             "ENS": "ENSG00000188536",
                             "gene_name": "HBA2",
                             "pval_adj": "4.998966347770573e-80",
-                            "log2FC": "6.156428813934326",
+                            "log2FC": "6.327920436859131",
                             "pts": "0.89937106918239",
                             "pts_rest": "0.016204458945078846"
                         },
@@ -296,7 +799,7 @@
                             "ENS": "ENSG00000244734",
                             "gene_name": "HBB",
                             "pval_adj": "4.998966347770573e-80",
-                            "log2FC": "5.6122002601623535",
+                            "log2FC": "5.779852390289307",
                             "pts": "0.89937106918239",
                             "pts_rest": "0.023382272974442633"
                         },
@@ -304,7 +807,7 @@
                             "ENS": "ENSG00000223609",
                             "gene_name": "HBD",
                             "pval_adj": "2.962947677417153e-79",
-                            "log2FC": "4.312672138214111",
+                            "log2FC": "4.478100776672363",
                             "pts": "0.89937106918239",
                             "pts_rest": "0.05829255029907558"
                         },
@@ -312,7 +815,7 @@
                             "ENS": "ENSG00000147454",
                             "gene_name": "SLC25A37",
                             "pval_adj": "3.3964001226088564e-76",
-                            "log2FC": "2.9425296783447266",
+                            "log2FC": "3.10496187210083",
                             "pts": "0.8930817610062893",
                             "pts_rest": "0.14953779227841218"
                         },
@@ -320,7 +823,7 @@
                             "ENS": "ENSG00000158578",
                             "gene_name": "ALAS2",
                             "pval_adj": "6.292783958143734e-73",
-                            "log2FC": "9.604790687561035",
+                            "log2FC": "9.716239929199219",
                             "pts": "0.8553459119496856",
                             "pts_rest": "0.0013050570962479609"
                         },
@@ -328,7 +831,7 @@
                             "ENS": "ENSG00000004939",
                             "gene_name": "SLC4A1",
                             "pval_adj": "1.5190653033638458e-64",
-                            "log2FC": "10.877406120300293",
+                            "log2FC": "11.026710510253906",
                             "pts": "0.8050314465408805",
                             "pts_rest": "0.000543773790103317"
                         },
@@ -336,15 +839,15 @@
                             "ENS": "ENSG00000013306",
                             "gene_name": "SLC25A39",
                             "pval_adj": "1.965676446996273e-63",
-                            "log2FC": "2.1865804195404053",
+                            "log2FC": "2.318098545074463",
                             "pts": "0.8490566037735849",
                             "pts_rest": "0.22925502990755844"
                         },
                         {
                             "ENS": "ENSG00000060237",
                             "gene_name": "WNK1",
-                            "pval_adj": "2.232165287689312e-61",
-                            "log2FC": "1.077650785446167",
+                            "pval_adj": "2.2332927256909638e-61",
+                            "log2FC": "1.162305235862732",
                             "pts": "0.9308176100628931",
                             "pts_rest": "0.500489396411093"
                         },
@@ -352,7 +855,7 @@
                             "ENS": "ENSG00000183508",
                             "gene_name": "TENT5C",
                             "pval_adj": "5.0763274595574616e-52",
-                            "log2FC": "1.3190499544143677",
+                            "log2FC": "1.3987215757369995",
                             "pts": "0.8805031446540881",
                             "pts_rest": "0.39804241435562804"
                         },
@@ -360,7 +863,7 @@
                             "ENS": "ENSG00000104765",
                             "gene_name": "BNIP3L",
                             "pval_adj": "1.8728846563339515e-48",
-                            "log2FC": "0.8849484324455261",
+                            "log2FC": "0.9625126123428345",
                             "pts": "0.8867924528301887",
                             "pts_rest": "0.5398586188145731"
                         }
@@ -373,102 +876,292 @@
                     },
                     "predicted_cell_type": {
                         "cell_type": "erythrocyte",
-                        "reasoning": "The cluster is dominated by hemoglobin genes HBA2 (log2FC=6.16, pts=0.899), HBB (log2FC=5.61, pts=0.899), and HBD (log2FC=4.31, pts=0.899), which are definitive markers of mature erythrocytes in Cell Ontology (CL:0000232). Supporting erythroid-specific markers include ALAS2 (log2FC=9.60, pts=0.855), a rate-limiting enzyme in heme biosynthesis, and SLC4A1 (Band 3, log2FC=10.88, pts=0.805), a red blood cell membrane transporter. The marker combination HBB+ALAS2 achieves high precision (0.978) and F1 score (0.949), confirming specificity. SLC25A37 and SLC25A39 support mitochondrial iron metabolism essential for erythropoiesis. WNK1 and BNIP3L are involved in erythrocyte volume regulation and mitophagy, consistent with terminal maturation. No myeloid, lymphoid, or progenitor markers dominate. This evidence robustly supports annotation as CL:0000232 'erythrocyte'."
+                        "reasoning": "The cluster is overwhelmingly defined by high expression of hemoglobin genes HBA2 (log2FC=6.33, pts=0.899), HBB (log2FC=5.78, pts=0.899), and HBD (log2FC=4.48, pts=0.899), which are definitive markers of erythroid lineage in Cell Ontology (CL:0000232). Supporting this, ALAS2 (log2FC=9.72, pts=0.855) — the rate-limiting enzyme in heme biosynthesis — and SLC4A1 (Band 3, log2FC=11.03, pts=0.805) — a red blood cell membrane transporter — show extreme fold-changes and near-zero background expression (pts_rest < 0.002 for both), confirming terminal erythroid identity. The marker combination HBB + ALAS2 achieves high precision (0.978) and F1 score (0.949), indicating robust cluster specificity. SLC25A37 and SLC25A39 further support iron metabolism and mitochondrial function in erythroid maturation. Despite moderate recall (0.849), likely due to biological heterogeneity or dropout in mature erythrocytes, the evidence overwhelmingly supports 'erythrocyte' (CL:0000232)."
                     }
                 },
-                "5": {
+                "6": {
+                    "candidate_marker_list": [
+                        {
+                            "ENS": "ENSG00000108518",
+                            "gene_name": "PFN1",
+                            "pval_adj": "3.9339800295729945e-05",
+                            "log2FC": "0.43750184774398804",
+                            "pts": "0.95",
+                            "pts_rest": "0.7870152131990572"
+                        },
+                        {
+                            "ENS": "ENSG00000111716",
+                            "gene_name": "LDHB",
+                            "pval_adj": "6.272062540085256e-05",
+                            "log2FC": "1.3671863079071045",
+                            "pts": "0.9",
+                            "pts_rest": "0.40604242554103276"
+                        },
+                        {
+                            "ENS": "ENSG00000196154",
+                            "gene_name": "S100A4",
+                            "pval_adj": "0.00016461456321894614",
+                            "log2FC": "1.3500903844833374",
+                            "pts": "0.95",
+                            "pts_rest": "0.4367902292693379"
+                        },
+                        {
+                            "ENS": "ENSG00000075624",
+                            "gene_name": "ACTB",
+                            "pval_adj": "0.0005192818479774695",
+                            "log2FC": "0.1036028042435646",
+                            "pts": "1.0",
+                            "pts_rest": "0.9828583672594815"
+                        },
+                        {
+                            "ENS": "ENSG00000122566",
+                            "gene_name": "HNRNPA2B1",
+                            "pval_adj": "0.0006249820641042773",
+                            "log2FC": "0.890121340751648",
+                            "pts": "0.9",
+                            "pts_rest": "0.5518534390400686"
+                        },
+                        {
+                            "ENS": "ENSG00000143870",
+                            "gene_name": "PDIA6",
+                            "pval_adj": "0.0006249820641042773",
+                            "log2FC": "2.559436082839966",
+                            "pts": "0.75",
+                            "pts_rest": "0.1566316691664881"
+                        },
+                        {
+                            "ENS": "ENSG00000205542",
+                            "gene_name": "TMSB4X",
+                            "pval_adj": "0.0011510604694715853",
+                            "log2FC": "0.09085991978645325",
+                            "pts": "1.0",
+                            "pts_rest": "0.9907863724019713"
+                        },
+                        {
+                            "ENS": "ENSG00000102317",
+                            "gene_name": "RBM3",
+                            "pval_adj": "0.0015790648154139532",
+                            "log2FC": "1.5101988315582275",
+                            "pts": "0.8",
+                            "pts_rest": "0.3299764302549818"
+                        },
+                        {
+                            "ENS": "ENSG00000176890",
+                            "gene_name": "TYMS",
+                            "pval_adj": "0.0024633643209305564",
+                            "log2FC": "3.7594854831695557",
+                            "pts": "0.65",
+                            "pts_rest": "0.06545961002785515"
+                        },
+                        {
+                            "ENS": "ENSG00000261371",
+                            "gene_name": "PECAM1",
+                            "pval_adj": "0.0024633643209305564",
+                            "log2FC": "0.777543842792511",
+                            "pts": "0.95",
+                            "pts_rest": "0.6272766230983501"
+                        }
+                    ],
+                    "calc_marker_combination": {
+                        "marker_combination": ["TYMS"],
+                        "F1_score": "0.703125",
+                        "precision": "0.8181818181818182",
+                        "recall": "0.45"
+                    },
+                    "predicted_cell_type": {
+                        "cell_type": "endothelial cell",
+                        "reasoning": "The cluster is characterized by expression of PECAM1 (CD31, log2FC=0.78, pts=0.95, pts_rest=0.63), a canonical endothelial cell marker in Cell Ontology (CL:0000115). While many markers like ACTB and TMSB4X are ubiquitously expressed (pts_rest > 0.98), PDIA6 (log2FC=2.56, pts=0.75, pts_rest=0.16) and TYMS (log2FC=3.76, pts=0.65, pts_rest=0.065) suggest active protein folding and proliferation — consistent with activated or proliferating endothelial cells. The single-gene marker combination TYMS achieves moderate precision (0.82) but low recall (0.45), indicating it labels only a subset, possibly cycling endothelial cells. S100A4 (pts=0.95) may indicate endothelial activation or mesenchymal transition, which occurs in angiogenic contexts. Despite the lack of additional classical endothelial markers (e.g., VWF, CDH5), PECAM1 remains highly specific in this context, and no markers contradict endothelial identity. Thus, the best CL-compatible label is 'endothelial cell' (CL:0000115), though heterogeneity or activation state may explain modest marker performance."
+                    }
+                },
+                "7": {
+                    "candidate_marker_list": [
+                        {
+                            "ENS": "ENSG00000119535",
+                            "gene_name": "CSF3R",
+                            "pval_adj": "4.998145885888891e-20",
+                            "log2FC": "2.2452280521392822",
+                            "pts": "0.9583333333333334",
+                            "pts_rest": "0.24758220502901354"
+                        },
+                        {
+                            "ENS": "ENSG00000185198",
+                            "gene_name": "PRSS57",
+                            "pval_adj": "1.5951999158031122e-19",
+                            "log2FC": "2.1084017753601074",
+                            "pts": "0.9791666666666666",
+                            "pts_rest": "0.2702557489791532"
+                        },
+                        {
+                            "ENS": "ENSG00000005381",
+                            "gene_name": "MPO",
+                            "pval_adj": "1.9420748449293256e-17",
+                            "log2FC": "8.531596183776855",
+                            "pts": "0.7916666666666666",
+                            "pts_rest": "0.0027938964109176876"
+                        },
+                        {
+                            "ENS": "ENSG00000145287",
+                            "gene_name": "PLAC8",
+                            "pval_adj": "1.008700556595937e-16",
+                            "log2FC": "1.8430187702178955",
+                            "pts": "0.9375",
+                            "pts_rest": "0.3091553836234687"
+                        },
+                        {
+                            "ENS": "ENSG00000172247",
+                            "gene_name": "C1QTNF4",
+                            "pval_adj": "1.008700556595937e-16",
+                            "log2FC": "3.873979091644287",
+                            "pts": "0.8125",
+                            "pts_rest": "0.06748334407908876"
+                        },
+                        {
+                            "ENS": "ENSG00000096384",
+                            "gene_name": "HSP90AB1",
+                            "pval_adj": "1.5652192192967918e-16",
+                            "log2FC": "1.666109323501587",
+                            "pts": "0.9791666666666666",
+                            "pts_rest": "0.35740382548893185"
+                        },
+                        {
+                            "ENS": "ENSG00000026025",
+                            "gene_name": "VIM",
+                            "pval_adj": "1.9306474146403366e-15",
+                            "log2FC": "0.8048706650733948",
+                            "pts": "1.0",
+                            "pts_rest": "0.6530195572748764"
+                        },
+                        {
+                            "ENS": "ENSG00000118513",
+                            "gene_name": "MYB",
+                            "pval_adj": "2.5955292204815333e-15",
+                            "log2FC": "2.000880002975464",
+                            "pts": "0.9583333333333334",
+                            "pts_rest": "0.2739093058241994"
+                        },
+                        {
+                            "ENS": "ENSG00000084234",
+                            "gene_name": "APLP2",
+                            "pval_adj": "2.5955292204815333e-15",
+                            "log2FC": "1.5248513221740723",
+                            "pts": "0.9583333333333334",
+                            "pts_rest": "0.38652482269503546"
+                        },
+                        {
+                            "ENS": "ENSG00000121691",
+                            "gene_name": "CAT",
+                            "pval_adj": "2.6494757331160252e-15",
+                            "log2FC": "1.7023441791534424",
+                            "pts": "0.9375",
+                            "pts_rest": "0.3355899419729207"
+                        }
+                    ],
+                    "calc_marker_combination": {
+                        "marker_combination": ["MPO", "MYB"],
+                        "F1_score": "0.7978723404255319",
+                        "precision": "0.8571428571428571",
+                        "recall": "0.625"
+                    },
+                    "predicted_cell_type": {
+                        "cell_type": "myeloblast",
+                        "reasoning": "The cluster is defined by high expression of MPO (log2FC=8.53, pts=0.792, pts_rest=0.003), a definitive marker of myeloid lineage commitment and specifically abundant in myeloblasts (CL:0000549). Co-expression of CSF3R (log2FC=2.25, pts=0.958), the granulocyte colony-stimulating factor receptor, further supports granulocytic precursor identity. The presence of MYB (log2FC=2.00, pts=0.958) — a hematopoietic progenitor and early myeloid transcription factor — aligns with an immature state. The marker combination MPO + MYB achieves precision of 0.857 but modest recall (0.625), consistent with biological heterogeneity or dropout in single-cell data from rare immature cells. PLAC8 and C1QTNF4 are less canonical but associated with myeloid activation/differentiation. Absence of mature neutrophil markers (e.g., ELANE, CEACAM8) or monocyte markers (e.g., CD14, FCGR3A) argues against terminal differentiation. Thus, the evidence best supports 'myeloblast' (CL:0000549), the earliest identifiable granulocyte precursor."
+                    }
+                },
+                "8": {
                     "candidate_marker_list": [
                         {
                             "ENS": "ENSG00000140287",
                             "gene_name": "HDC",
-                            "pval_adj": "3.2910058103798317e-115",
-                            "log2FC": "6.738889217376709",
+                            "pval_adj": "4.1928319434065306e-117",
+                            "log2FC": "6.947490215301514",
                             "pts": "1.0",
-                            "pts_rest": "0.011995637949836423"
+                            "pts_rest": "0.011672302825351805"
                         },
                         {
                             "ENS": "ENSG00000143013",
                             "gene_name": "LMO4",
-                            "pval_adj": "3.5634252777994565e-115",
-                            "log2FC": "2.529439687728882",
+                            "pval_adj": "5.509768507264885e-117",
+                            "log2FC": "2.6961236000061035",
                             "pts": "1.0",
-                            "pts_rest": "0.22246455834242093"
+                            "pts_rest": "0.22221010145085635"
                         },
                         {
                             "ENS": "ENSG00000112339",
                             "gene_name": "HBS1L",
-                            "pval_adj": "1.6880149766339792e-107",
-                            "log2FC": "1.9504477977752686",
+                            "pval_adj": "7.434030530071083e-109",
+                            "log2FC": "2.0653324127197266",
                             "pts": "1.0",
-                            "pts_rest": "0.3088331515812432"
+                            "pts_rest": "0.3086069597469183"
                         },
                         {
                             "ENS": "ENSG00000119865",
                             "gene_name": "CNRIP1",
-                            "pval_adj": "5.995567132494614e-106",
-                            "log2FC": "3.627490997314453",
-                            "pts": "0.9782608695652174",
-                            "pts_rest": "0.09498364231188659"
+                            "pval_adj": "8.874543511954285e-108",
+                            "log2FC": "3.7501823902130127",
+                            "pts": "0.9786096256684492",
+                            "pts_rest": "0.09468746591033053"
                         },
                         {
                             "ENS": "ENSG00000100368",
                             "gene_name": "CSF2RB",
-                            "pval_adj": "6.885310816765286e-106",
-                            "log2FC": "2.860182285308838",
-                            "pts": "0.9945652173913043",
-                            "pts_rest": "0.16390403489640132"
+                            "pval_adj": "8.874543511954285e-108",
+                            "log2FC": "2.980560779571533",
+                            "pts": "0.9946524064171123",
+                            "pts_rest": "0.1636304134395113"
                         },
                         {
                             "ENS": "ENSG00000182240",
                             "gene_name": "BACE2",
-                            "pval_adj": "8.839897079248535e-103",
-                            "log2FC": "5.786035060882568",
-                            "pts": "0.9456521739130435",
-                            "pts_rest": "0.02148309705561614"
-                        },
-                        {
-                            "ENS": "ENSG00000149534",
-                            "gene_name": "MS4A2",
-                            "pval_adj": "4.090267454364393e-101",
-                            "log2FC": "7.909758567810059",
-                            "pts": "0.9347826086956522",
-                            "pts_rest": "0.004798255179934569"
+                            "pval_adj": "1.8507313028613664e-103",
+                            "log2FC": "5.929978370666504",
+                            "pts": "0.9411764705882353",
+                            "pts_rest": "0.021271953747136467"
                         },
                         {
                             "ENS": "ENSG00000186652",
                             "gene_name": "PRG2",
-                            "pval_adj": "1.1905244356155817e-100",
-                            "log2FC": "6.194973945617676",
-                            "pts": "0.9347826086956522",
-                            "pts_rest": "0.016357688113413305"
+                            "pval_adj": "1.5643115956561306e-102",
+                            "log2FC": "6.387928009033203",
+                            "pts": "0.9358288770053476",
+                            "pts_rest": "0.016035780517072107"
                         },
                         {
-                            "ENS": "ENSG00000179348",
-                            "gene_name": "GATA2",
-                            "pval_adj": "2.051725861726398e-98",
-                            "log2FC": "1.150817632675171",
-                            "pts": "1.0",
-                            "pts_rest": "0.5079607415485278"
+                            "ENS": "ENSG00000149534",
+                            "gene_name": "MS4A2",
+                            "pval_adj": "6.639655981164595e-102",
+                            "log2FC": "8.116023063659668",
+                            "pts": "0.93048128342246",
+                            "pts_rest": "0.004581651576306316"
                         },
                         {
                             "ENS": "ENSG00000055118",
                             "gene_name": "KCNH2",
-                            "pval_adj": "6.131123996281649e-97",
-                            "log2FC": "5.156918525695801",
-                            "pts": "0.9293478260869565",
-                            "pts_rest": "0.030425299890948745"
+                            "pval_adj": "8.862275757885813e-99",
+                            "log2FC": "5.269308090209961",
+                            "pts": "0.93048128342246",
+                            "pts_rest": "0.030107996072870076"
+                        },
+                        {
+                            "ENS": "ENSG00000179348",
+                            "gene_name": "GATA2",
+                            "pval_adj": "1.0588917951015586e-98",
+                            "log2FC": "1.2338154315948486",
+                            "pts": "1.0",
+                            "pts_rest": "0.50779971637395"
                         }
                     ],
                     "calc_marker_combination": {
                         "marker_combination": ["HDC", "LMO4"],
-                        "F1_score": "0.9147706422018348",
+                        "F1_score": "0.9714285714285714",
                         "precision": "0.9883720930232558",
-                        "recall": "0.9239130434782609"
+                        "recall": "0.9090909090909091"
                     },
                     "predicted_cell_type": {
                         "cell_type": "mast cell",
-                        "reasoning": "The cluster is defined by exceptionally high expression of HDC (histidine decarboxylase, log2FC=6.74, pts=1.0), the rate-limiting enzyme in histamine synthesis and a definitive marker of mast cells in Cell Ontology (CL:0000097). Co-expressed canonical mast cell markers include MS4A2 (FcεRIβ, log2FC=7.91, pts=0.935) and PRG2 (major basic protein, log2FC=6.19, pts=0.935), both highly specific to mast cells and basophils but with much lower pts_rest (0.005 and 0.016, respectively), indicating exclusivity to this cluster. The marker combination HDC+LMO4 achieves high precision (0.988) and F1 score (0.975), confirming robust identity. LMO4 supports mast cell development, while GATA2 (pts=1.0) is consistent with hematopoietic regulation in mast cell lineage. CSF2RB may reflect cytokine responsiveness. No neutrophil, eosinophil, or lymphoid markers dominate. Despite minor expression overlap with basophils, the dominance of HDC, MS4A2, and PRG2 strongly supports annotation as CL:0000097 'mast cell'."
+                        "reasoning": "The cluster is defined by exceptionally high expression of HDC (histidine decarboxylase, log2FC=6.95, pts=1.0, pts_rest=0.012) and MS4A2 (FcεRIβ, log2FC=8.12, pts=0.93, pts_rest=0.005), both canonical and highly specific markers for mast cells in Cell Ontology (CL:0000097). PRG2 (major basic protein, log2FC=6.39, pts=0.936) and BACE2 (log2FC=5.93, pts=0.941) further support mast cell identity, with minimal background expression. The marker combination HDC + LMO4 achieves near-perfect precision (0.988) and F1 score (0.971), confirming cluster specificity — while LMO4 is not lineage-defining, its co-expression reinforces the robustness of the annotation. CSF2RB (common beta chain for IL-3/IL-5/GM-CSF receptors) and GATA2 are consistent with mast cell development and survival signaling. KCNH2, though known as a cardiac channel, is also documented in mast cell activation literature. No conflicting lineage markers are present. Thus, the evidence overwhelmingly supports 'mast cell' (CL:0000097)."
                     }
                 }
             }
         ],
+        "comments": ""
+    }

@@ -1,8 +1,12 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import * as d3 from 'd3';
+import {ContextMenuPortal} from '../RingNodeGlyph';
+import {cellStore} from '@/store/CellData';
+import '../RingNodeGlyph/index.less';
 
 const GreyGlyph: React.FC = () => {
     const gRef = useRef(null);
+    const [contextMenu, setContextMenu] = useState<{visible: boolean; x: number; y: number} | null>(null);
 
     useEffect(() => {
         if (!gRef.current) return;
@@ -65,7 +69,62 @@ const GreyGlyph: React.FC = () => {
         };
     }, []);
 
-    return <g ref={gRef} />;
+    const handleContextMenu = (e: React.MouseEvent) => {
+        // Prevent default browser context menu
+        e.preventDefault();
+        // Stop event from bubbling up to document and triggering handleClickOutside
+        e.stopPropagation();
+
+        // Use client coordinates for fixed positioning
+        setContextMenu({
+            visible: true,
+            x: e.clientX,
+            y: e.clientY
+        });
+    };
+
+    // Close menu when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (e: MouseEvent) => {
+            // Only close if we actually have a menu open
+            if (contextMenu?.visible) {
+                setContextMenu(null);
+            }
+        };
+
+        // Important: Wait a tick before attaching listeners to prevent immediate closure
+        // from the click event that opened it
+        let timeoutId: ReturnType<typeof setTimeout>;
+
+        if (contextMenu?.visible) {
+            timeoutId = setTimeout(() => {
+                document.addEventListener('click', handleClickOutside);
+                document.addEventListener('contextmenu', handleClickOutside);
+            }, 10);
+        }
+
+        return () => {
+            if (timeoutId) clearTimeout(timeoutId);
+            document.removeEventListener('click', handleClickOutside);
+            document.removeEventListener('contextmenu', handleClickOutside);
+        };
+    }, [contextMenu]);
+
+    const handleMenuAction = (action: string) => {
+        console.log(`Action ${action} triggered for root node`);
+        if (action === 'add_to_chat') {
+            cellStore.addChatPanelAction('root');
+        }
+
+        setContextMenu(null);
+    };
+
+    return (
+        <>
+            <g ref={gRef} onContextMenu={handleContextMenu} style={{cursor: 'context-menu'}} />
+            <ContextMenuPortal contextMenu={contextMenu} handleMenuAction={handleMenuAction} nodeId='virtual_root' />
+        </>
+    );
 };
 
 export default GreyGlyph;

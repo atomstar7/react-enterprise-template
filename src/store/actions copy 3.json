@@ -3929,7 +3929,7 @@
                         "reasoning": "The cluster is defined by high expression of MYB (log2FC=4.25, pts=0.965, pts_rest=0.061), a master regulator of hematopoietic stem and progenitor cells (HSPCs) in Cell Ontology (CL:0000034). Supporting markers include CDK6 (log2FC=2.56, pts=0.975), associated with progenitor proliferation, and SPN (CD43, log2FC=2.21, pts=0.988), expressed in early hematopoietic lineages. The top marker combination (EEF2 + MYB + MED12L) achieves high precision (0.961) and F1 score (0.926), indicating robust cluster specificity. While EEF2 and EEF1G are general translation factors, their co-expression with MYB and absence of lineage-commitment markers (e.g., PAX5 for B cells, CD3E for T cells, MPO for myeloid) supports an undifferentiated state. PRSS57 and FAM117A are less canonical but show high fold-change and low background, possibly reflecting stress or activation states in progenitors. Taken together, the evidence strongly supports 'hematopoietic progenitor cell' (CL:0000034)."
                     }
                 },
-                "3": {
+                "2+3+4": {
                     "candidate_marker_list": [
                         {
                             "ENS": "ENSG00000154146",
@@ -4835,7 +4835,7 @@
                         }
                     ],
                     "calc_marker_combination": {
-                        "marker_combination": ["ITM2C", "RERE", "FAM30A", "SATB1", "LSP1"],
+                        "marker_combination": ["IGHM", "KCNK17"],
                         "F1_score": "0.7551087210661678",
                         "precision": "0.9951278928136419",
                         "recall": "0.8227593152064451"
