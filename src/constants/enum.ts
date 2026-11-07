@@ -50,32 +50,33 @@ enum seriesColor {
 //     c12 = '#67a9cf'
 // }
 
-enum embeddingColor {
-    c1 = '#f4a582',
-    c2 = '#fddbc7',
-    c3 = '#e6b4b4',
-    c4 = '#f8885cff',
-    c5 = '#92c5de',
-    c6 = '#4393c3',
-    c7 = '#b2182b',
-    c8 = '#da5844ff',
-    c9 = '#2166ac',
-    c10 = '#67001f',
-    c11 = '#053061'
-}
-
 // enum embeddingColor {
-//     c1 = '#f4c9d8',
-//     c2 = '#f1a7c5',
-//     c3 = '#ef85b0',
-//     c5 = '#d84a8f',
-//     c6 = '#b84a9e',
-//     c7 = '#8b4caa',
-//     c8 = '#5d4b99',
-//     c9 = '#3f3b8e',
-//     c10 = '#2c2a76',
-//     c11 = '#3b4a70',
-//     c12 = '#2c364e'
+//     c1 = '#f4a582',
+//     c2 = '#fddbc7',
+//     c3 = '#e6b4b4',
+//     c4 = '#f8885cff',
+//     c5 = '#92c5de',
+//     c6 = '#4393c3',
+//     c7 = '#b2182b',
+//     c8 = '#da5844ff',
+//     c9 = '#2166ac',
+//     c10 = '#67001f',
+//     c11 = '#053061'
 // }
+
+enum embeddingColor {
+    c1 = '#a6cee3',
+    c2 = '#1f78b4',
+    c3 = '#b2df8a',
+    c4 = '#33a02c',
+    c5 = '#fb9a99',
+    c6 = '#e31a1c',
+    c7 = '#fdbf6f',
+    c8 = '#ff7f00',
+    c9 = '#cab2d6',
+    c10 = '#6a3d9a',
+    c11 = '#ffff99',
+    c12 = '#b15928'
+}
 
 export {seriesColor, lineColor, embeddingColor};

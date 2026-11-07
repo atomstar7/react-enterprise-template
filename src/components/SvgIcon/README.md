@@ -2,10 +2,10 @@
 
 ### 说明
 
--   svg-sprite-loader 制作 svg-symbol，
--   直接使用 svg-use。
--   使用 svgo-loader 优化 svg。
--   使 Icon 组件化，使用 require.context 一次引入所有文件。
+- svg-sprite-loader 制作 svg-symbol，
+- 直接使用 svg-use。
+- 使用 svgo-loader 优化 svg。
+- 使 Icon 组件化，使用 require.context 一次引入所有文件。
 
 ### API
 

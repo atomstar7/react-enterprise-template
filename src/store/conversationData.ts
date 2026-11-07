@@ -31,7 +31,7 @@ Cluster 8: Annotated as neutrophils. High expression of MPO and CSF3R confirms t
 Cluster 9: Annotated as mast cells. The expression of marker genes such as HDC and LMO4 is highly specific, and the annotation is accurate.
 Next Steps:Based on the current annotation results, the following steps can be considered for the next steps:Optimize cluster quality: Try adjusting the resolution and observe the clustering effect at different resolutions. The current resolution (0.5) is an initial attempt and may be too broad. Increasing the resolution appropriately may help with more refined classification.`;
 
-const gene_reply = `IGHN is a gene that encodes the IgH chain, which is a protein that is involved in the immune response. CD74 is a gene that encodes the CD74 protein, which is a protein that is involved in the immune response.
+const gene_reply = `IGHM is a gene that encodes the IgH chain, which is a protein that is involved in the immune response. CD74 is a gene that encodes the CD74 protein, which is a protein that is involved in the immune response.
 CD74 antigen (invariant polypeptide of major histocompatibility complex, class II antigen-associated) [Mus musculus (house mouse)]
 Location in Chromosome 18, NC_000084.7 (60936921..60945724)`;
 
@@ -47,7 +47,7 @@ export const initialMessages: Message[] = [
     {id: 4, text: action_comment, sender: 'agent', content: ''},
     {
         id: 5,
-        text: 'What are the functions of the genes IGHN and CD74?',
+        text: 'What are the functions of the genes IGHM and CD74?',
         sender: 'user',
         content: 'G'
     },
